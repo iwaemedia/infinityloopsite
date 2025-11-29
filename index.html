@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Infinity Loop Reader</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    :root {
+      --bg: #050608;
+      --bg-elevated: #10131a;
+      --text: #f4f5f7;
+      --muted: #9ca3af;
+      --border: #1f2933;
+      --nav-width: 280px;
+
+      --accent: #e63946;
+      --accent-soft: rgba(230, 57, 70, 0.18);
+
+      --accent-warm: #f59e0b;
+      --accent-warm-soft: rgba(245, 158, 11, 0.16);
+
+      --radius: 14px;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #111827 0, #020308 55%, #000 100%);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .app-shell {
+      display: flex;
+      height: 100vh;
+      padding: 16px;
+      gap: 16px;
+    }
+
+    /* Splash overlay */
+    .splash-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, #111827 0, #020308 55%, #000 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .splash-card {
+      background: rgba(3, 6, 12, 0.96);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      max-width: 960px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .splash-cover-wrap {
+      border-radius: 20px;
+      overflow: hidden;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .splash-cover-img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .splash-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .splash-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .splash-title {
+      font-size: 26px;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+    .splash-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .splash-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 6px 0 12px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 4px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .pill-strong {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .splash-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .btn-primary,
+    .btn-ghost {
+      border-radius: 999px;
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        background 0.12s ease,
+        border-color 0.12s ease,
+        color 0.12s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #ff6b6b);
+      color: #0b1120;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.6);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 34px rgba(0, 0, 0, 0.7);
+    }
+
+    .btn-ghost {
+      background: rgba(31, 41, 55, 0.7);
+      color: var(--muted);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(31, 41, 55, 0.95);
+      border-color: rgba(209, 213, 219, 0.7);
+      color: #e5e7eb;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary span.icon {
+      display: inline-block;
+      transform: translateY(1px);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--nav-width);
+      background: rgba(3, 7, 18, 0.96);
+      border-radius: var(--radius);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow);
+      overflow-y: auto;
+      overflow-x: hidden;
+      transition: width 0.15s ease, padding 0.15s ease, border 0.15s ease;
+    }
+
+    /* whole sidebar collapsed */
+    body.sidebar-collapsed .sidebar 
+
+
+    .brand {
+      padding: 4px 8px 6px;
+      border-bottom: 1px solid rgba(55, 65, 81, 0.9);
+      margin-bottom: 4px;
+    }
+
+    .brand-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .progress-block {
+      margin-top: 8px;
+      padding: 6px 8px 6px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(75, 85, 99, 0.7);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .progress-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .progress-header-row button {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 10px;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+    }
+
+    .progress-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .progress-item-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(31, 41, 55, 0.9);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-warm));
+      transition: width 0.2s ease-out;
+    }
+
+    .nav-section { margin-top: 4px; }
+
+    .nav-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: var(--muted);
+      padding: 8px 10px 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-section-title::after {
+      content: "▾";
+      font-size: 10px;
+      opacity: 0.7;
+    }
+
+    .nav-section.collapsed .nav-section-title::after {
+      content: "▸";
+    }
+
+    .nav-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .nav-section.collapsed .nav-list {
+      display: none;
+    }
+
+    .nav-item { margin: 2px 0; }
+
+    .nav-link {
+      width: 100%;
+      text-align: left;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition:
+        background 0.12s ease,
+        color 0.12s ease,
+        border-color 0.12s ease,
+        transform 0.08s ease;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .nav-link span.badge {
+      font-size: 10px;
+      opacity: 0.8;
+    }
+
+    .nav-link:hover {
+      background: rgba(31, 41, 55, 0.8);
+      color: #f9fafb;
+      border-color: rgba(75, 85, 99, 0.9);
+      transform: translateY(-0.5px);
+    }
+
+    .nav-link.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .nav-footer {
+      margin-top: 8px;
+      padding: 8px 10px 4px;
+      font-size: 11px;
+      color: var(--muted);
+      border-top: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .nav-footer span.label {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 10px;
+    }
+
+    .nav-footer .loop-tags {
+      margin-top: 5px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .nav-footer .loop-tag {
+      border-radius: 999px;
+      padding: 2px 7px;
+      border: 1px solid var(--accent-warm-soft);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--accent-warm);
+      background: rgba(31, 41, 55, 0.8);
+    }
+
+    .reader-pane {
+      flex: 1;
+      border-radius: var(--radius);
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .reader-header {
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(55, 65, 81, 0.9);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .reader-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .menu-toggle {
+      border-radius: 999px;
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--muted);
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .menu-toggle:hover {
+      background: rgba(31, 41, 55, 0.95);
+      color: #e5e7eb;
+    }
+
+    .reader-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .reader-title span {
+      color: #e5e7eb;
+      font-weight: 600;
+    }
+
+    .reader-meta {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .reader-meta .dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.8);
+    }
+
+    .bookmark-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--muted);
+      padding: 4px 10px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .bookmark-btn:hover {
+      background: rgba(31, 41, 55, 0.95);
+      color: #e5e7eb;
+    }
+
+    .reader-iframe-wrap {
+      flex: 1;
+      background: #ffffff;
+    }
+
+    .reader-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #ffffff;
+    }
+
+    @media (max-width: 900px) {
+      .app-shell { flex-direction: column; }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+      }
+      .nav-section-title { display: none; }
+      .nav-list { display: flex; flex-wrap: nowrap; }
+      .nav-item { flex: 0 0 auto; }
+      .reader-pane { height: calc(100vh - 190px); }
+    }
+
+    @media (max-width: 720px) {
+      .splash-card {
+        grid-template-columns: minmax(0, 1fr);
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="splash-overlay" id="splash">
+    <div class="splash-card">
+      <div class="splash-cover-wrap">
+        <img src="Front Cover.png" alt="Front Cover" class="splash-cover-img">
+      </div>
+      <div class="splash-content">
+        <div class="splash-kicker">The Infinity Loop Reader</div>
+        <div class="splash-title">The Infinity Loop</div>
+        <div class="splash-subtitle">
+          Mapping the Machinery of Power, Policy, and Profit.
+        </div>
+        <div class="splash-actions">
+          <button class="btn-primary" id="enter-reader">
+            <span class="icon">➜</span>
+            <span>Enter the Infinity Loop Reader</span>
+          </button>
+          <button class="btn-ghost" id="start-guide">
+            Start with “How to Use This Book”
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-shell" id="app-shell" style="visibility:hidden;">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-title">Infinity Loop</div>
+        <div class="brand-sub">Standalone offline reader</div>
+
+        <div class="progress-block">
+          <div class="progress-header-row">
+            <span>Reading Progress</span>
+            <button id="progress-reset" type="button">Reset</button>
+          </div>
+
+          <div class="progress-item">
+            <div class="progress-item-label">
+              <span>Overall (chapters)</span>
+              <span id="overall-progress-label">0 / 11</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="overall-progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="progress-item">
+            <div class="progress-item-label">
+              <span>Current chapter</span>
+              <span id="chapter-progress-label">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="chapter-progress-fill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FRONT MATTER -->
+      <div class="nav-section collapsed" data-section="front">
+>
+        <div class="nav-section-title">Front Matter</div>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <button class="nav-link" data-file="CONTENT_WARNING_.htm" data-label="Content Warning">
+              Content Warning
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link"
+                    data-file="A_NOTE_ON_LANGUAGE_AND_TERMINOLOGY.htm"
+                    data-label="A Note on Language &amp; Terminology">
+              A Note on Language &amp; Terminology
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-file="TITLE_PAGE.htm" data-label="Title Page">
+              Title Page
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-file="Dedication.htm" data-label="Dedication">
+              Dedication
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-file="Epigraph_.htm" data-label="Epigraph">
+              Epigraph
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link"
+                    data-file="AUTHOR'S_PREFACE_UNDERSTANDING_THE_INFINITY_LOOP_.htm"
+                    data-label="Author’s Preface">
+              Author’s Preface
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link"
+                    data-file="NOTE_ON_SOURCES_AND_METHODOLOGY_.htm"
+                    data-label="Note on Sources &amp; Methodology">
+              Note on Sources &amp; Methodology
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link"
+                    data-file="HOW_TO_USE_THIS_BOOK_A_READER'S_GUIDE_.htm"
+                    data-label="How to Use This Book">
+              How to Use This Book
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- CHAPTERS -->
+      <div class="nav-section collapsed" data-section="chapters">
+>
+        <div class="nav-section-title">Chapters</div>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <button class="nav-link" data-group="chapter"
+                    data-file="CHAPTER_1_clean_stitched_formatted.htm"
+                    data-label="Chapter 1">
+              CHAPTER 1 <span class="badge">(1865 - 1877)LoopSnapshot🟡6/10</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-group="chapter"
+                    data-file="CHAPTER_2_clean_stitched_formatted.htm"
+                    data-label="Chapter 2">
+              CHAPTER 2 <span class="badge">(1877 - 1919)LoopSnapshot🟢8/10</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-group="chapter"
+                    data-file="CHAPTER_3_clean_stitched_formatted.htm"
+                    data-label="Chapter 3">
+              CHAPTER 3 <span class="badge">(1919 - 1945)LoopSnapshot🔴8/10 </span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-group="chapter"
+                    data-file="CHAPTER_4_clean_stitched_formatted.htm"
+                    data-label="Chapter 4">
+              CHAPTER 4 <span class="badge">(1946 - 1955)LoopSnapshot🔴8/10</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-group="chapter"
+                    data-file="CHAPTER_5_clean_stitched_formatted.htm"
+                    data-label="Chapter 5">
+              CHAPTER 5 <span class="badge">(1956 - 1971)LoopSnapshot🔴9/10</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-group="chapter"
+                    data-file="CHAPTER_6_clean_stitched_formatted.htm"
+                    data-label="Chapter 6">
+              CHAPTER 6 <span class="badge">(1972 - 1989)LoopSnapshot🔴9/10</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-group="chapter"
+                    data-file="CHAPTER_7_clean_stitched_formatted.htm"
+                    data-label="Chapter 7">
+              CHAPTER 7 <span class="badge">(1990 - 2009)LoopSnapshot🔴9/10</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-group="chapter"
+                    data-file="CHAPTER_8_clean_stitched_formatted.htm"
+                    data-label="Chapter 8">
+              CHAPTER 8 <span class="badge">(2010 - 2016)LoopSnapshot🔴9/10</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-group="chapter"
+                    data-file="CHAPTER_9_clean_stitched_formatted.htm"
+                    data-label="Chapter 9">
+              CHAPTER 9 <span class="badge">(2017 - 2024)LoopSnapshot🔴🟡🟢10/10</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-group="chapter"
+                    data-file="CHAPTER_10_clean_stitched_formatted.htm"
+                    data-label="Chapter 10">
+              CHAPTER 10 <span class="badge">(1619 - Present)LoopSnapshot🟢8/10</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-group="chapter"
+                    data-file="CHAPTER_11_clean_stitched_formatted.htm"
+                    data-label="Chapter 11">
+              CHAPTER 11 <span class="badge">2025 AND BEYONDLoopSnapshot🔴10/10 </span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- BACK MATTER -->
+      <div class="nav-section collapsed" data-section="back">
+>
+        <div class="nav-section-title">Back Matter</div>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <button class="nav-link"
+                    data-file="APPENDIX_A_LOOP MECHANISM GLOSSARY_.htm"
+                    data-label="Appendix A: Loop Glossary">
+              Appendix A: Loop Glossary
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link"
+                    data-file="APPENDIX_B_HISTORICAL TIMELINE (1619-2025)_.htm"
+                    data-label="Appendix B: Historical Timeline">
+              Appendix B: 1619 - 2025 Timeline
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link"
+                    data-file="APPENDIX_C_METHODOLOGY AND SOURCES NOTE_.htm"
+                    data-label="Appendix C: Methodology &amp; Sources">
+              Appendix C: Methodology &amp; Sources
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link"
+                    data-file="Tiered_Works_Cited.htm"
+                    data-label="Works Cited (Tiered)">
+              Works Cited (Tiered)
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link"
+                    data-file="Works_Cited_.htm"
+                    data-label="Works Cited (Book Layout)">
+              Works Cited (Book Layout)
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link"
+                    data-file="CONSOLIDATED_WORKS_CITED.htm"
+                    data-label="Consolidated Works Cited">
+              Consolidated Works Cited
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link"
+                    data-file="ACKNOWLEDGMENTS_.htm"
+                    data-label="Acknowledgments">
+              Acknowledgments
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link"
+                    data-file="ABOUT_THE_AUTHOR_.htm"
+                    data-label="About the Author">
+              About the Author
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="nav-footer">
+        <span class="label">Loop Archetypes</span>
+        <div class="loop-tags">
+          <span class="loop-tag">Surveillance</span>
+          <span class="loop-tag">Criminalization</span>
+          <span class="loop-tag">Extraction</span>
+          <span class="loop-tag">Destabilization</span>
+          <span class="loop-tag">Resistance</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="reader-pane">
+      <div class="reader-header">
+        <div class="reader-header-left">
+          <button id="menu-toggle" class="menu-toggle" title="Toggle menu">☰</button>
+          <div class="reader-title">
+            Currently viewing: <span id="current-label">—</span>
+          </div>
+        </div>
+        <div class="reader-meta">
+          <span>Infinity Loop Manuscript</span>
+          <span class="dot"></span>
+          <span>Local offline reader</span>
+          <button id="bookmark-btn" class="bookmark-btn" title="Set bookmark for this chapter">
+            Bookmark
+          </button>
+        </div>
+      </div>
+      <div class="reader-iframe-wrap">
+        <iframe id="reader-frame"
+                class="reader-iframe"
+                src="CHAPTER_1_clean_stitched_formatted.htm"></iframe>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const splash = document.getElementById('splash');
+      const appShell = document.getElementById('app-shell');
+      const enterBtn = document.getElementById('enter-reader');
+      const startGuideBtn = document.getElementById('start-guide');
+      const iframe = document.getElementById('reader-frame');
+      const currentLabel = document.getElementById('current-label');
+      const navLinks = Array.from(document.querySelectorAll('.nav-link'));
+
+      const overallFill = document.getElementById('overall-progress-fill');
+      const overallLabel = document.getElementById('overall-progress-label');
+      const chapterFill = document.getElementById('chapter-progress-fill');
+      const chapterLabel = document.getElementById('chapter-progress-label');
+      const progressReset = document.getElementById('progress-reset');
+
+      const menuToggle = document.getElementById('menu-toggle');
+      const bookmarkBtn = document.getElementById('bookmark-btn');
+      const navSections = Array.from(document.querySelectorAll('.nav-section'));
+
+      const chapterLinks = navLinks.filter(btn => btn.dataset.group === 'chapter');
+      const totalChapters = chapterLinks.length;
+
+      let currentFile = 'CHAPTER_1_clean_stitched_formatted.htm';
+      let currentScrollTarget = null;
+
+      /* --- bookmark helpers --- */
+      function getBookmark() {
+        try {
+          const raw = localStorage.getItem('bookmark');
+          return raw ? JSON.parse(raw) : null;
+        } catch (e) {
+          console.error('Bookmark parse error', e);
+          return null;
+        }
+      }
+
+      function saveBookmark(percent) {
+        const payload = {
+          file: currentFile,
+          label: currentLabel.textContent || '',
+          percent: Math.max(0, Math.min(100, percent))
+        };
+        localStorage.setItem('bookmark', JSON.stringify(payload));
+      }
+
+      function applyBookmarkToMeter(file) {
+        const bm = getBookmark();
+        if (bm && bm.file === file && typeof bm.percent === 'number') {
+          const pct = Math.max(0, Math.min(100, bm.percent));
+          chapterFill.style.width = pct + '%';
+          chapterLabel.textContent = pct + '%';
+        } else {
+          chapterFill.style.width = '0%';
+          chapterLabel.textContent = '0%';
+        }
+      }
+
+      function applyBookmarkScrollIfNeeded() {
+        try {
+          const bm = getBookmark();
+          if (!bm || bm.file !== currentFile || typeof bm.percent !== 'number') return;
+          const win = iframe.contentWindow;
+          const doc = win ? win.document : null;
+          if (!doc) return;
+          const el = doc.documentElement || doc.body;
+          const scrollHeight = el.scrollHeight || doc.body.scrollHeight || 0;
+          const clientHeight = el.clientHeight || doc.body.clientHeight || 1;
+          const maxScroll = Math.max(scrollHeight - clientHeight, 1);
+          const target = (Math.max(0, Math.min(100, bm.percent)) / 100) * maxScroll;
+          el.scrollTop = target;
+        } catch (e) {
+          console.error('Bookmark scroll apply error:', e);
+        }
+      }
+
+      /* --- scroll % helpers --- */
+      function getScrollPercent() {
+        try {
+          const win = iframe.contentWindow;
+          const doc = win ? win.document : null;
+          if (!doc) return 0;
+          const el = doc.documentElement || doc.body;
+          const scrollTop = el.scrollTop || doc.body.scrollTop || 0;
+          const scrollHeight = el.scrollHeight || doc.body.scrollHeight || 0;
+          const clientHeight = el.clientHeight || doc.body.clientHeight || 1;
+          const maxScroll = Math.max(scrollHeight - clientHeight, 1);
+          return Math.max(0, Math.min(100, Math.round((scrollTop / maxScroll) * 100)));
+        } catch (e) {
+          console.error('getScrollPercent error:', e);
+          return 0;
+        }
+      }
+
+      // --- current chapter scroll percentage ---
+function updateChapterScrollProgress() {
+  try {
+    const win = iframe.contentWindow;
+    if (!win) return;
+
+    const doc = win.document;
+    if (!doc) return;
+
+    const docEl = doc.documentElement || doc.body;
+    const body = doc.body || docEl;
+
+    const scrollTop  = docEl.scrollTop  || body.scrollTop  || 0;
+    const scrollHeight = docEl.scrollHeight || body.scrollHeight || 0;
+    const clientHeight = docEl.clientHeight || body.clientHeight || 1;
+
+    const maxScroll = Math.max(scrollHeight - clientHeight, 1);
+    const pct = Math.max(0, Math.min(100, Math.round((scrollTop / maxScroll) * 100)));
+
+    chapterFill.style.width = pct + '%';
+    chapterLabel.textContent = pct + '%';
+  } catch (e) {
+    console.error('Scroll progress error:', e);
+  }
+}
+
+function attachScrollListener() {
+  try {
+    const win = iframe.contentWindow;
+    if (!win) return;
+
+    const doc = win.document;
+    if (!doc) return;
+
+    // Remove any previous handler so we don’t double-count
+    if (win.__loopScrollHandler) {
+      win.removeEventListener('scroll', win.__loopScrollHandler);
+      doc.removeEventListener('scroll', win.__loopScrollHandler);
+      if (doc.documentElement) {
+        doc.documentElement.removeEventListener('scroll', win.__loopScrollHandler);
+      }
+      if (doc.body) {
+        doc.body.removeEventListener('scroll', win.__loopScrollHandler);
+      }
+    }
+
+    win.__loopScrollHandler = updateChapterScrollProgress;
+
+    // Listen on window + both scrollable roots to cover all HTML variations
+    win.addEventListener('scroll', updateChapterScrollProgress, { passive: true });
+    doc.addEventListener('scroll', updateChapterScrollProgress, { passive: true });
+    if (doc.documentElement) {
+      doc.documentElement.addEventListener('scroll', updateChapterScrollProgress, { passive: true });
+    }
+    if (doc.body) {
+      doc.body.addEventListener('scroll', updateChapterScrollProgress, { passive: true });
+    }
+
+    // Initial calculation once content is laid out
+    setTimeout(updateChapterScrollProgress, 100);
+  } catch (e) {
+    console.error('Failed to attach scroll listener:', e);
+  }
+}
+
+// IFRAME LOAD HANDLER
+iframe.addEventListener('load', () => {
+  injectTableBorders();        // keep your table borders
+  attachScrollListener();      // attach scroll tracking
+  // keep any bookmark/restore calls here if you were using them
+});
+
+
+      /* --- overall progress --- */
+      function updateOverallProgress() {
+        let visited = 0;
+        chapterLinks.forEach(link => {
+          const key = 'visited_' + link.getAttribute('data-file');
+          if (localStorage.getItem(key) === '1') visited += 1;
+        });
+        const pct = totalChapters ? Math.round((visited / totalChapters) * 100) : 0;
+        overallFill.style.width = pct + '%';
+        overallLabel.textContent = `${visited} / ${totalChapters}`;
+      }
+
+      function markChapterVisited(file) {
+        localStorage.setItem('visited_' + file, '1');
+        updateOverallProgress();
+      }
+
+      /* --- navigation --- */
+      function openSection(file, label) {
+        if (!file) return;
+        currentFile = file;
+        iframe.src = file;
+        currentLabel.textContent = label || file;
+
+        navLinks.forEach(btn => btn.classList.remove('active'));
+        const match = navLinks.find(btn => btn.getAttribute('data-file') === file);
+        if (match) {
+          match.classList.add('active');
+          if (match.dataset.group === 'chapter') {
+            markChapterVisited(file);
+          }
+          // ensure its section is expanded
+          const section = match.closest('.nav-section');
+          if (section) section.classList.remove('collapsed');
+        }
+
+        applyBookmarkToMeter(file);
+      }
+
+      function showApp(defaultFile, defaultLabel) {
+        splash.style.display = 'none';
+        appShell.style.visibility = 'visible';
+        openSection(defaultFile, defaultLabel);
+      }
+
+      /* Entry: bookmark first, else Content Warning */
+      function startFromEntry() {
+        const bm = getBookmark();
+        if (bm && bm.file) {
+          showApp(bm.file, bm.label || 'Bookmark');
+        } else {
+          showApp('CONTENT_WARNING_.htm', 'Content Warning');
+        }
+      }
+
+      enterBtn.addEventListener('click', () => {
+  // Hide splash and show app shell
+  splash.style.display = 'none';
+  appShell.style.visibility = 'visible';
+
+  // Make sure sections stay collapsed until user taps them
+  document
+    .querySelectorAll('.nav-section')
+    .forEach(section => section.classList.add('collapsed'));
+
+  // Open Content Warning as the first page
+  openSection('CONTENT_WARNING_.htm', 'Content Warning');
+});
+
+
+      /* "How to Use This Book" ignores bookmark */
+      startGuideBtn.addEventListener('click', () => {
+        showApp("HOW_TO_USE_THIS_BOOK_A_READER'S_GUIDE_.htm", 'How to Use This Book');
+      });
+
+      navLinks.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const file = btn.getAttribute('data-file');
+          const label = btn.getAttribute('data-label') || btn.textContent.trim();
+          openSection(file, label);
+        });
+      });
+
+      /* section headers: collapse / expand */
+      navSections.forEach(section => {
+        const title = section.querySelector('.nav-section-title');
+        if (!title) return;
+        title.addEventListener('click', () => {
+          section.classList.toggle('collapsed');
+        });
+      });
+
+      /* Reset everything */
+      progressReset.addEventListener('click', () => {
+        chapterLinks.forEach(link => {
+          const key = 'visited_' + link.getAttribute('data-file');
+          localStorage.removeItem(key);
+        });
+        localStorage.removeItem('bookmark');
+        overallFill.style.width = '0%';
+        overallLabel.textContent = `0 / ${totalChapters}`;
+        chapterFill.style.width = '0%';
+        chapterLabel.textContent = '0%';
+      });
+
+      /* Sidebar global collapse */
+      menuToggle.addEventListener('click', () => {
+        document.body.classList.toggle('sidebar-collapsed');
+      });
+
+      /* Bookmark: save current scroll % */
+      bookmarkBtn.addEventListener('click', () => {
+        const pct = getScrollPercent();
+        saveBookmark(pct);
+        applyBookmarkToMeter(currentFile);
+        alert('Bookmark saved at ' + pct + '% for this chapter.');
+      });
+
+      window.addEventListener('DOMContentLoaded', () => {
+        updateOverallProgress();
+      });
+    })();
+  </script>
+</body>
+</html>
