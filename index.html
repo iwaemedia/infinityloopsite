@@ -55,7 +55,7 @@
       width: 100%;
       height: 100%;
       background: radial-gradient(ellipse at center, #0a0e1a 0%, #000000 100%);
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       z-index: 3000;
@@ -275,7 +275,7 @@
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.95);
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       z-index: 4000;
@@ -883,31 +883,6 @@
       font-weight: bold;
     }
 
-    /* ========== MESSAGE STYLES ========== */
-    .message {
-      margin-top: 15px;
-      padding: 12px;
-      border-radius: 6px;
-      display: none;
-      font-size: 14px;
-    }
-
-    .message.success {
-      background: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-
-    .message.error {
-      background: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-
-    .message.show {
-      display: block;
-    }
-
     /* ========== RESPONSIVE DESIGN ========== */
     /* Tablet and Desktop */
     @media (min-width: 769px) {
@@ -1066,54 +1041,6 @@
 </head>
 <body>
 
-  <!-- ========== EMAIL MODAL (SHOWS FIRST) ========== -->
-  <div class="modal-overlay" id="emailModal">
-    <div class="modal-content">
-      <h2>Start Your Free Trial</h2>
-      <p>Enter your email address to access the first 2 chapters of The Infinity Loop for 7 days.</p>
-      <p style="font-size: 14px; color: var(--muted);">
-        No credit card required. Full version available with license.
-      </p>
-      
-      <form id="emailForm">
-        <div class="email-input-group">
-          <input 
-            type="email"
-            class="email-input"
-            id="trialEmail"
-            placeholder="your@email.com"
-            autocomplete="email"
-            required
-          >
-          
-          <div style="display: flex; align-items: flex-start; gap: 10px; margin-top: 15px;">
-            <input 
-              type="checkbox"
-              id="agreeTerms"
-              style="width: auto; margin-top: 3px;"
-              required
-            >
-            <label for="agreeTerms" style="font-size: 12px; text-align: left; color: var(--muted); line-height: 1.4;">
-              I agree to receive updates and accept the 
-              <a href="#" style="color: var(--accent); text-decoration: underline;" id="termsLink">Terms of Service</a>
-            </label>
-          </div>
-        </div>
-        
-        <button class="btn-primary" type="submit" id="startTrialWithEmail">
-          Start Free Trial (2 Chapters)
-        </button>
-        
-        <div id="message" class="message"></div>
-      </form>
-      
-      <p style="margin-top: 20px; font-size: 12px; color: var(--muted);">
-        Already have a license? 
-        <a href="#" id="switchToLicense" style="color: var(--accent); text-decoration: underline;">Activate here</a>
-      </p>
-    </div>
-  </div>
-
   <!-- ========== ENHANCED SPLASH SCREEN ========== -->
   <div class="splash-entrance" id="splashEntrance">
     <div class="splash-card">
@@ -1131,6 +1058,49 @@
         Open The Infinity Loop
         <span>→</span>
       </button>
+    </div>
+  </div>
+
+  <!-- ========== EMAIL MODAL ========== -->
+  <div class="modal-overlay" id="emailModal">
+    <div class="modal-content">
+      <h2>Start Your Free Trial</h2>
+      <p>Enter your email address to access the first 2 chapters of The Infinity Loop for 7 days.</p>
+      <p style="font-size: 14px; color: var(--muted);">No credit card required. Full version available with license.</p>
+      
+      <div class="email-input-group">
+        <input type="text"
+               class="email-input"
+               id="trialName"
+               placeholder="Your name"
+               autocomplete="name">
+
+        <input type="email" 
+               class="email-input" 
+               id="trialEmail"
+               placeholder="your@email.com"
+               autocomplete="email"
+               required>
+
+        <div style="display: flex; align-items: flex-start; gap: 10px; margin-top: 15px;">
+          <input type="checkbox" 
+                 id="agreeTerms" 
+                 style="width: auto; margin-top: 3px;">
+          <label for="agreeTerms" style="font-size: 12px; text-align: left; color: var(--muted); line-height: 1.4;">
+            I agree to receive updates and accept the 
+            <a href="#" style="color: var(--accent); text-decoration: underline;" id="termsLink">Terms of Service</a>
+          </label>
+        </div>
+      </div>
+      
+      <button class="btn-primary" id="startTrialWithEmail">
+        Start Free Trial (2 Chapters)
+      </button>
+      
+      <p style="margin-top: 20px; font-size: 12px; color: var(--muted);">
+        Already have a license? 
+        <a href="#" id="switchToLicense" style="color: var(--accent); text-decoration: underline;">Activate here</a>
+      </p>
     </div>
   </div>
 
@@ -1329,7 +1299,7 @@
         TEST_LICENSE: "INF-TEST-2024-ABCD-5678",
         VALID_LICENSE_PREFIX: "INF-",
         PURCHASE_URL: "https://your-store.com/purchase",
-        WEBHOOK_URL: 'https://hook.us2.make.com/4bwg1lvvkqkqwk75tv8b2jmc8upri5fv'
+        MAKE_WEBHOOK_URL: "https://hook.us2.make.com/4bwg1lvvkqkqwk75tv8b2jmc8upri5fv"
       };
 
       // ========== STATE MANAGEMENT ==========
@@ -1367,12 +1337,6 @@
       const overallLabel = document.getElementById('overall-progress-label');
       const chapterFill = document.getElementById('chapter-progress-fill');
       const chapterLabel = document.getElementById('chapter-progress-label');
-
-      // Email form elements
-      const emailForm = document.getElementById('emailForm');
-      const trialEmailInput = document.getElementById('trialEmail');
-      const agreeTermsCheckbox = document.getElementById('agreeTerms');
-      const messageDiv = document.getElementById('message');
 
       // ========== BOOK STRUCTURE ==========
       const BOOK_STRUCTURE = {
@@ -1582,9 +1546,10 @@
           }
         }
 
-        saveUser(email) {
+        saveUser(email, name = '') {
           const userData = {
             email: email,
+            name: name || '',
             registered: new Date().toISOString(),
             deviceId: this.deviceId
           };
@@ -1593,9 +1558,10 @@
           return userData;
         }
 
-        startTrial(email) {
+        startTrial(email, name = '') {
           const trialData = {
             email: email,
+            name: name || '',
             startDate: new Date().toISOString(),
             expiry: new Date(Date.now() + CONFIG.TRIAL_DAYS * 24 * 60 * 60 * 1000).toISOString(),
             chaptersAllowed: CONFIG.TRIAL_CHAPTERS,
@@ -1661,6 +1627,13 @@
           if (this.licenseData?.email) return this.licenseData.email;
           if (this.trialData?.email) return this.trialData.email;
           if (this.userData?.email) return this.userData.email;
+          return '';
+        }
+
+        getUserName() {
+          if (this.licenseData?.name) return this.licenseData.name;
+          if (this.trialData?.name) return this.trialData.name;
+          if (this.userData?.name) return this.userData.name;
           return '';
         }
 
@@ -1984,13 +1957,51 @@
         }
       }
 
-      // ========== UI FLOW FUNCTIONS ==========
+      // ========== HELPER FUNCTIONS ==========
+      function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+
+      /**
+       * Send event data to Make.com webhook
+       * eventType: "trial_signup" | "license_activation" | etc.
+       * data: additional fields merged into payload
+       */
+      function sendToMake(eventType, data = {}) {
+        if (!CONFIG.MAKE_WEBHOOK_URL) return;
+
+        const basePayload = {
+          event: eventType,
+          source: 'infinity-loop-reader',
+          appVersion: CONFIG.APP_VERSION,
+          deviceId: (typeof licenseManager !== 'undefined' && licenseManager.deviceId) 
+            ? licenseManager.deviceId 
+            : null,
+          timestamp: new Date().toISOString()
+        };
+
+        const payload = Object.assign({}, basePayload, data);
+
+        fetch(CONFIG.MAKE_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        }).catch(err => {
+          console.error('Make webhook error:', err);
+        });
+      }
+
+      // ========== UI FLOW ==========
       function showEmailModal() {
-        emailModal.style.display = 'flex';
         splashEntrance.style.display = 'none';
+        emailModal.style.display = 'flex';
         
         setTimeout(() => {
-          trialEmailInput.focus();
+          const nameInput = document.getElementById('trialName');
+          if (nameInput) nameInput.focus();
         }, 100);
       }
 
@@ -1999,7 +2010,7 @@
       }
 
       function showLicenseModal() {
-        hideEmailModal();
+        emailModal.style.display = 'none';
         licenseModal.style.display = 'flex';
         
         setTimeout(() => {
@@ -2009,12 +2020,6 @@
 
       function hideLicenseModal() {
         licenseModal.style.display = 'none';
-      }
-
-      function showSplashScreen() {
-        hideEmailModal();
-        hideLicenseModal();
-        splashEntrance.style.display = 'flex';
       }
 
       function showApp() {
@@ -2040,71 +2045,36 @@
         openSection('TITLE_PAGE.htm', 'Title Page', 0);
       }
 
-      function handleEmailFormSubmit(e) {
-        e.preventDefault();
-        
-        const email = trialEmailInput.value.trim();
-        
+      function startAppWithTrial(email, name) {
         if (!validateEmail(email)) {
-          showMessage('Please enter a valid email address.', 'error');
+          alert('Please enter a valid email address.');
           return;
         }
         
-        if (!agreeTermsCheckbox.checked) {
-          showMessage('Please agree to the Terms of Service to continue.', 'error');
+        const agreeTerms = document.getElementById('agreeTerms').checked;
+        if (!agreeTerms) {
+          alert('You must agree to the Terms of Service to continue.');
           return;
         }
         
-        // Disable button and show loading state
-        const submitBtn = document.getElementById('startTrialWithEmail');
-        const originalText = submitBtn.textContent;
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending...';
-        
-        // Clear any existing message
-        hideMessage();
-        
-        // Send to webhook
-        fetch(CONFIG.WEBHOOK_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-            timestamp: new Date().toISOString(),
-            source: 'book-website',
-            agreedToTerms: true
-          })
-        })
-        .then(response => {
-          if (response.ok) {
-            // Save user and start trial
-            licenseManager.saveUser(email);
-            licenseManager.startTrial(email);
-            
-            showMessage('Success! Check your email for the download link.', 'success');
-            
-            // Show splash screen after a delay
-            setTimeout(() => {
-              showSplashScreen();
-            }, 1500);
-          } else {
-            throw new Error('Server responded with an error');
-          }
-        })
-        .catch(error => {
-          showMessage('Oops! Something went wrong. Please try again.', 'error');
-        })
-        .finally(() => {
-          submitBtn.disabled = false;
-          submitBtn.textContent = originalText;
+        // Save locally
+        licenseManager.saveUser(email, name);
+        licenseManager.startTrial(email, name);
+
+        // Send trial signup to Make
+        sendToMake('trial_signup', {
+          email: email,
+          name: name || '',
+          accessType: 'trial'
         });
+        
+        showApp();
+        alert('Welcome to The Infinity Loop! You have access to the first 2 chapters for 7 days.');
       }
 
       function startAppWithLicense(licenseKey) {
-        const email = licenseManager.getUserEmail() || 
-                     prompt('Enter your email for license activation:');
+        const existingEmail = licenseManager.getUserEmail();
+        const email = existingEmail || prompt('Enter your email for license activation:');
         
         if (!email) {
           alert('Email is required for license activation.');
@@ -2115,10 +2085,25 @@
           alert('Please enter a valid email address.');
           return;
         }
+
+        const name = licenseManager.getUserName() || '';
         
         try {
+          // Activate license locally
           licenseManager.activateLicense(licenseKey, email);
-          hideLicenseModal();
+
+          // Prepare license info for Make
+          const licenseKeyLast4 = (licenseKey || '').slice(-4);
+
+          // Send license activation event to Make
+          sendToMake('license_activation', {
+            email: email,
+            name: name,
+            licenseKeyLast4: licenseKeyLast4,
+            licenseKey: licenseKey,          // include full if you want to log it
+            accessType: 'license'
+          });
+
           showApp();
           alert('License activated successfully! Full access granted.');
         } catch (error) {
@@ -2132,34 +2117,57 @@
         
         if (accessType === 'none' || !email) {
           // New user - show email modal
-          showEmailModal();
+          splashEntrance.style.opacity = '0';
+          splashEntrance.style.transition = 'opacity 0.5s ease';
+          
+          setTimeout(() => {
+            splashEntrance.style.display = 'none';
+            showEmailModal();
+          }, 500);
         } else {
           // Returning user - go directly to app
-          showApp();
+          splashEntrance.style.opacity = '0';
+          splashEntrance.style.transition = 'opacity 0.5s ease';
+          
+          setTimeout(() => {
+            splashEntrance.style.display = 'none';
+            showApp();
+          }, 500);
         }
-      }
-
-      // ========== HELPER FUNCTIONS ==========
-      function validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-      }
-
-      function showMessage(text, type) {
-        messageDiv.textContent = text;
-        messageDiv.className = 'message ' + type + ' show';
-      }
-
-      function hideMessage() {
-        messageDiv.className = 'message';
       }
 
       // ========== EVENT LISTENERS ==========
       function setupEventListeners() {
-        // Email form submission
-        emailForm.addEventListener('submit', handleEmailFormSubmit);
+        // Entrance page
+        enterBookBtn.addEventListener('click', () => {
+          splashEntrance.style.opacity = '0';
+          splashEntrance.style.transition = 'opacity 0.5s ease';
+          
+          setTimeout(() => {
+            splashEntrance.style.display = 'none';
+            checkExistingAccess();
+          }, 500);
+        });
 
-        // Email modal links
+        bookCover.addEventListener('click', () => {
+          enterBookBtn.click();
+        });
+
+        // Email modal
+        document.getElementById('startTrialWithEmail').addEventListener('click', () => {
+          const email = document.getElementById('trialEmail').value.trim();
+          const name  = (document.getElementById('trialName')?.value || '').trim();
+          startAppWithTrial(email, name);
+        });
+
+        document.getElementById('trialEmail').addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            const email = document.getElementById('trialEmail').value.trim();
+            const name  = (document.getElementById('trialName')?.value || '').trim();
+            startAppWithTrial(email, name);
+          }
+        });
+
         document.getElementById('switchToLicense').addEventListener('click', (e) => {
           e.preventDefault();
           showLicenseModal();
@@ -2168,15 +2176,6 @@
         document.getElementById('termsLink').addEventListener('click', (e) => {
           e.preventDefault();
           alert('Terms of Service:\n\n1. Trial lasts 7 days\n2. Email required for trial\n3. No spam, unsubscribe anytime\n4. Full version requires purchase');
-        });
-
-        // Splash screen button
-        enterBookBtn.addEventListener('click', () => {
-          checkExistingAccess();
-        });
-
-        bookCover.addEventListener('click', () => {
-          checkExistingAccess();
         });
 
         // License modal
@@ -2281,17 +2280,8 @@
       function init() {
         setupEventListeners();
         
-        // Check for existing access FIRST
-        const accessType = licenseManager.getAccessType();
-        const email = licenseManager.getUserEmail();
-        
-        if (accessType === 'none' || !email) {
-          // New user: Show email modal first (before splash screen)
-          showEmailModal();
-        } else {
-          // Returning user: Show splash screen
-          showSplashScreen();
-        }
+        // Show entrance splash page
+        splashEntrance.style.display = 'flex';
         
         // For development
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
@@ -2314,15 +2304,7 @@
           localStorage.removeItem('infinityLoopProgress');
           location.reload();
         },
-        getLicense: () => licenseManager,
-        resetAll: () => {
-          localStorage.removeItem('infinityLoopUser');
-          localStorage.removeItem('infinityLoopTrial');
-          localStorage.removeItem('infinityLoopLicense');
-          localStorage.removeItem('infinityLoopProgress');
-          localStorage.removeItem('infinityLoopDeviceId');
-          location.reload();
-        }
+        getLicense: () => licenseManager
       };
 
     })();
