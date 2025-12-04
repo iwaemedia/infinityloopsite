@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script type='text/javascript' src='https://infinityloopsite.netlify.app/ewNXqOVY_tUucyr4BvNZ7zkbZZwLdeTUSlUQ6jEkxGUIzPTctAwV43tFEUPlP2gh_nrBMm8J22sXokZ0yHYhbgspmp15u6Ae0hvKxpLXQI9sU3dRCGF3YzJCZqoTKw2Vsd_b-7z4YoDXDWIlVHFe_dHSDJ2HfxbPQHAX1R8oXzs='></script>
-  <script type='text/javascript' src='https://infinityloopsite.netlify.app/ozgprIfiP3XUSNQxcUh26cLe10kEP2l377ol9a__BOazQQdWicLLdLDyc2eS7uccXwO4CkGrB9Wo8YBK6R5DWsJgV3TWkILfaVy7wdSDLLjx1qsyuPQ3H79-VSQT5SU8FwPUSMqPbip36sed98Q7bjAU82U4WPjbWR-OQAxX7qM='></script>
-  
+  <!-- Remote scripts you already use -->
+  <script type="text/javascript" src="https://infinityloopsite.netlify.app/ewNXqOVY_tUucyr4BvNZ7zkbZZwLdeTUSlUQ6jEkxGUIzPTctAwV43tFEUPlP2gh_nrBMm8J22sXokZ0yHYhbgspmp15u6Ae0hvKxpLXQI9sU3dRCGF3YzJCZqoTKw2Vsd_b-7z4YoDXDWIlVHFe_dHSDJ2HfxbPQHAX1R8oXzs="></script>
+  <script type="text/javascript" src="https://infinityloopsite.netlify.app/ozgprIfiP3XUSNQxcUh26cLe10kEP2l377ol9a__BOazQQdWicLLdLDyc2eS7uccXwO4CkGrB9Wo8YBK6R5DWsJgV3TWkILfaVy7wdSDLLjx1qsyuPQ3H79-VSQT5SU8FwPUSMqPbip36sed98Q7bjAU82U4WPjbWR-OQAxX7qM="></script>
+
+  <!-- META -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <meta name="description" content="Interactive reader for The Infinity Loop - Mapping the Machinery of Power, Policy, and Profit">
   <meta name="author" content="The Infinity Loop">
-  
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="copyright" content="The Infinity Loop - All rights reserved">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
-  
+
+  <!-- UPDATED CSP: allow Netlify helper scripts, Stripe, PayPal, Make webhook -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' https://infinityloopsite.netlify.app https://js.stripe.com https://www.paypal.com;
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data:;
+    connect-src 'self' https://hook.us2.make.com;
+    frame-src 'self' https://js.stripe.com https://www.paypal.com;
+  ">
+
   <title>The Infinity Loop Reader</title>
-  
+
   <style>
     /* ========== CSS VARIABLES ========== */
     :root {
@@ -35,7 +45,7 @@
     }
 
     /* ========== BASE STYLES ========== */
-    * { 
+    * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -62,7 +72,7 @@
         visibility: hidden !important;
         opacity: 0 !important;
       }
-      
+
       body::before {
         content: "Printing disabled - The Infinity Loop content is copyright protected. Purchase the full license for access to printable companion materials.";
         display: block !important;
@@ -83,7 +93,7 @@
         max-width: 600px;
         z-index: 999999;
       }
-      
+
       body {
         height: 100vh !important;
         width: 100vw !important;
@@ -147,17 +157,6 @@
       }
     }
 
-    @keyframes progressPulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
-
     /* ========== SPLASH SCREEN ========== */
     .splash-entrance {
       position: fixed;
@@ -196,7 +195,7 @@
       display: block;
       border-radius: 20px;
       object-fit: cover;
-      box-shadow: 
+      box-shadow:
         var(--shadow-strong),
         0 0 0 1px rgba(255, 255, 255, 0.05),
         0 0 60px rgba(230, 57, 70, 0.2);
@@ -247,7 +246,7 @@
       font-weight: 600;
       cursor: pointer;
       transition: var(--transition);
-      box-shadow: 
+      box-shadow:
         0 10px 30px rgba(230, 57, 70, 0.4),
         0 0 0 1px rgba(255, 255, 255, 0.1);
       display: flex;
@@ -262,7 +261,7 @@
 
     .splash-button:hover {
       transform: translateY(-3px);
-      box-shadow: 
+      box-shadow:
         0 20px 40px rgba(230, 57, 70, 0.6),
         0 0 0 1px rgba(255, 255, 255, 0.2);
     }
@@ -380,80 +379,6 @@
     .btn-secondary:hover {
       background: var(--accent-soft);
       transform: translateY(-2px);
-    }
-
-    /* ========== PROGRESS SYSTEM STYLES ========== */
-    .progress-block {
-      margin-top: 8px;
-      padding: 12px;
-      border-radius: 10px;
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(75, 85, 99, 0.7);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .progress-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .progress-header-row button {
-      border: none;
-      background: transparent;
-      color: var(--muted);
-      font-size: 11px;
-      cursor: pointer;
-      padding: 4px 8px;
-      text-decoration: underline;
-      transition: color 0.2s ease;
-      border-radius: 4px;
-    }
-
-    .progress-header-row button:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .progress-item {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .progress-item-label {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      border-radius: 9999px;
-      background: rgba(31, 41, 55, 0.9);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      border-radius: 9999px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-warm));
-      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-    }
-
-    .progress-fill.animating {
-      animation: progressPulse 1s ease-in-out;
     }
 
     /* ========== MAIN APP SHELL ========== */
@@ -611,12 +536,6 @@
       border-color: transparent;
     }
 
-    .nav-link .completion-check {
-      margin-left: auto;
-      color: var(--accent-warm);
-      font-weight: bold;
-    }
-
     /* ========== READER PANE ========== */
     .reader-pane {
       flex: 1;
@@ -761,28 +680,28 @@
         padding: 8px;
         gap: 8px;
       }
-      
+
       .sidebar {
         width: 100%;
         max-height: 40vh;
       }
-      
+
       .reader-pane {
         height: 55vh;
         min-height: 300px;
       }
-      
+
       .reader-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
       }
-      
+
       .reader-meta {
         flex-wrap: wrap;
         gap: 8px;
       }
-      
+
       .reader-title {
         font-size: 12px;
       }
@@ -794,16 +713,16 @@
   <!-- ========== SPLASH SCREEN ========== -->
   <div class="splash-entrance" id="splashEntrance">
     <div class="splash-card">
-      <img src="Front Cover.png" 
-           alt="The Infinity Loop - Book Cover" 
-           class="splash-cover" 
+      <img src="Front Cover.png"
+           alt="The Infinity Loop - Book Cover"
+           class="splash-cover"
            id="bookCover">
-      
+
       <h1 class="splash-title">The Infinity Loop</h1>
       <p class="splash-subtitle">Mapping the Machinery of Power, Policy, and Profit</p>
-      
+
       <div class="splash-tagline">Enter the Loop • Discover the System</div>
-      
+
       <button class="splash-button" id="enterBookBtn">
         <span style="flex: 1; text-align: center;">Open The Infinity Loop</span>
         <span style="font-size: 1.2rem;">→</span>
@@ -819,46 +738,46 @@
       <p style="font-size: 14px; color: var(--muted);">
         No credit card required. Full version available with license.
       </p>
-      
+
       <form id="emailForm">
         <div class="email-input-group">
-          <input 
+          <input
             type="text"
             class="email-input"
             id="trialName"
             placeholder="Your name (optional)"
             autocomplete="name">
-          
-          <input 
+
+          <input
             type="email"
             class="email-input"
             id="trialEmail"
             placeholder="your@email.com"
             autocomplete="email"
             required>
-          
+
           <div style="display: flex; align-items: flex-start; gap: 10px; margin-top: 15px;">
-            <input 
+            <input
               type="checkbox"
               id="agreeTerms"
               style="width: auto; margin-top: 3px;"
               required>
             <label for="agreeTerms" style="font-size: 12px; text-align: left; color: var(--muted); line-height: 1.4;">
-              I agree to receive updates and accept the 
+              I agree to receive updates and accept the
               <a href="#" style="color: var(--accent); text-decoration: underline;" id="termsLink">Terms of Service</a>
             </label>
           </div>
         </div>
-        
+
         <button class="btn-primary" type="submit" id="startTrialWithEmail">
           Start Free Trial (2 Chapters)
         </button>
-        
+
         <div id="emailMessage" class="message"></div>
       </form>
-      
+
       <p style="margin-top: 20px; font-size: 12px; color: var(--muted);">
-        Already have a license? 
+        Already have a license?
         <a href="#" id="switchToLicense" style="color: var(--accent); text-decoration: underline;">Activate here</a>
       </p>
     </div>
@@ -869,40 +788,40 @@
     <div class="modal-content">
       <h2>Activate Full Version</h2>
       <p>Enter your license key to unlock all 11 chapters.</p>
-      
-      <input type="text" 
-             class="license-input" 
-             id="licenseInput" 
+
+      <input type="text"
+             class="license-input"
+             id="licenseInput"
              placeholder="INF-XXXXXXXX"
-             maxlength="12"
+             maxlength="32"
              autocomplete="off">
-      
+
       <button class="btn-primary" id="activateLicense">
         Activate License
       </button>
-      
+
       <div style="margin: 20px 0; text-align: center; color: var(--muted); font-size: 14px;">
         — OR —
       </div>
-      
+
       <div class="license-buttons">
-        <a href="#" 
-           class="btn-secondary" 
+        <a href="#"
+           class="btn-secondary"
            id="purchaseStripe">
           Pay with Card / Apple Pay (Stripe)
         </a>
-        <a href="#" 
-           class="btn-secondary" 
+        <a href="#"
+           class="btn-secondary"
            id="purchasePaypal">
           Pay with PayPal
         </a>
       </div>
-      
+
       <p style="margin-top: 20px; font-size: 12px; color: var(--muted);">
-        By activating, you agree to the 
+        By activating, you agree to the
         <a href="#" style="color: var(--accent); text-decoration: underline;" id="licenseAgreementLink">License Agreement</a>
       </p>
-      
+
       <div id="licenseMessage" class="message"></div>
     </div>
   </div>
@@ -919,34 +838,6 @@
       <div class="brand">
         <div class="brand-title">The Infinity Loop</div>
         <div class="brand-sub" id="licenseTypeDisplay">Trial Version • 2/11 Chapters</div>
-
-        <!-- FIXED PROGRESS BLOCK -->
-        <div class="progress-block">
-          <div class="progress-header-row">
-            <span>Reading Progress</span>
-            <button id="progress-reset" type="button">Reset All</button>
-          </div>
-
-          <div class="progress-item">
-            <div class="progress-item-label">
-              <span>Overall (chapters)</span>
-              <span id="overall-progress-label">0 / 2</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" id="overall-progress-fill" style="width: 0%"></div>
-            </div>
-          </div>
-
-          <div class="progress-item">
-            <div class="progress-item-label">
-              <span>Current chapter</span>
-              <span id="chapter-progress-label">0%</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" id="chapter-progress-fill" style="width: 0%"></div>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Navigation sections -->
@@ -984,7 +875,7 @@
         </div>
       </div>
       <div class="reader-iframe-wrap">
-        <iframe id="reader-frame" class="reader-iframe" title="Book content" sandbox="allow-same-origin allow-scripts"></iframe>
+        <iframe id="reader-frame" class="reader-iframe" title="Book content"></iframe>
       </div>
     </main>
   </div>
@@ -1007,129 +898,7 @@
     // ========== STATE MANAGEMENT ==========
     let currentFile = '';
     let currentChapter = 0;
-    let scrollInterval = null;
     let isMobile = window.innerWidth <= 768;
-    let isTrackingScroll = false;
-    let lastScrollPosition = 0;
-
-    // ========== PROGRESS TRACKING SYSTEM ==========
-    class ProgressTracker {
-      constructor() {
-        this.data = this.loadProgressData();
-      }
-
-      loadProgressData() {
-        try {
-          const saved = localStorage.getItem('infinityLoopProgress');
-          if (saved) {
-            const data = JSON.parse(saved);
-            // Validate data structure
-            if (data.completedChapters && data.chapterProgress) {
-              return data;
-            }
-          }
-        } catch (e) {
-          console.error('Error loading progress:', e);
-        }
-        
-        // Default structure
-        return {
-          completedChapters: [],
-          chapterProgress: {},
-          lastReadPositions: {},
-          totalTimeSpent: 0,
-          sessionStartTime: null,
-          lastUpdated: new Date().toISOString()
-        };
-      }
-
-      saveProgressData() {
-        try {
-          this.data.lastUpdated = new Date().toISOString();
-          localStorage.setItem('infinityLoopProgress', JSON.stringify(this.data));
-          return true;
-        } catch (e) {
-          console.error('Error saving progress:', e);
-          return false;
-        }
-      }
-
-      updateChapterProgress(chapterNum, percentage) {
-        if (chapterNum < 1 || chapterNum > 11) return;
-        
-        const prevProgress = this.data.chapterProgress[chapterNum] || 0;
-        const newProgress = Math.max(prevProgress, Math.min(100, Math.round(percentage)));
-        
-        this.data.chapterProgress[chapterNum] = newProgress;
-        
-        // Mark as completed if >= 85% (more forgiving)
-        if (newProgress >= 85 && !this.data.completedChapters.includes(chapterNum)) {
-          this.data.completedChapters.push(chapterNum);
-          this.data.completedChapters.sort((a, b) => a - b);
-        }
-        
-        this.saveProgressData();
-        return newProgress;
-      }
-
-      getChapterProgress(chapterNum) {
-        return this.data.chapterProgress[chapterNum] || 0;
-      }
-
-      getOverallProgress(maxChapters) {
-        const completed = this.data.completedChapters.filter(ch => ch <= maxChapters).length;
-        const percentage = maxChapters > 0 ? Math.round((completed / maxChapters) * 100) : 0;
-        return {
-          completed,
-          total: maxChapters,
-          percentage: percentage
-        };
-      }
-
-      resetProgress() {
-        this.data = {
-          completedChapters: [],
-          chapterProgress: {},
-          lastReadPositions: {},
-          totalTimeSpent: this.data.totalTimeSpent || 0,
-          sessionStartTime: null,
-          lastUpdated: new Date().toISOString()
-        };
-        this.saveProgressData();
-        return true;
-      }
-
-      saveLastPosition(chapterNum, position) {
-        this.data.lastReadPositions[chapterNum] = {
-          position,
-          timestamp: new Date().toISOString()
-        };
-        this.saveProgressData();
-      }
-
-      getLastPosition(chapterNum) {
-        return this.data.lastReadPositions[chapterNum];
-      }
-
-      startSession() {
-        if (!this.data.sessionStartTime) {
-          this.data.sessionStartTime = new Date().toISOString();
-          this.saveProgressData();
-        }
-      }
-
-      endSession() {
-        if (this.data.sessionStartTime) {
-          const startTime = new Date(this.data.sessionStartTime);
-          const endTime = new Date();
-          const sessionDuration = endTime - startTime;
-          
-          this.data.totalTimeSpent = (this.data.totalTimeSpent || 0) + sessionDuration;
-          this.data.sessionStartTime = null;
-          this.saveProgressData();
-        }
-      }
-    }
 
     // ========== LICENSE MANAGER ==========
     class LicenseManager {
@@ -1143,7 +912,6 @@
       getDeviceId() {
         let deviceId = localStorage.getItem('infinityLoopDeviceId');
         if (!deviceId) {
-          // Generate a more stable device ID
           const timestamp = Date.now().toString(36);
           const random = Math.random().toString(36).substring(2, 10);
           deviceId = `DEV-${timestamp}-${random}`.toUpperCase();
@@ -1165,13 +933,13 @@
         try {
           const data = localStorage.getItem('infinityLoopLicense');
           if (!data) return null;
-          
+
           const license = JSON.parse(data);
           if (license.expiry && new Date(license.expiry) < new Date()) {
             localStorage.removeItem('infinityLoopLicense');
             return null;
           }
-          
+
           return license;
         } catch {
           return null;
@@ -1182,13 +950,13 @@
         try {
           const data = localStorage.getItem('infinityLoopTrial');
           if (!data) return null;
-          
+
           const trial = JSON.parse(data);
           if (trial.expiry && new Date(trial.expiry) < new Date()) {
             localStorage.removeItem('infinityLoopTrial');
             return null;
           }
-          
+
           return trial;
         } catch {
           return null;
@@ -1223,7 +991,7 @@
 
       activateLicense(licenseKey, email) {
         licenseKey = licenseKey.trim().toUpperCase();
-        
+
         if (!licenseKey.startsWith(CONFIG.VALID_LICENSE_PREFIX) && licenseKey !== CONFIG.TEST_LICENSE) {
           throw new Error('Invalid license key format. License must start with "INF-"');
         }
@@ -1255,7 +1023,7 @@
       }
 
       canAccessChapter(chapterNumber) {
-        if (chapterNumber === 0) return true; // Front/back matter always accessible
+        if (chapterNumber === 0) return true;
         if (this.hasActiveLicense()) return true;
         if (this.hasActiveTrial()) return chapterNumber <= CONFIG.TRIAL_CHAPTERS;
         return false;
@@ -1307,22 +1075,14 @@
     const iframe = document.getElementById('reader-frame');
     const currentLabel = document.getElementById('current-label');
     const loadingOverlay = document.getElementById('loadingOverlay');
-    
-    // Progress elements
-    const overallFill = document.getElementById('overall-progress-fill');
-    const overallLabel = document.getElementById('overall-progress-label');
-    const chapterFill = document.getElementById('chapter-progress-fill');
-    const chapterLabel = document.getElementById('chapter-progress-label');
 
-    // Badges
     const trialBadge = document.getElementById('trialBadge');
     const fullBadge = document.getElementById('fullBadge');
 
-    // ========== INITIALIZE SYSTEMS ==========
-    const progressTracker = new ProgressTracker();
+    // Initialize license manager
     const licenseManager = new LicenseManager();
 
-    // ========== BOOK STRUCTURE ==========
+    // ========== BOOK STRUCTURE (matches your folder names) ==========
     const BOOK_STRUCTURE = {
       frontMatter: [
         { file: 'TITLE_PAGE.htm', label: 'Title Page', alwaysAccessible: true },
@@ -1334,21 +1094,21 @@
         { file: 'AUTHOR\'S_PREFACE_UNDERSTANDING_THE_INFINITY_LOOP_.htm', label: 'Author\'s Preface: Understanding the Infinity Loop', alwaysAccessible: true },
         { file: 'NOTE_ON_SOURCES_AND_METHODOLOGY_.htm', label: 'Note on Sources and Methodology', alwaysAccessible: true }
       ],
-      
+
       chapters: [
         { file: 'CHAPTER_1_clean_stitched_formatted.htm', label: 'CHAPTER 1: THE GENESIS: RECONSTRUCTION AND THE BLACK CODES', badge: '(1865 - 1877) LoopSnapshot🟡6/10' },
         { file: 'CHAPTER_2_clean_stitched_formatted.htm', label: 'CHAPTER 2: THE REFINEMENT: JIM CROW AND THE RISE OF LEGALIZED APARTHEID', badge: '(1877 - 1919) LoopSnapshot🟢8/10' },
         { file: 'CHAPTER_3_clean_stitched_formatted.htm', label: 'CHAPTER 3: MOBILIZATION AND BACKLASH: RED SUMMER, GARVEY, AND THE PROTO-COINTELPRO', badge: '(1919 - 1945) LoopSnapshot🔴8/10' },
-        { file: 'CHAPTER_4_clean_stitched_formatted.htm', label: 'CHAPTER 4: COLD WAR CONTRADICTIONS: VETERANS, MCGEE, AND "GENOCIDE"', badge: '(1946 - 1955) LoopSnapshot🔴8/10' },
+        { file: 'CHAPTER_4_clean_stitched_formatted.htm', label: 'CHAPTER 4: COLD WAR CONTRADICTIONS: VETERANS, MCGEE, AND \"GENOCIDE\"', badge: '(1946 - 1955) LoopSnapshot🔴8/10' },
         { file: 'CHAPTER_5_clean_stitched_formatted.htm', label: 'CHAPTER 5: COINTELPRO PEAK: NEUTRALIZATION, KERNER, AND THE PANTHER\'S PRICE', badge: '(1956 - 1971) LoopSnapshot🔴9/10' },
         { file: 'CHAPTER_6_clean_stitched_formatted.htm', label: 'CHAPTER 6: THE MODERN CARCERAL STATE: THE WAR ON DRUGS ESCALATES', badge: '(1972 - 1989) LoopSnapshot🔴9/10' },
-        { file: 'CHAPTER_7_clean_stitched_formatted.htm', label: 'CHAPTER 7: THE "COLORBLIND" ERA: PREDICTIVE POLICING AND MASS INCARCERATION', badge: '(1990 - 2009) LoopSnapshot🔴9/10' },
+        { file: 'CHAPTER_7_clean_stitched_formatted.htm', label: 'CHAPTER 7: THE \"COLORBLIND\" ERA: PREDICTIVE POLICING AND MASS INCARCERATION', badge: '(1990 - 2009) LoopSnapshot🔴9/10' },
         { file: 'CHAPTER_8_clean_stitched_formatted.htm', label: 'CHAPTER 8: DIGITAL AUGMENTATION: FERGUSON, BALTIMORE, AND ALGORITHMIC BIAS', badge: '(2010 - 2016) LoopSnapshot🔴9/10' },
         { file: 'CHAPTER_9_clean_stitched_formatted.htm', label: 'CHAPTER 9: THE AUTOMATED LOOP: BIE LABELS, AI, AND THE FUTURE OF CONTROL', badge: '(2017 - 2024) LoopSnapshot🔴🟡🟢10/10' },
         { file: 'CHAPTER_10_clean_stitched_formatted.htm', label: 'CHAPTER 10: THE RESILIENCE BLUEPRINT: RESISTANCE AND THRIVING WITHIN THE LOOP', badge: '(1619 - Present) LoopSnapshot🟢8/10' },
         { file: 'CHAPTER_11_clean_stitched_formatted.htm', label: 'CHAPTER 11: THE ABOLITION HORIZON: FROM EVIDENCE TO ABOLITION', badge: '2025 AND BEYOND LoopSnapshot🔴10/10' }
       ],
-      
+
       backMatter: [
         { file: 'APPENDIX_A_LOOP MECHANISM GLOSSARY_.htm', label: 'Appendix A: Loop Mechanism Glossary', alwaysAccessible: true },
         { file: 'APPENDIX_B_HISTORICAL TIMELINE (1619-2025)_.htm', label: 'Appendix B: Historical Timeline (1619–2025)', alwaysAccessible: true },
@@ -1361,7 +1121,7 @@
       ]
     };
 
-    // ========== HELPER FUNCTIONS ==========
+    // ========== HELPERS ==========
     function validateEmail(email) {
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return re.test(email);
@@ -1370,7 +1130,6 @@
     function formatLicenseKey(key) {
       if (!key) return '';
       key = key.toUpperCase().trim();
-      // Remove any non-alphanumeric characters except dash
       key = key.replace(/[^A-Z0-9-]/g, '');
       return key;
     }
@@ -1383,9 +1142,6 @@
       loadingOverlay.style.display = 'none';
     }
 
-    /**
-     * Send event data to Make.com webhook
-     */
     function sendToMake(eventType, data = {}) {
       if (!CONFIG.MAKE_WEBHOOK_URL) return;
 
@@ -1401,142 +1157,73 @@
 
       fetch(CONFIG.MAKE_WEBHOOK_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       }).catch(err => {
         console.error('Make webhook error:', err);
       });
     }
 
-    // ========== PROGRESS DISPLAY FUNCTIONS ==========
-    function updateProgressDisplay() {
-      const maxChapters = licenseManager.hasActiveLicense() ? 11 : CONFIG.TRIAL_CHAPTERS;
-      const overall = progressTracker.getOverallProgress(maxChapters);
-      
-      // Update overall progress
-      overallFill.style.width = overall.percentage + '%';
-      overallLabel.textContent = `${overall.completed} / ${overall.total}`;
-      
-      // Update chapter progress if a chapter is open
-      if (currentChapter > 0) {
-        const chapterProgress = progressTracker.getChapterProgress(currentChapter);
-        chapterFill.style.width = chapterProgress + '%';
-        chapterLabel.textContent = chapterProgress + '%';
-        
-        // Add animation on change
-        chapterFill.classList.add('animating');
-        setTimeout(() => {
-          chapterFill.classList.remove('animating');
-        }, 1000);
+    function showMessage(elementId, text, type = 'info', show = true) {
+      const element = document.getElementById(elementId);
+      if (!element) return;
+
+      element.textContent = text;
+      element.className = 'message';
+
+      if (show && text) {
+        element.classList.add(type);
+        element.classList.add('show');
       } else {
-        chapterFill.style.width = '0%';
-        chapterLabel.textContent = '0%';
+        element.classList.remove('show');
       }
     }
 
-    // ========== SCROLL TRACKING ==========
-    function calculateScrollPercentage() {
-      try {
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        if (!iframeDoc || !iframeDoc.documentElement) return 0;
-        
-        const scrollTop = iframeDoc.documentElement.scrollTop || iframeDoc.body.scrollTop || 0;
-        const scrollHeight = iframeDoc.documentElement.scrollHeight || iframeDoc.body.scrollHeight || 1;
-        const clientHeight = iframeDoc.documentElement.clientHeight || iframeDoc.body.clientHeight || 1;
-        
-        const maxScroll = Math.max(scrollHeight - clientHeight, 1);
-        const percentage = Math.round((scrollTop / maxScroll) * 100);
-        
-        return isNaN(percentage) ? 0 : percentage;
-      } catch (e) {
-        return 0;
-      }
-    }
-
-    function startScrollTracking() {
-      stopScrollTracking();
-      
-      scrollInterval = setInterval(() => {
-        if (currentChapter > 0) {
-          const percentage = calculateScrollPercentage();
-          if (percentage > 0) {
-            const newProgress = progressTracker.updateChapterProgress(currentChapter, percentage);
-            if (newProgress !== lastScrollPosition) {
-              lastScrollPosition = newProgress;
-              updateProgressDisplay();
-            }
-          }
-        }
-      }, 1000); // Check every second
-      
-      isTrackingScroll = true;
-    }
-
-    function stopScrollTracking() {
-      if (scrollInterval) {
-        clearInterval(scrollInterval);
-        scrollInterval = null;
-      }
-      isTrackingScroll = false;
-    }
-
-    // ========== NAVIGATION FUNCTIONS ==========
+    // ========== NAVIGATION ==========
     function loadNavigation() {
       const frontMatterList = document.getElementById('frontMatterList');
       const chapterList = document.getElementById('chapterList');
       const backMatterList = document.getElementById('backMatterList');
-      
-      // Clear existing lists
+
       frontMatterList.innerHTML = '';
       chapterList.innerHTML = '';
       backMatterList.innerHTML = '';
-      
-      // Load Front Matter
+
+      // Front matter
       BOOK_STRUCTURE.frontMatter.forEach(item => {
         const li = document.createElement('li');
         li.className = 'nav-item';
+
         const button = document.createElement('button');
         button.className = 'nav-link';
         button.textContent = item.label;
         button.addEventListener('click', () => openSection(item.file, item.label, 0));
+
         li.appendChild(button);
         frontMatterList.appendChild(li);
       });
-      
-      // Load Chapters
+
+      // Chapters
       BOOK_STRUCTURE.chapters.forEach((chapter, index) => {
         const chapterNum = index + 1;
         const canAccess = licenseManager.canAccessChapter(chapterNum);
-        const progress = progressTracker.getChapterProgress(chapterNum);
-        const isCompleted = progress >= 85;
-        
+
         const li = document.createElement('li');
         li.className = 'nav-item';
+
         const button = document.createElement('button');
         button.className = 'nav-link';
-        
-        // Create label with badge
+
         const labelSpan = document.createElement('span');
         labelSpan.textContent = chapter.label.split('LoopSnapshot')[0].trim();
         button.appendChild(labelSpan);
-        
+
         if (!canAccess) {
           button.disabled = true;
           button.style.opacity = '0.5';
           button.title = 'Upgrade to full version to access this chapter';
         }
-        
-        // Add completion indicator
-        if (isCompleted && canAccess) {
-          const checkmark = document.createElement('span');
-          checkmark.className = 'completion-check';
-          checkmark.textContent = '✓';
-          checkmark.style.marginLeft = 'auto';
-          button.appendChild(checkmark);
-        }
-        
+
         button.addEventListener('click', () => {
           if (!canAccess) {
             showLicenseModal();
@@ -1544,23 +1231,25 @@
           }
           openSection(chapter.file, chapter.label, chapterNum);
         });
-        
+
         li.appendChild(button);
         chapterList.appendChild(li);
       });
-      
-      // Load Back Matter
+
+      // Back matter
       BOOK_STRUCTURE.backMatter.forEach(item => {
         const li = document.createElement('li');
         li.className = 'nav-item';
+
         const button = document.createElement('button');
         button.className = 'nav-link';
         button.textContent = item.label;
         button.addEventListener('click', () => openSection(item.file, item.label, 0));
+
         li.appendChild(button);
         backMatterList.appendChild(li);
       });
-      
+
       updateAccessUI();
     }
 
@@ -1570,7 +1259,7 @@
       const chapterLimit = document.getElementById('chapterLimit');
       const licenseStatus = document.getElementById('licenseStatus');
       const activateBtn = document.getElementById('activateBtn');
-      
+
       if (accessType === 'full') {
         licenseTypeDisplay.textContent = 'Full Version • 11/11 Chapters';
         if (trialBadge) trialBadge.style.display = 'none';
@@ -1607,32 +1296,26 @@
 
     function openSection(file, label, chapterNum = 0) {
       if (!file) return;
-      
-      stopScrollTracking();
+
       currentFile = file;
       currentChapter = chapterNum;
-      
+
       showLoading();
-      
-      // Load content
+
       iframe.src = file;
       currentLabel.textContent = label.split('LoopSnapshot')[0].trim();
-      
-      // Update active nav
+
       document.querySelectorAll('.nav-link').forEach(btn => {
         btn.classList.remove('active');
       });
-      
-      // Find and activate the correct nav button
+
       const navLinks = document.querySelectorAll('.nav-link');
       for (const btn of navLinks) {
         const btnText = btn.textContent.replace('✓', '').trim();
         const labelText = label.split('LoopSnapshot')[0].trim();
-        
+
         if (btnText === labelText || btnText.includes(labelText.substring(0, 30))) {
           btn.classList.add('active');
-          
-          // Expand the section if collapsed
           const section = btn.closest('.nav-section');
           if (section && section.classList.contains('collapsed')) {
             section.classList.remove('collapsed');
@@ -1640,42 +1323,18 @@
           break;
         }
       }
-      
-      // Update progress display
-      updateProgressDisplay();
-      
-      // Handle iframe load
+
       iframe.onload = function() {
         hideLoading();
-        
-        if (chapterNum > 0) {
-          // Restore scroll position if available
-          const lastPos = progressTracker.getLastPosition(chapterNum);
-          if (lastPos && lastPos.position > 0) {
-            try {
-              const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-              setTimeout(() => {
-                iframeDoc.documentElement.scrollTop = lastPos.position;
-              }, 100);
-            } catch (e) {
-              console.log('Could not restore scroll position:', e.message);
-            }
-          }
-          
-          // Start tracking scroll
-          setTimeout(() => {
-            startScrollTracking();
-          }, 500);
-        }
       };
-      
+
       iframe.onerror = function() {
         hideLoading();
         alert(`Error loading "${label}". Please check if the file "${file}" exists.`);
       };
     }
 
-    // ========== UI FLOW FUNCTIONS ==========
+    // ========== UI FLOW ==========
     function showEmailModal() {
       splashEntrance.style.display = 'none';
       emailModal.style.display = 'flex';
@@ -1703,15 +1362,10 @@
       emailModal.style.display = 'none';
       licenseModal.style.display = 'none';
       appShell.style.display = 'flex';
-      
-      // Start progress tracking session
-      progressTracker.startSession();
-      
-      // Load navigation and open first accessible content
+
       loadNavigation();
-      updateProgressDisplay();
-      
-      // Start with Title Page or first accessible chapter
+
+      // Start at Title Page
       openSection('TITLE_PAGE.htm', 'Title Page', 0);
     }
 
@@ -1720,30 +1374,28 @@
         showMessage('emailMessage', 'Please enter a valid email address.', 'error');
         return;
       }
-      
+
       const agreeTerms = document.getElementById('agreeTerms');
       if (!agreeTerms || !agreeTerms.checked) {
         showMessage('emailMessage', 'You must agree to the Terms of Service to continue.', 'error');
         return;
       }
-      
+
       const submitBtn = document.getElementById('startTrialWithEmail');
       submitBtn.disabled = true;
       submitBtn.textContent = 'Setting up trial...';
-      
-      // Save user and start trial
+
       licenseManager.saveUser(email, name);
       licenseManager.startTrial(email, name);
-      
-      // Send trial signup to Make
+
       sendToMake('trial_signup', {
         email: email,
         name: name,
         accessType: 'trial'
       });
-      
+
       showMessage('emailMessage', 'Success! Starting your trial...', 'success');
-      
+
       setTimeout(() => {
         showApp();
         showMessage('emailMessage', '', 'success', false);
@@ -1754,31 +1406,28 @@
 
     function startAppWithLicense(licenseKey) {
       licenseKey = formatLicenseKey(licenseKey);
-      
+
       if (!licenseKey.startsWith(CONFIG.VALID_LICENSE_PREFIX) && licenseKey !== CONFIG.TEST_LICENSE) {
         showMessage('licenseMessage', 'Invalid license key format. License must start with "INF-"', 'error');
         return;
       }
-      
-      const existingEmail = licenseManager.getUserEmail();
-      let email = existingEmail;
-      
+
+      let email = licenseManager.getUserEmail();
       if (!email) {
         email = prompt('Enter your email for license activation:');
         if (!email || !validateEmail(email)) {
           showMessage('licenseMessage', 'Please enter a valid email address.', 'error');
           return;
         }
+        licenseManager.saveUser(email);
       }
-      
+
       const name = licenseManager.getUserName();
       const licenseKeyLast4 = licenseKey.slice(-4);
-      
+
       try {
-        // Activate license locally
         licenseManager.activateLicense(licenseKey, email);
-        
-        // Send license activation event to Make
+
         sendToMake('license_activation', {
           email: email,
           name: name,
@@ -1786,9 +1435,9 @@
           licenseKey: licenseKey,
           accessType: 'license'
         });
-        
+
         showMessage('licenseMessage', 'License activated successfully!', 'success');
-        
+
         setTimeout(() => {
           showApp();
           showMessage('licenseMessage', '', 'success', false);
@@ -1801,7 +1450,7 @@
     function checkExistingAccess() {
       const accessType = licenseManager.getAccessType();
       const email = licenseManager.getUserEmail();
-      
+
       if (accessType === 'none' || !email) {
         splashEntrance.style.opacity = '0';
         splashEntrance.style.transition = 'opacity 0.5s ease';
@@ -1819,24 +1468,8 @@
       }
     }
 
-    function showMessage(elementId, text, type = 'info', show = true) {
-      const element = document.getElementById(elementId);
-      if (!element) return;
-      
-      element.textContent = text;
-      element.className = 'message';
-      
-      if (show) {
-        element.classList.add(type);
-        element.classList.add('show');
-      } else {
-        element.classList.remove('show');
-      }
-    }
-
-    // ========== EVENT LISTENERS SETUP ==========
+    // ========== EVENT LISTENERS ==========
     function setupEventListeners() {
-      // Entrance page
       document.getElementById('enterBookBtn').addEventListener('click', () => {
         splashEntrance.style.opacity = '0';
         splashEntrance.style.transition = 'opacity 0.5s ease';
@@ -1850,13 +1483,10 @@
         document.getElementById('enterBookBtn').click();
       });
 
-      // Email form
       document.getElementById('emailForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        
         const email = document.getElementById('trialEmail').value.trim();
         const name = (document.getElementById('trialName')?.value || '').trim();
-        
         startAppWithTrial(email, name);
       });
 
@@ -1869,7 +1499,6 @@
         }
       });
 
-      // License activation
       document.getElementById('activateLicense').addEventListener('click', () => {
         const licenseKey = document.getElementById('licenseInput').value.trim();
         startAppWithLicense(licenseKey);
@@ -1882,7 +1511,6 @@
         }
       });
 
-      // Purchase buttons
       document.getElementById('purchaseStripe').addEventListener('click', (e) => {
         e.preventDefault();
         const confirmed = confirm('You will be redirected to our secure Stripe checkout page. Continue?');
@@ -1899,7 +1527,6 @@
         }
       });
 
-      // Modal switches
       document.getElementById('switchToLicense').addEventListener('click', (e) => {
         e.preventDefault();
         showLicenseModal();
@@ -1907,16 +1534,29 @@
 
       document.getElementById('activateBtn').addEventListener('click', showLicenseModal);
 
-      // Reset progress
-      document.getElementById('progress-reset').addEventListener('click', () => {
-        if (confirm('Are you sure you want to reset all reading progress? This cannot be undone.')) {
-          progressTracker.resetProgress();
-          updateProgressDisplay();
-          alert('All progress has been reset.');
-        }
+      document.getElementById('termsLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        alert(
+          'Terms of Service (summary):\n\n' +
+          '• Trial lasts 7 days\n' +
+          '• Access limited to 2 chapters in trial\n' +
+          '• Email required to deliver updates and license info\n' +
+          '• Full version requires purchase and license key\n' +
+          '• No unauthorized copying, sharing, or redistribution of content'
+        );
       });
 
-      // Navigation toggles
+      document.getElementById('licenseAgreementLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        alert(
+          'License Agreement (summary):\n\n' +
+          '• License grants one reader access on a single device\n' +
+          '• Non-transferable, non-refundable (except where required by law)\n' +
+          '• You may not redistribute or resell the content\n' +
+          '• Updates to this digital reader are included for 1 year\n'
+        );
+      });
+
       document.querySelectorAll('.nav-section-title').forEach(title => {
         title.addEventListener('click', (e) => {
           const section = e.target.closest('.nav-section');
@@ -1924,65 +1564,23 @@
         });
       });
 
-      // Collapse all sections by default
       document.querySelectorAll('.nav-section').forEach(section => {
         section.classList.add('collapsed');
       });
 
-      // Save progress on unload
-      window.addEventListener('beforeunload', () => {
-        stopScrollTracking();
-        progressTracker.endSession();
-        progressTracker.saveProgressData();
-      });
-
-      // Auto-save progress every 30 seconds
-      setInterval(() => {
-        progressTracker.saveProgressData();
-      }, 30000);
-
-      // Handle window resize
       window.addEventListener('resize', () => {
         isMobile = window.innerWidth <= 768;
       });
-
-      // Handle iframe scroll events for real-time tracking
-      iframe.addEventListener('load', () => {
-        try {
-          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-          iframeDoc.addEventListener('scroll', () => {
-            if (currentChapter > 0) {
-              const percentage = calculateScrollPercentage();
-              if (percentage > 0) {
-                progressTracker.updateChapterProgress(currentChapter, percentage);
-                updateProgressDisplay();
-              }
-            }
-          });
-        } catch (e) {
-          // Cross-origin error
-        }
-      });
     }
 
-    // ========== INITIALIZATION ==========
+    // ========== INIT ==========
     function init() {
       setupEventListeners();
       splashEntrance.style.display = 'flex';
-      
-      // Auto-focus on book cover for better UX
-      setTimeout(() => {
-        document.getElementById('bookCover')?.focus();
-      }, 100);
-      
-      // Development mode logging
+
       if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         console.log('Development mode active');
         console.log('Test license:', CONFIG.TEST_LICENSE);
-        console.log('Device ID:', licenseManager.deviceId);
-        console.log('Current access:', licenseManager.getAccessType());
-        
-        // Set test license as placeholder
         const licenseInput = document.getElementById('licenseInput');
         if (licenseInput) {
           licenseInput.placeholder = CONFIG.TEST_LICENSE;
@@ -1990,28 +1588,11 @@
       }
     }
 
-    // Start the application
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {
       init();
     }
-
-    // Debug utilities (remove in production)
-    window.debug = {
-      progress: progressTracker,
-      license: licenseManager,
-      reload: () => location.reload(),
-      clearAll: () => {
-        localStorage.clear();
-        location.reload();
-      },
-      simulateProgress: (chapter, percentage) => {
-        progressTracker.updateChapterProgress(chapter, percentage);
-        updateProgressDisplay();
-        console.log(`Set chapter ${chapter} to ${percentage}%`);
-      }
-    };
   </script>
 </body>
 </html>
