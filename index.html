@@ -14,7 +14,7 @@
   <meta name="copyright" content="The Infinity Loop - All rights reserved">
 
   <!-- UPDATED CSP: allow Netlify helper scripts, Stripe, PayPal, Make webhook -->
-  <meta http-equiv="Content-Security-Policy" content="
+  <meta charset="UTF-8">
     default-src 'self';
     script-src 'self' 'unsafe-inline' https://infinityloopsite.netlify.app https://js.stripe.com https://www.paypal.com;
     style-src 'self' 'unsafe-inline';
@@ -745,7 +745,7 @@
             type="text"
             class="email-input"
             id="trialName"
-            placeholder="Your name (optional)"
+            placeholder="Your name"
             autocomplete="name">
 
           <input
@@ -887,7 +887,7 @@
       APP_VERSION: '2.0.0',
       TRIAL_CHAPTERS: 2,
       TRIAL_DAYS: 7,
-      TEST_LICENSE: "INF-TEST-2024-ABCD-5678",
+      TEST_LICENSE: "INF-TEST-2026-ABCD-5678",
       VALID_LICENSE_PREFIX: "INF-",
       PURCHASE_URL: "https://buy.stripe.com/dRm7sN2on3yF26FbYEdIA01",
       MAKE_WEBHOOK_URL: "https://hook.us2.make.com/4bwg1lvvkqkqwk75tv8b2jmc8upri5fv",
@@ -1575,8 +1575,16 @@
 
     // ========== INIT ==========
     function init() {
-      setupEventListeners();
-      splashEntrance.style.display = 'flex';
+  setupEventListeners();
+  splashEntrance.style.display = 'flex';
+
+  // Refresh trial/ license display once per hour while the app is open
+  setInterval(() => {
+    updateAccessUI();
+  }, 60 * 60 * 1000); // 1 hour
+
+  // Dev logging...
+}
 
       if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         console.log('Development mode active');
@@ -1586,7 +1594,6 @@
           licenseInput.placeholder = CONFIG.TEST_LICENSE;
         }
       }
-    }
 
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
