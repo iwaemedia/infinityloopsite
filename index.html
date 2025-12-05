@@ -1,7 +1,8 @@
+<meta charset="UTF-8">
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Remote scripts you already use -->
+  <!-- (Optional) External scripts you were loading before -->
   <script type="text/javascript" src="https://infinityloopsite.netlify.app/ewNXqOVY_tUucyr4BvNZ7zkbZZwLdeTUSlUQ6jEkxGUIzPTctAwV43tFEUPlP2gh_nrBMm8J22sXokZ0yHYhbgspmp15u6Ae0hvKxpLXQI9sU3dRCGF3YzJCZqoTKw2Vsd_b-7z4YoDXDWIlVHFe_dHSDJ2HfxbPQHAX1R8oXzs="></script>
   <script type="text/javascript" src="https://infinityloopsite.netlify.app/ozgprIfiP3XUSNQxcUh26cLe10kEP2l377ol9a__BOazQQdWicLLdLDyc2eS7uccXwO4CkGrB9Wo8YBK6R5DWsJgV3TWkILfaVy7wdSDLLjx1qsyuPQ3H79-VSQT5SU8FwPUSMqPbip36sed98Q7bjAU82U4WPjbWR-OQAxX7qM="></script>
 
@@ -12,16 +13,7 @@
   <meta name="author" content="The Infinity Loop">
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="copyright" content="The Infinity Loop - All rights reserved">
-
-  <!-- UPDATED CSP: allow Netlify helper scripts, Stripe, PayPal, Make webhook -->
-  <meta charset="UTF-8">
-    default-src 'self';
-    script-src 'self' 'unsafe-inline' https://infinityloopsite.netlify.app https://js.stripe.com https://www.paypal.com;
-    style-src 'self' 'unsafe-inline';
-    img-src 'self' data:;
-    connect-src 'self' https://hook.us2.make.com;
-    frame-src 'self' https://js.stripe.com https://www.paypal.com;
-  ">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
 
   <title>The Infinity Loop Reader</title>
 
@@ -44,7 +36,6 @@
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* ========== BASE STYLES ========== */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -65,14 +56,13 @@
       overscroll-behavior-y: none;
     }
 
-    /* ========== PRINT PROTECTION ========== */
+    /* PRINT PROTECTION (visual only, actual blocking is handled in browser) */
     @media print {
       body * {
         display: none !important;
         visibility: hidden !important;
         opacity: 0 !important;
       }
-
       body::before {
         content: "Printing disabled - The Infinity Loop content is copyright protected. Purchase the full license for access to printable companion materials.";
         display: block !important;
@@ -93,7 +83,6 @@
         max-width: 600px;
         z-index: 999999;
       }
-
       body {
         height: 100vh !important;
         width: 100vw !important;
@@ -101,69 +90,35 @@
       }
     }
 
-    /* ========== ANIMATIONS ========== */
+    /* ANIMATIONS */
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-
     @keyframes cardAppear {
-      from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      from { opacity: 0; transform: translateY(30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
-
     @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
     @keyframes modalFadeIn {
-      from {
-        opacity: 0;
-        backdrop-filter: blur(0px);
-      }
-      to {
-        opacity: 1;
-        backdrop-filter: blur(10px);
-      }
+      from { opacity: 0; backdrop-filter: blur(0px); }
+      to { opacity: 1; backdrop-filter: blur(10px); }
     }
-
     @keyframes modalSlideIn {
-      from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      from { opacity: 0; transform: translateY(30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
-
     @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+      to { transform: rotate(360deg); }
     }
 
-    /* ========== SPLASH SCREEN ========== */
+    /* SPLASH */
     .splash-entrance {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       background: radial-gradient(ellipse at center, #0a0e1a 0%, #000000 100%);
       display: flex;
       align-items: center;
@@ -172,7 +127,6 @@
       overflow: hidden;
       animation: fadeIn 0.5s ease-out;
     }
-
     .splash-card {
       max-width: 520px;
       width: 100%;
@@ -188,11 +142,8 @@
       gap: 16px;
       animation: cardAppear 0.8s ease-out 0.3s both;
     }
-
     .splash-cover {
       width: 100%;
-      height: auto;
-      display: block;
       border-radius: 20px;
       object-fit: cover;
       box-shadow:
@@ -202,7 +153,13 @@
       transition: var(--transition);
       cursor: pointer;
     }
-
+    .splash-cover:hover {
+      transform: scale(1.02) rotate(1deg);
+      box-shadow:
+        0 30px 70px rgba(0,0,0,0.8),
+        0 0 0 1px rgba(255,255,255,0.08),
+        0 0 100px rgba(230,57,70,0.3);
+    }
     .splash-title {
       margin-top: 8px;
       margin-bottom: 4px;
@@ -217,25 +174,22 @@
       line-height: 1.1;
       animation: slideUp 0.5s ease-out 0.5s both;
     }
-
     .splash-subtitle {
       margin: 0 0 8px 0;
       text-align: center;
       font-size: clamp(0.9rem, 2vw, 1.1rem);
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255,255,255,0.8);
       font-weight: 300;
       letter-spacing: 0.05em;
       max-width: 400px;
       animation: slideUp 0.5s ease-out 0.6s both;
     }
-
     .splash-tagline {
       color: var(--muted);
       font-size: 0.9rem;
       margin-bottom: 8px;
       animation: slideUp 0.5s ease-out 0.7s both;
     }
-
     .splash-button {
       background: linear-gradient(135deg, var(--accent), #ff6b6b);
       color: white;
@@ -258,7 +212,6 @@
       text-align: center;
       animation: slideUp 0.5s ease-out 0.8s both;
     }
-
     .splash-button:hover {
       transform: translateY(-3px);
       box-shadow:
@@ -266,18 +219,10 @@
         0 0 0 1px rgba(255, 255, 255, 0.2);
     }
 
-    .splash-button span {
-      font-size: 1.2rem;
-      margin-left: 5px;
-    }
-
-    /* ========== MODALS ========== */
+    /* MODALS */
     .modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       background: rgba(0, 0, 0, 0.95);
       display: none;
       align-items: center;
@@ -286,7 +231,6 @@
       backdrop-filter: blur(10px);
       animation: modalFadeIn 0.3s ease-out;
     }
-
     .modal-content {
       background: linear-gradient(135deg, #111827 0%, #020308 100%);
       border-radius: 24px;
@@ -298,20 +242,17 @@
       text-align: center;
       animation: modalSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
-
     .modal-content h2 {
       color: var(--accent);
       margin-bottom: 20px;
       font-size: clamp(1.5rem, 4vw, 28px);
       font-weight: 700;
     }
-
     .modal-content p {
       margin-bottom: 20px;
       color: var(--muted);
       line-height: 1.6;
     }
-
     .email-input,
     .license-input {
       width: 100%;
@@ -325,7 +266,6 @@
       text-align: center;
       transition: var(--transition);
     }
-
     .email-input:focus,
     .license-input:focus {
       outline: none;
@@ -347,12 +287,10 @@
       font-size: 16px;
       min-height: 48px;
     }
-
     .btn-primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 20px rgba(230, 57, 70, 0.4);
     }
-
     .btn-primary:disabled {
       opacity: 0.6;
       cursor: not-allowed;
@@ -375,13 +313,12 @@
       margin: 8px 0;
       width: 100%;
     }
-
     .btn-secondary:hover {
       background: var(--accent-soft);
       transform: translateY(-2px);
     }
 
-    /* ========== MAIN APP SHELL ========== */
+    /* APP SHELL */
     .app-shell {
       display: flex;
       height: 100vh;
@@ -391,7 +328,7 @@
       animation: fadeIn 0.5s ease-out 0.3s forwards;
     }
 
-    /* ========== SIDEBAR ========== */
+    /* SIDEBAR */
     .sidebar {
       width: var(--nav-width);
       background: rgba(3, 7, 18, 0.96);
@@ -406,13 +343,11 @@
       overflow-x: hidden;
       backdrop-filter: blur(10px);
     }
-
     .brand {
       padding: 4px 8px 6px;
       border-bottom: 1px solid rgba(55, 65, 81, 0.9);
       margin-bottom: 4px;
     }
-
     .brand-title {
       font-size: 14px;
       font-weight: 600;
@@ -421,7 +356,6 @@
       color: var(--muted);
       margin-bottom: 4px;
     }
-
     .brand-sub {
       font-size: 11px;
       color: var(--muted);
@@ -431,7 +365,6 @@
     .nav-section {
       margin-top: 4px;
     }
-
     .nav-section-title {
       font-size: 11px;
       text-transform: uppercase;
@@ -446,21 +379,17 @@
       transition: var(--transition);
       border-radius: 6px;
     }
-
     .nav-section-title:hover {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255,255,255,0.05);
     }
-
     .nav-section-title::after {
-      content: '▼';
+      content: "▼";
       font-size: 10px;
       transition: transform 0.3s ease;
     }
-
     .nav-section.collapsed .nav-section-title::after {
       transform: rotate(-90deg);
     }
-
     .nav-list {
       list-style: none;
       padding: 0;
@@ -470,17 +399,14 @@
       overflow-x: hidden;
       transition: max-height 0.3s ease, opacity 0.3s ease;
     }
-
     .nav-section.collapsed .nav-list {
       max-height: 0;
       opacity: 0;
       overflow: hidden;
     }
-
     .nav-item {
       margin: 2px 0;
     }
-
     .nav-link {
       width: 100%;
       text-align: left;
@@ -501,21 +427,18 @@
       position: relative;
       min-height: 36px;
     }
-
     .nav-link:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.1);
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.1);
     }
-
     .nav-link.active {
       background: var(--accent-soft);
       color: var(--accent);
       border-color: var(--accent);
       font-weight: 600;
     }
-
     .nav-link.active::before {
-      content: '';
+      content: "";
       position: absolute;
       left: 4px;
       top: 50%;
@@ -525,41 +448,39 @@
       background: var(--accent);
       border-radius: 50%;
     }
-
     .nav-link:disabled {
       opacity: 0.4;
       cursor: not-allowed;
     }
 
-    .nav-link:disabled:hover {
-      background: transparent;
-      border-color: transparent;
-    }
-
-    /* ========== READER PANE ========== */
+    /* READER PANE */
     .reader-pane {
       flex: 1;
       border-radius: var(--radius);
       background: rgba(15, 23, 42, 0.96);
-      border: 1px solid rgba(31, 41, 55, 0.9);
+      border: 1px solid rgba(31,41,55,0.9);
       box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
       overflow: hidden;
       backdrop-filter: blur(10px);
     }
-
     .reader-header {
       padding: 12px 16px;
-      border-bottom: 1px solid rgba(55, 65, 81, 0.9);
+      border-bottom: 1px solid rgba(55,65,81,0.9);
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
-      background: rgba(15, 23, 42, 0.8);
+      background: rgba(15,23,42,0.8);
     }
-
+    .reader-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
     .reader-title {
       font-size: 13px;
       color: var(--muted);
@@ -567,7 +488,12 @@
       align-items: center;
       gap: 8px;
     }
-
+    .reader-title span {
+      max-width: 320px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .reader-meta {
       display: flex;
       align-items: center;
@@ -575,12 +501,25 @@
       font-size: 12px;
       color: var(--muted);
     }
-
     .reader-meta .dot {
       width: 4px;
       height: 4px;
       background: var(--muted);
       border-radius: 50%;
+    }
+    .activate-license-btn {
+      border-radius: 9999px;
+      border: 1px solid var(--accent);
+      padding: 8px 14px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 11px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .activate-license-btn:hover {
+      background: var(--accent);
+      color: white;
     }
 
     .reader-iframe-wrap {
@@ -589,7 +528,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .reader-iframe {
       width: 100%;
       height: 100%;
@@ -598,13 +536,10 @@
       display: block;
     }
 
-    /* ========== LOADING OVERLAY ========== */
+    /* LOADING OVERLAY */
     .loading-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      inset: 0;
       background: rgba(0, 0, 0, 0.8);
       display: none;
       align-items: center;
@@ -612,17 +547,16 @@
       z-index: 9999;
       backdrop-filter: blur(5px);
     }
-
     .loading-spinner {
       width: 40px;
       height: 40px;
-      border: 4px solid rgba(255, 255, 255, 0.1);
+      border: 4px solid rgba(255,255,255,0.1);
       border-left-color: var(--accent);
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
 
-    /* ========== MESSAGES ========== */
+    /* MESSAGES */
     .message {
       margin-top: 15px;
       padding: 12px;
@@ -631,24 +565,21 @@
       font-size: 14px;
       animation: fadeIn 0.3s ease;
     }
-
     .message.success {
       background: rgba(21, 128, 61, 0.2);
       color: #86efac;
       border: 1px solid rgba(22, 163, 74, 0.5);
     }
-
     .message.error {
       background: rgba(127, 29, 29, 0.2);
       color: #fca5a5;
       border: 1px solid rgba(220, 38, 38, 0.5);
     }
-
     .message.show {
       display: block;
     }
 
-    /* ========== STATUS BADGES ========== */
+    /* BADGES */
     .trial-badge {
       background: linear-gradient(135deg, var(--accent), #ff6b6b);
       color: white;
@@ -660,7 +591,6 @@
       margin-left: 8px;
       text-transform: uppercase;
     }
-
     .license-badge {
       background: linear-gradient(135deg, #10b981, #34d399);
       color: white;
@@ -673,35 +603,30 @@
       text-transform: uppercase;
     }
 
-    /* ========== RESPONSIVE ========== */
+    /* RESPONSIVE */
     @media (max-width: 768px) {
       .app-shell {
         flex-direction: column;
         padding: 8px;
         gap: 8px;
       }
-
       .sidebar {
         width: 100%;
         max-height: 40vh;
       }
-
       .reader-pane {
         height: 55vh;
         min-height: 300px;
       }
-
       .reader-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
       }
-
       .reader-meta {
         flex-wrap: wrap;
         gap: 8px;
       }
-
       .reader-title {
         font-size: 12px;
       }
@@ -710,7 +635,7 @@
 </head>
 
 <body>
-  <!-- ========== SPLASH SCREEN ========== -->
+  <!-- SPLASH -->
   <div class="splash-entrance" id="splashEntrance">
     <div class="splash-card">
       <img src="Front Cover.png"
@@ -730,7 +655,7 @@
     </div>
   </div>
 
-  <!-- ========== EMAIL MODAL ========== -->
+  <!-- EMAIL MODAL -->
   <div class="modal-overlay" id="emailModal">
     <div class="modal-content">
       <h2>Start Your Free Trial</h2>
@@ -745,7 +670,7 @@
             type="text"
             class="email-input"
             id="trialName"
-            placeholder="Your name"
+            placeholder="Your name (optional)"
             autocomplete="name">
 
           <input
@@ -783,7 +708,7 @@
     </div>
   </div>
 
-  <!-- ========== LICENSE MODAL ========== -->
+  <!-- LICENSE MODAL -->
   <div class="modal-overlay" id="licenseModal">
     <div class="modal-content">
       <h2>Activate Full Version</h2>
@@ -826,28 +751,29 @@
     </div>
   </div>
 
-  <!-- ========== LOADING OVERLAY ========== -->
+  <!-- LOADING OVERLAY -->
   <div class="loading-overlay" id="loadingOverlay">
     <div class="loading-spinner"></div>
   </div>
 
-  <!-- ========== MAIN APPLICATION ========== -->
+  <!-- MAIN APPLICATION -->
   <div class="app-shell" id="app-shell" style="display: none;">
-    <!-- SIDEBAR NAVIGATION -->
+    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
       <div class="brand">
         <div class="brand-title">The Infinity Loop</div>
         <div class="brand-sub" id="licenseTypeDisplay">Trial Version • 2/11 Chapters</div>
       </div>
 
-      <!-- Navigation sections -->
       <div class="nav-section" data-section="front">
         <div class="nav-section-title">Front Matter</div>
         <ul class="nav-list" id="frontMatterList"></ul>
       </div>
 
       <div class="nav-section" data-section="chapters">
-        <div class="nav-section-title">Core Chapters <span id="chapterLimit">(2/11)</span></div>
+        <div class="nav-section-title">
+          Core Chapters <span id="chapterLimit">(2/11)</span>
+        </div>
         <ul class="nav-list" id="chapterList"></ul>
       </div>
 
@@ -857,7 +783,7 @@
       </div>
     </aside>
 
-    <!-- MAIN READER PANE -->
+    <!-- READER -->
     <main class="reader-pane" id="readerPane">
       <div class="reader-header">
         <div class="reader-header-left">
@@ -880,27 +806,26 @@
     </main>
   </div>
 
-  <!-- ========== JAVASCRIPT ========== -->
+  <!-- JAVASCRIPT -->
   <script>
-    // ========== CONFIGURATION ==========
+    // CONFIG
     const CONFIG = {
       APP_VERSION: '2.0.0',
       TRIAL_CHAPTERS: 2,
       TRIAL_DAYS: 7,
-      TEST_LICENSE: "INF-TEST-2026-ABCD-5678",
-      VALID_LICENSE_PREFIX: "INF-",
-      PURCHASE_URL: "https://buy.stripe.com/dRm7sN2on3yF26FbYEdIA01",
-      MAKE_WEBHOOK_URL: "https://hook.us2.make.com/4bwg1lvvkqkqwk75tv8b2jmc8upri5fv",
-      STRIPE_CHECKOUT_URL: "https://buy.stripe.com/dRm7sN2on3yF26FbYEdIA01",
-      PAYPAL_CHECKOUT_URL: "https://www.paypal.com/ncp/payment/FR755FQZHEGQA"
+      TEST_LICENSE: 'INF-TEST-2024-ABCD-5678',
+      VALID_LICENSE_PREFIX: 'INF-',
+      MAKE_WEBHOOK_URL: 'https://hook.us2.make.com/4bwg1lvvkqkqwk75tv8b2jmc8upri5fv',
+      STRIPE_CHECKOUT_URL: 'https://buy.stripe.com/dRm7sN2on3yF26FbYEdIA01',
+      PAYPAL_CHECKOUT_URL: 'https://www.paypal.com/ncp/payment/FR755FQZHEGQA'
     };
 
-    // ========== STATE MANAGEMENT ==========
+    // STATE
     let currentFile = '';
     let currentChapter = 0;
     let isMobile = window.innerWidth <= 768;
 
-    // ========== LICENSE MANAGER ==========
+    // LICENSE MANAGER
     class LicenseManager {
       constructor() {
         this.deviceId = this.getDeviceId();
@@ -933,13 +858,11 @@
         try {
           const data = localStorage.getItem('infinityLoopLicense');
           if (!data) return null;
-
           const license = JSON.parse(data);
           if (license.expiry && new Date(license.expiry) < new Date()) {
             localStorage.removeItem('infinityLoopLicense');
             return null;
           }
-
           return license;
         } catch {
           return null;
@@ -950,13 +873,11 @@
         try {
           const data = localStorage.getItem('infinityLoopTrial');
           if (!data) return null;
-
           const trial = JSON.parse(data);
           if (trial.expiry && new Date(trial.expiry) < new Date()) {
             localStorage.removeItem('infinityLoopTrial');
             return null;
           }
-
           return trial;
         } catch {
           return null;
@@ -991,11 +912,9 @@
 
       activateLicense(licenseKey, email) {
         licenseKey = licenseKey.trim().toUpperCase();
-
         if (!licenseKey.startsWith(CONFIG.VALID_LICENSE_PREFIX) && licenseKey !== CONFIG.TEST_LICENSE) {
-          throw new Error('Invalid license key format. License must start with "INF-"');
+          throw new Error('Invalid license key format. License must start with "INF-".');
         }
-
         const licenseData = {
           key: licenseKey,
           email: email || this.userData?.email,
@@ -1003,12 +922,10 @@
           expiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
           deviceId: this.deviceId
         };
-
         localStorage.setItem('infinityLoopLicense', JSON.stringify(licenseData));
         this.licenseData = licenseData;
         localStorage.removeItem('infinityLoopTrial');
         this.trialData = null;
-
         return licenseData;
       }
 
@@ -1056,36 +973,14 @@
         const diffTime = expiry - now;
         return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
       }
-
-      clearAllData() {
-        localStorage.removeItem('infinityLoopUser');
-        localStorage.removeItem('infinityLoopLicense');
-        localStorage.removeItem('infinityLoopTrial');
-        this.userData = null;
-        this.licenseData = null;
-        this.trialData = null;
-      }
     }
 
-    // ========== DOM ELEMENTS ==========
-    const splashEntrance = document.getElementById('splashEntrance');
-    const emailModal = document.getElementById('emailModal');
-    const licenseModal = document.getElementById('licenseModal');
-    const appShell = document.getElementById('app-shell');
-    const iframe = document.getElementById('reader-frame');
-    const currentLabel = document.getElementById('current-label');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-
-    const trialBadge = document.getElementById('trialBadge');
-    const fullBadge = document.getElementById('fullBadge');
-
-    // Initialize license manager
     const licenseManager = new LicenseManager();
-
-    // ========== BOOK STRUCTURE (matches your folder names) ==========
+ 
+    // BOOK STRUCTURE (file names must match your screenshot)
     const BOOK_STRUCTURE = {
       frontMatter: [
-        { file: 'TITLE_PAGE.htm', label: 'Title Page', alwaysAccessible: true },
+        { file: 'TITLE_PAGE.htm', label: 'Title Page',  alwaysAccessible: true },
         { file: 'Dedication.htm', label: 'Dedication', alwaysAccessible: true },
         { file: 'Epigraph_.htm', label: 'Epigraph', alwaysAccessible: true },
         { file: 'CONTENT_WARNING_.htm', label: 'Content Warning / Reader Care Note', alwaysAccessible: true },
@@ -1094,21 +989,19 @@
         { file: 'AUTHOR\'S_PREFACE_UNDERSTANDING_THE_INFINITY_LOOP_.htm', label: 'Author\'s Preface: Understanding the Infinity Loop', alwaysAccessible: true },
         { file: 'NOTE_ON_SOURCES_AND_METHODOLOGY_.htm', label: 'Note on Sources and Methodology', alwaysAccessible: true }
       ],
-
       chapters: [
         { file: 'CHAPTER_1_clean_stitched_formatted.htm', label: 'CHAPTER 1: THE GENESIS: RECONSTRUCTION AND THE BLACK CODES', badge: '(1865 - 1877) LoopSnapshot🟡6/10' },
         { file: 'CHAPTER_2_clean_stitched_formatted.htm', label: 'CHAPTER 2: THE REFINEMENT: JIM CROW AND THE RISE OF LEGALIZED APARTHEID', badge: '(1877 - 1919) LoopSnapshot🟢8/10' },
         { file: 'CHAPTER_3_clean_stitched_formatted.htm', label: 'CHAPTER 3: MOBILIZATION AND BACKLASH: RED SUMMER, GARVEY, AND THE PROTO-COINTELPRO', badge: '(1919 - 1945) LoopSnapshot🔴8/10' },
-        { file: 'CHAPTER_4_clean_stitched_formatted.htm', label: 'CHAPTER 4: COLD WAR CONTRADICTIONS: VETERANS, MCGEE, AND \"GENOCIDE\"', badge: '(1946 - 1955) LoopSnapshot🔴8/10' },
+        { file: 'CHAPTER_4_clean_stitched_formatted.htm', label: 'CHAPTER 4: COLD WAR CONTRADICTIONS: VETERANS, MCGEE, AND "GENOCIDE"', badge: '(1946 - 1955) LoopSnapshot🔴8/10' },
         { file: 'CHAPTER_5_clean_stitched_formatted.htm', label: 'CHAPTER 5: COINTELPRO PEAK: NEUTRALIZATION, KERNER, AND THE PANTHER\'S PRICE', badge: '(1956 - 1971) LoopSnapshot🔴9/10' },
         { file: 'CHAPTER_6_clean_stitched_formatted.htm', label: 'CHAPTER 6: THE MODERN CARCERAL STATE: THE WAR ON DRUGS ESCALATES', badge: '(1972 - 1989) LoopSnapshot🔴9/10' },
-        { file: 'CHAPTER_7_clean_stitched_formatted.htm', label: 'CHAPTER 7: THE \"COLORBLIND\" ERA: PREDICTIVE POLICING AND MASS INCARCERATION', badge: '(1990 - 2009) LoopSnapshot🔴9/10' },
+        { file: 'CHAPTER_7_clean_stitched_formatted.htm', label: 'CHAPTER 7: THE "COLORBLIND" ERA: PREDICTIVE POLICING AND MASS INCARCERATION', badge: '(1990 - 2009) LoopSnapshot🔴9/10' },
         { file: 'CHAPTER_8_clean_stitched_formatted.htm', label: 'CHAPTER 8: DIGITAL AUGMENTATION: FERGUSON, BALTIMORE, AND ALGORITHMIC BIAS', badge: '(2010 - 2016) LoopSnapshot🔴9/10' },
         { file: 'CHAPTER_9_clean_stitched_formatted.htm', label: 'CHAPTER 9: THE AUTOMATED LOOP: BIE LABELS, AI, AND THE FUTURE OF CONTROL', badge: '(2017 - 2024) LoopSnapshot🔴🟡🟢10/10' },
         { file: 'CHAPTER_10_clean_stitched_formatted.htm', label: 'CHAPTER 10: THE RESILIENCE BLUEPRINT: RESISTANCE AND THRIVING WITHIN THE LOOP', badge: '(1619 - Present) LoopSnapshot🟢8/10' },
         { file: 'CHAPTER_11_clean_stitched_formatted.htm', label: 'CHAPTER 11: THE ABOLITION HORIZON: FROM EVIDENCE TO ABOLITION', badge: '2025 AND BEYOND LoopSnapshot🔴10/10' }
       ],
-
       backMatter: [
         { file: 'APPENDIX_A_LOOP MECHANISM GLOSSARY_.htm', label: 'Appendix A: Loop Mechanism Glossary', alwaysAccessible: true },
         { file: 'APPENDIX_B_HISTORICAL TIMELINE (1619-2025)_.htm', label: 'Appendix B: Historical Timeline (1619–2025)', alwaysAccessible: true },
@@ -1121,7 +1014,18 @@
       ]
     };
 
-    // ========== HELPERS ==========
+    // DOM SHORTCUTS
+    const splashEntrance = document.getElementById('splashEntrance');
+    const emailModal = document.getElementById('emailModal');
+    const licenseModal = document.getElementById('licenseModal');
+    const appShell = document.getElementById('app-shell');
+    const iframe = document.getElementById('reader-frame');
+    const currentLabel = document.getElementById('current-label');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const trialBadge = document.getElementById('trialBadge');
+    const fullBadge = document.getElementById('fullBadge');
+
+    // HELPERS
     function validateEmail(email) {
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return re.test(email);
@@ -1134,17 +1038,11 @@
       return key;
     }
 
-    function showLoading() {
-      loadingOverlay.style.display = 'flex';
-    }
-
-    function hideLoading() {
-      loadingOverlay.style.display = 'none';
-    }
+    function showLoading() { loadingOverlay.style.display = 'flex'; }
+    function hideLoading() { loadingOverlay.style.display = 'none'; }
 
     function sendToMake(eventType, data = {}) {
       if (!CONFIG.MAKE_WEBHOOK_URL) return;
-
       const basePayload = {
         event: eventType,
         source: 'infinity-loop-reader',
@@ -1152,34 +1050,15 @@
         deviceId: licenseManager.deviceId,
         timestamp: new Date().toISOString()
       };
-
       const payload = { ...basePayload, ...data };
-
       fetch(CONFIG.MAKE_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-      }).catch(err => {
-        console.error('Make webhook error:', err);
-      });
+      }).catch(err => console.error('Make webhook error:', err));
     }
 
-    function showMessage(elementId, text, type = 'info', show = true) {
-      const element = document.getElementById(elementId);
-      if (!element) return;
-
-      element.textContent = text;
-      element.className = 'message';
-
-      if (show && text) {
-        element.classList.add(type);
-        element.classList.add('show');
-      } else {
-        element.classList.remove('show');
-      }
-    }
-
-    // ========== NAVIGATION ==========
+    // NAVIGATION
     function loadNavigation() {
       const frontMatterList = document.getElementById('frontMatterList');
       const chapterList = document.getElementById('chapterList');
@@ -1193,12 +1072,10 @@
       BOOK_STRUCTURE.frontMatter.forEach(item => {
         const li = document.createElement('li');
         li.className = 'nav-item';
-
         const button = document.createElement('button');
         button.className = 'nav-link';
         button.textContent = item.label;
         button.addEventListener('click', () => openSection(item.file, item.label, 0));
-
         li.appendChild(button);
         frontMatterList.appendChild(li);
       });
@@ -1207,23 +1084,18 @@
       BOOK_STRUCTURE.chapters.forEach((chapter, index) => {
         const chapterNum = index + 1;
         const canAccess = licenseManager.canAccessChapter(chapterNum);
-
         const li = document.createElement('li');
         li.className = 'nav-item';
-
         const button = document.createElement('button');
         button.className = 'nav-link';
-
         const labelSpan = document.createElement('span');
         labelSpan.textContent = chapter.label.split('LoopSnapshot')[0].trim();
         button.appendChild(labelSpan);
-
         if (!canAccess) {
           button.disabled = true;
           button.style.opacity = '0.5';
           button.title = 'Upgrade to full version to access this chapter';
         }
-
         button.addEventListener('click', () => {
           if (!canAccess) {
             showLicenseModal();
@@ -1231,7 +1103,6 @@
           }
           openSection(chapter.file, chapter.label, chapterNum);
         });
-
         li.appendChild(button);
         chapterList.appendChild(li);
       });
@@ -1240,12 +1111,10 @@
       BOOK_STRUCTURE.backMatter.forEach(item => {
         const li = document.createElement('li');
         li.className = 'nav-item';
-
         const button = document.createElement('button');
         button.className = 'nav-link';
         button.textContent = item.label;
         button.addEventListener('click', () => openSection(item.file, item.label, 0));
-
         li.appendChild(button);
         backMatterList.appendChild(li);
       });
@@ -1262,19 +1131,20 @@
 
       if (accessType === 'full') {
         licenseTypeDisplay.textContent = 'Full Version • 11/11 Chapters';
-        if (trialBadge) trialBadge.style.display = 'none';
-        if (fullBadge) fullBadge.style.display = 'inline-block';
+        trialBadge.style.display = 'none';
+        fullBadge.style.display = 'inline-block';
         chapterLimit.textContent = '(11/11)';
         licenseStatus.textContent = 'Full Version';
         activateBtn.textContent = 'License Active';
         activateBtn.style.background = 'linear-gradient(135deg, #10b981, #34d399)';
-        activateBtn.style.color = 'white';
+        activateBtn.style.color = '#fff';
         activateBtn.style.borderColor = '#10b981';
       } else if (accessType === 'trial') {
         const remainingDays = licenseManager.getRemainingTrialDays();
-        licenseTypeDisplay.textContent = `Trial Version • ${CONFIG.TRIAL_CHAPTERS}/11 Chapters • ${remainingDays} days left`;
-        if (trialBadge) trialBadge.style.display = 'inline-block';
-        if (fullBadge) fullBadge.style.display = 'none';
+        licenseTypeDisplay.textContent =
+          `Trial Version • ${CONFIG.TRIAL_CHAPTERS}/11 Chapters • ${remainingDays} days left`;
+        trialBadge.style.display = 'inline-block';
+        fullBadge.style.display = 'none';
         chapterLimit.textContent = `(${CONFIG.TRIAL_CHAPTERS}/11)`;
         licenseStatus.textContent = `Trial Active • ${remainingDays} days left`;
         activateBtn.textContent = 'Activate License';
@@ -1283,8 +1153,8 @@
         activateBtn.style.borderColor = 'var(--accent)';
       } else {
         licenseTypeDisplay.textContent = 'No Access';
-        if (trialBadge) trialBadge.style.display = 'none';
-        if (fullBadge) fullBadge.style.display = 'none';
+        trialBadge.style.display = 'none';
+        fullBadge.style.display = 'none';
         chapterLimit.textContent = '(0/11)';
         licenseStatus.textContent = 'No Access';
         activateBtn.textContent = 'Get Access';
@@ -1296,25 +1166,18 @@
 
     function openSection(file, label, chapterNum = 0) {
       if (!file) return;
-
       currentFile = file;
       currentChapter = chapterNum;
-
       showLoading();
-
       iframe.src = file;
-      currentLabel.textContent = label.split('LoopSnapshot')[0].trim();
+      const baseLabel = label.split('LoopSnapshot')[0].trim();
+      currentLabel.textContent = baseLabel;
 
-      document.querySelectorAll('.nav-link').forEach(btn => {
-        btn.classList.remove('active');
-      });
-
+      document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
       const navLinks = document.querySelectorAll('.nav-link');
       for (const btn of navLinks) {
         const btnText = btn.textContent.replace('✓', '').trim();
-        const labelText = label.split('LoopSnapshot')[0].trim();
-
-        if (btnText === labelText || btnText.includes(labelText.substring(0, 30))) {
+        if (btnText === baseLabel || btnText.startsWith(baseLabel.substring(0, 25))) {
           btn.classList.add('active');
           const section = btn.closest('.nav-section');
           if (section && section.classList.contains('collapsed')) {
@@ -1324,27 +1187,24 @@
         }
       }
 
-      iframe.onload = function() {
+      iframe.onload = () => hideLoading();
+      iframe.onerror = () => {
         hideLoading();
-      };
-
-      iframe.onerror = function() {
-        hideLoading();
-        alert(`Error loading "${label}". Please check if the file "${file}" exists.`);
+        alert(`Error loading "${label}". Please check if the file "${file}" exists in the same folder as index.html.`);
       };
     }
 
-    // ========== UI FLOW ==========
+    // UI FLOW
     function showEmailModal() {
       splashEntrance.style.display = 'none';
       emailModal.style.display = 'flex';
       setTimeout(() => {
-        const trialNameInput = document.getElementById('trialName');
-        const trialEmailInput = document.getElementById('trialEmail');
-        if (trialNameInput && trialNameInput.value === '') {
-          trialNameInput.focus();
+        const nameInput = document.getElementById('trialName');
+        const emailInput = document.getElementById('trialEmail');
+        if (nameInput && !nameInput.value) {
+          nameInput.focus();
         } else {
-          trialEmailInput.focus();
+          emailInput.focus();
         }
       }, 100);
     }
@@ -1362,11 +1222,21 @@
       emailModal.style.display = 'none';
       licenseModal.style.display = 'none';
       appShell.style.display = 'flex';
-
       loadNavigation();
-
-      // Start at Title Page
       openSection('TITLE_PAGE.htm', 'Title Page', 0);
+    }
+
+    function showMessage(elementId, text, type = 'info', show = true) {
+      const element = document.getElementById(elementId);
+      if (!element) return;
+      element.textContent = text;
+      element.className = 'message';
+      if (show) {
+        element.classList.add(type);
+        element.classList.add('show');
+      } else {
+        element.classList.remove('show');
+      }
     }
 
     function startAppWithTrial(email, name = '') {
@@ -1374,7 +1244,6 @@
         showMessage('emailMessage', 'Please enter a valid email address.', 'error');
         return;
       }
-
       const agreeTerms = document.getElementById('agreeTerms');
       if (!agreeTerms || !agreeTerms.checked) {
         showMessage('emailMessage', 'You must agree to the Terms of Service to continue.', 'error');
@@ -1389,8 +1258,8 @@
       licenseManager.startTrial(email, name);
 
       sendToMake('trial_signup', {
-        email: email,
-        name: name,
+        email,
+        name,
         accessType: 'trial'
       });
 
@@ -1406,20 +1275,18 @@
 
     function startAppWithLicense(licenseKey) {
       licenseKey = formatLicenseKey(licenseKey);
-
       if (!licenseKey.startsWith(CONFIG.VALID_LICENSE_PREFIX) && licenseKey !== CONFIG.TEST_LICENSE) {
-        showMessage('licenseMessage', 'Invalid license key format. License must start with "INF-"', 'error');
+        showMessage('licenseMessage', 'Invalid license key format. License must start with "INF-".', 'error');
         return;
       }
 
       let email = licenseManager.getUserEmail();
       if (!email) {
-        email = prompt('Enter your email for license activation:');
-        if (!email || !validateEmail(email)) {
+        email = prompt('Enter your email for license activation:') || '';
+        if (!validateEmail(email)) {
           showMessage('licenseMessage', 'Please enter a valid email address.', 'error');
           return;
         }
-        licenseManager.saveUser(email);
       }
 
       const name = licenseManager.getUserName();
@@ -1429,10 +1296,10 @@
         licenseManager.activateLicense(licenseKey, email);
 
         sendToMake('license_activation', {
-          email: email,
-          name: name,
-          licenseKeyLast4: licenseKeyLast4,
-          licenseKey: licenseKey,
+          email,
+          name,
+          licenseKeyLast4,
+          licenseKey,
           accessType: 'license'
         });
 
@@ -1442,43 +1309,31 @@
           showApp();
           showMessage('licenseMessage', '', 'success', false);
         }, 1500);
-      } catch (error) {
-        showMessage('licenseMessage', 'Error: ' + error.message, 'error');
+      } catch (err) {
+        showMessage('licenseMessage', 'Error: ' + err.message, 'error');
       }
     }
 
     function checkExistingAccess() {
       const accessType = licenseManager.getAccessType();
       const email = licenseManager.getUserEmail();
-
-      if (accessType === 'none' || !email) {
-        splashEntrance.style.opacity = '0';
-        splashEntrance.style.transition = 'opacity 0.5s ease';
-        setTimeout(() => {
-          splashEntrance.style.display = 'none';
+      splashEntrance.style.opacity = '0';
+      splashEntrance.style.transition = 'opacity 0.5s ease';
+      setTimeout(() => {
+        splashEntrance.style.display = 'none';
+        if (accessType === 'none' || !email) {
           showEmailModal();
-        }, 500);
-      } else {
-        splashEntrance.style.opacity = '0';
-        splashEntrance.style.transition = 'opacity 0.5s ease';
-        setTimeout(() => {
-          splashEntrance.style.display = 'none';
+        } else {
           showApp();
-        }, 500);
-      }
+        }
+      }, 500);
     }
 
-    // ========== EVENT LISTENERS ==========
+    // EVENT LISTENERS
     function setupEventListeners() {
       document.getElementById('enterBookBtn').addEventListener('click', () => {
-        splashEntrance.style.opacity = '0';
-        splashEntrance.style.transition = 'opacity 0.5s ease';
-        setTimeout(() => {
-          splashEntrance.style.display = 'none';
-          checkExistingAccess();
-        }, 500);
+        checkExistingAccess();
       });
-
       document.getElementById('bookCover').addEventListener('click', () => {
         document.getElementById('enterBookBtn').click();
       });
@@ -1489,7 +1344,6 @@
         const name = (document.getElementById('trialName')?.value || '').trim();
         startAppWithTrial(email, name);
       });
-
       document.getElementById('trialEmail').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
@@ -1503,7 +1357,6 @@
         const licenseKey = document.getElementById('licenseInput').value.trim();
         startAppWithLicense(licenseKey);
       });
-
       document.getElementById('licenseInput').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
           const licenseKey = document.getElementById('licenseInput').value.trim();
@@ -1514,47 +1367,27 @@
       document.getElementById('purchaseStripe').addEventListener('click', (e) => {
         e.preventDefault();
         const confirmed = confirm('You will be redirected to our secure Stripe checkout page. Continue?');
-        if (confirmed) {
-          window.open(CONFIG.STRIPE_CHECKOUT_URL, '_blank');
-        }
+        if (confirmed) window.open(CONFIG.STRIPE_CHECKOUT_URL, '_blank');
       });
-
       document.getElementById('purchasePaypal').addEventListener('click', (e) => {
         e.preventDefault();
         const confirmed = confirm('You will be redirected to our secure PayPal checkout page. Continue?');
-        if (confirmed) {
-          window.open(CONFIG.PAYPAL_CHECKOUT_URL, '_blank');
-        }
+        if (confirmed) window.open(CONFIG.PAYPAL_CHECKOUT_URL, '_blank');
       });
 
       document.getElementById('switchToLicense').addEventListener('click', (e) => {
         e.preventDefault();
         showLicenseModal();
       });
-
       document.getElementById('activateBtn').addEventListener('click', showLicenseModal);
 
       document.getElementById('termsLink').addEventListener('click', (e) => {
         e.preventDefault();
-        alert(
-          'Terms of Service (summary):\n\n' +
-          '• Trial lasts 7 days\n' +
-          '• Access limited to 2 chapters in trial\n' +
-          '• Email required to deliver updates and license info\n' +
-          '• Full version requires purchase and license key\n' +
-          '• No unauthorized copying, sharing, or redistribution of content'
-        );
+        alert('Terms of Service:\\n\\n1. Trial lasts 7 days.\\n2. Email is required for access.\\n3. You may unsubscribe from updates at any time.\\n4. Full version requires purchase of a license.');
       });
-
       document.getElementById('licenseAgreementLink').addEventListener('click', (e) => {
         e.preventDefault();
-        alert(
-          'License Agreement (summary):\n\n' +
-          '• License grants one reader access on a single device\n' +
-          '• Non-transferable, non-refundable (except where required by law)\n' +
-          '• You may not redistribute or resell the content\n' +
-          '• Updates to this digital reader are included for 1 year\n'
-        );
+        alert('License Agreement (summary):\\n\\n1. License grants access to all chapters on one device.\\n2. Non-transferable.\\n3. Updates included for 1 year.\\n4. Content is copyright protected; redistribution is prohibited.');
       });
 
       document.querySelectorAll('.nav-section-title').forEach(title => {
@@ -1571,29 +1404,24 @@
       window.addEventListener('resize', () => {
         isMobile = window.innerWidth <= 768;
       });
+
+      // Refresh countdown every hour
+      setInterval(() => {
+        updateAccessUI();
+      }, 60 * 60 * 1000);
     }
 
-    // ========== INIT ==========
     function init() {
-  setupEventListeners();
-  splashEntrance.style.display = 'flex';
-
-  // Refresh trial/ license display once per hour while the app is open
-  setInterval(() => {
-    updateAccessUI();
-  }, 60 * 60 * 1000); // 1 hour
-
-  // Dev logging...
-}
+      setupEventListeners();
+      splashEntrance.style.display = 'flex';
 
       if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         console.log('Development mode active');
         console.log('Test license:', CONFIG.TEST_LICENSE);
         const licenseInput = document.getElementById('licenseInput');
-        if (licenseInput) {
-          licenseInput.placeholder = CONFIG.TEST_LICENSE;
-        }
+        if (licenseInput) licenseInput.placeholder = CONFIG.TEST_LICENSE;
       }
+    }
 
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
