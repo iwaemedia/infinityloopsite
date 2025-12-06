@@ -1236,27 +1236,29 @@
             }
 
             function showApp() {
-                splashEntrance.style.display = 'none';
-                hideEmailModal();
-                hideLicenseModal();
-                appShell.style.display = 'flex';
+    // Permanently remove splash so it can never flash back in this session
+    if (splashEntrance && splashEntrance.parentNode) {
+        splashEntrance.parentNode.removeChild(splashEntrance);
+    }
 
-                setTimeout(() => {
-                    appShell.style.opacity = '1';
-                }, 10);
+    hideEmailModal();
+    hideLicenseModal();
+    appShell.style.display = 'flex';
 
-                if (isMobile) {
-                    sidebar.style.display = 'flex';
-                    menuToggle.textContent = '✕';
-                    menuToggle.setAttribute('aria-expanded', 'true');
-                }
+    setTimeout(() => {
+        appShell.style.opacity = '1';
+    }, 10);
 
-                loadNavigation();
+    if (isMobile) {
+        sidebar.style.display = 'flex';
+        menuToggle.textContent = '✕';
+        menuToggle.setAttribute('aria-expanded', 'true');
+    }
 
-                // Open Content Warning page by default
-                openSection('CONTENT_WARNING_.htm', 'Content Warning / Reader Care Note', 0, 'content-warning');
-
-            }
+    loadNavigation();
+    progressManager.updateProgressUI();
+    openSection('CONTENT_WARNING_.htm', 'Content Warning / Reader Care Note', 0, 'content-warning');
+}
 
             // ========== MAKE WEBHOOK HELPER ==========
             function sendToMake(eventType, data) {
@@ -1574,13 +1576,13 @@
                 }
 
                 init() {
-                    this.disableTextSelection();
-                    this.disableRightClick();
-                    this.disableKeyboardCopy();
-                    this.disablePrintShortcut();
-                    this.disableDevTools();
-                    this.observeDOM();
-                }
+    this.disableTextSelection();
+    this.disableRightClick();
+    this.disableKeyboardCopy();
+    this.disablePrintShortcut();
+    this.disableDevTools();
+    // this.observeDOM(); // disabled to prevent reload/flicker
+}
 
                 disableTextSelection() {
     // Shared selection CSS for main app + iframe
