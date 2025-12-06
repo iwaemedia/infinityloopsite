@@ -1886,41 +1886,38 @@
                         // 1) Selection rules inside iframe
                         const iframeStyle = doc.createElement('style');
                         iframeStyle.innerHTML = `
-                            html, body,
-                            body *:not(input):not(textarea):not([contenteditable="true"]) {
-                                -webkit-user-select: none !important;
-                                -moz-user-select: none !important;
-                                -ms-user-select: none !important;
-                                user-select: none !important;
-                            }
+    /* Center the content and use a comfortable width */
+    html, body {
+        margin: 0 !important;
+        padding: 3rem 4rem !important;
+        max-width: 1100px !important;   /* controls the reading width */
+        margin-left: auto !important;
+        margin-right: auto !important;
+        font-size: 18px !important;
+        line-height: 1.7 !important;
+    }
 
-                            input, textarea, [contenteditable="true"] {
-                                -webkit-user-select: text !important;
-                                -moz-user-select: text !important;
-                                -ms-user-select: text !important;
-                                user-select: text !important;
-                            }
+    /* Knock out extra Word margins so the column can actually widen */
+    body > div, body > p {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
 
-                            /* Reading typography overrides (font size + margins) */
-                            html, body {
-                                margin-left: 1.5in !important;
-                                margin-right: 1.5in !important;
-                                font-size: 18px !important;
-                                line-height: 1.7 !important;
-                            }
+    p, span, li, td, th {
+        font-size: 18px !important;
+        line-height: 1.7 !important;
+    }
 
-                            p, span, li, td, th {
-                                font-size: 18px !important;
-                                line-height: 1.7 !important;
-                            }
+    @media (max-width: 1024px) {
+        html, body {
+            padding: 1.5rem 1.25rem !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+    }
+`;
 
-                            @media (max-width: 1024px) {
-                                html, body {
-                                    margin-left: 0.3in !important;
-                                    margin-right: 0.3in !important;
-                                }
-                            }
-                        `;
                         doc.head.appendChild(iframeStyle);
 
                         // 2) Event-level block inside iframe, as a backup
