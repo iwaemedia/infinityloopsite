@@ -1823,252 +1823,282 @@
     </script>
 
     <!-- ========== CONTENT PROTECTION SYSTEM ========== -->
-    <script>
-        // ========== CONTENT PROTECTION SYSTEM ==========
-        (function () {
-            'use strict';
+<script>
+(function () {
+    'use strict';
 
-            class ContentProtection {
-                constructor() {
-                    this.init();
+    class ContentProtection {
+        constructor() {
+            this.init();
+        }
+
+        init() {
+            this.disableTextSelection();
+            this.disableRightClick();
+            this.disableKeyboardCopy();
+            this.disablePrintShortcut();
+            // NOTE: We intentionally do NOT block dev tools or reload the page.
+        }
+
+        // Disable text selection everywhere except form fields
+        disableTextSelection() {
+            const selectionCSS = `
+                /* MAIN DOCUMENT */
+                body,
+                body *:not(input):not(textarea):not([contenteditable="true"]) {
+                    -webkit-user-select: none !important;
+                    -moz-user-select: none !important;
+                    -ms-user-select: none !important;
+                    user-select: none !important;
                 }
 
-                init() {
-                    this.disableTextSelection();
-                    this.disableRightClick();
-                    this.disableKeyboardCopy();
-                    this.disablePrintShortcut();
-                    this.disableDevTools();
-                    this.observeDOM();
+                /* Allow selection in inputs and editable areas */
+                input, textarea, [contenteditable="true"] {
+                    -webkit-user-select: text !important;
+                    -moz-user-select: text !important;
+                    -ms-user-select: text !important;
+                    user-select: text !important;
                 }
+            `;
 
-                disableTextSelection() {
-                    const style = document.createElement('style');
-                    style.innerHTML = `
-                        * {
-                            -webkit-user-select: none !important;
-                            -moz-user-select: none !important;
-                            -ms-user-select: none !important;
-                            user-select: none !important;
-                        }
+            // Apply to main document
+            const style = document.createElement('style');
+            style.innerHTML = selectionCSS;
+            document.head.appendChild(style);
 
-                        input, textarea, [contenteditable="true"] {
-                            -webkit-user-select: text !important;
-                            -moz-user-select: text !important;
-                            -ms-user-select: text !important;
-                            user-select: text !important;
-                        }
-                    `;
-                    document.head.appendChild(style);
+            // Also enforce via event, in case some inline styles override CSS
+            document.addEventListener('selectstart', (e) => {
+                const tag = (e.target && e.target.tagName) || '';
+                if (tag !== 'INPUT' && tag !== 'TEXTAREA' &&
+                    !(e.target && e.target.isContentEditable)) {
+                    e.preventDefault();
                 }
+            });
 
-                disableRightClick() {
-                    document.addEventListener('contextmenu', (e) => {
-                        if (
-                            e.target.closest('.reader-iframe-wrap') ||
-                            e.target.closest('#reader-frame') ||
-                            e.target.closest('.reader-pane')
-                        ) {
-                            e.preventDefault();
-                            this.showProtectionWarning();
-                        }
-                    });
-                }
+            // Apply to iframe content (reader)
+            const iframe = document.getElementById('reader-frame');
+            if (iframe) {
+                iframe.addEventListener('load', () => {
+                    try {
+                        const doc = iframe.contentDocument || iframe.contentWindow.document;
+                        if (!doc) return;
 
-                disableKeyboardCopy() {
-                    document.addEventListener('keydown', (e) => {
-                        const key = (e.key || '').toLowerCase();
-                        const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+                        // 1) Selection rules inside iframe
+                        const iframeStyle = doc.createElement('style');
+                        iframeStyle.innerHTML = `
+                            html, body,
+                            body *:not(input):not(textarea):not([contenteditable="true"]) {
+                                -webkit-user-select: none !important;
+                                -moz-user-select: none !important;
+                                -ms-user-select: none !important;
+                                user-select: none !important;
+                            }
 
-                        const forbidden =
-                            (isCtrlOrCmd && ['c', 'x', 'u'].includes(key)) ||
-                            key === 'f12' ||
-                            (isCtrlOrCmd && e.shiftKey && ['i', 'j'].includes(key));
+                            input, textarea, [contenteditable="true"] {
+                                -webkit-user-select: text !important;
+                                -moz-user-select: text !important;
+                                -ms-user-select: text !important;
+                                user-select: text !important;
+                            }
 
-                        if (forbidden) {
-                            e.preventDefault();
-                            this.showProtectionWarning();
-                        }
-                    });
-                }
+                            /* Reading typography overrides (font size + margins) */
+                            html, body {
+                                margin-left: 1.5in !important;
+                                margin-right: 1.5in !important;
+                                font-size: 18px !important;
+                                line-height: 1.7 !important;
+                            }
 
-                disablePrintShortcut() {
-                    document.addEventListener('keydown', (e) => {
-                        const key = (e.key || '').toLowerCase();
-                        if ((e.ctrlKey || e.metaKey) && key === 'p') {
-                            e.preventDefault();
-                            this.showPrintWarning();
-                        }
-                    });
+                            p, span, li, td, th {
+                                font-size: 18px !important;
+                                line-height: 1.7 !important;
+                            }
 
-                    window.print = () => {
-                        console.warn('Printing disabled - The Infinity Loop content is copyright protected.');
-                        this.showPrintWarning();
-                    };
-                }
+                            @media (max-width: 1024px) {
+                                html, body {
+                                    margin-left: 0.3in !important;
+                                    margin-right: 0.3in !important;
+                                }
+                            }
+                        `;
+                        doc.head.appendChild(iframeStyle);
 
-                disableDevTools() {
-                    const threshold = 160;
-                    const checkDevTools = () => {
-                        const widthDiff = window.outerWidth - window.innerWidth;
-                        const heightDiff = window.outerHeight - window.innerHeight;
-
-                        if (widthDiff > threshold || heightDiff > threshold) {
-                            document.body.innerHTML = `
-                                <div style="
-                                    position: fixed;
-                                    top: 0;
-                                    left: 0;
-                                    width: 100%;
-                                    height: 100%;
-                                    background: #000;
-                                    color: white;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    text-align: center;
-                                    padding: 20px;
-                                    z-index: 999999;
-                                    font-family: sans-serif;
-                                ">
-                                    <div>
-                                        <h1 style="color: #e63946;">⚠️ Developer Tools Detected</h1>
-                                        <p>Developer tools are disabled for security reasons.</p>
-                                        <p>This content is protected by copyright law.</p>
-                                        <button onclick="location.reload()" style="
-                                            background: #e63946;
-                                            color: white;
-                                            border: none;
-                                            padding: 10px 20px;
-                                            border-radius: 5px;
-                                            margin-top: 20px;
-                                            cursor: pointer;
-                                        ">
-                                            Reload Page
-                                        </button>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    };
-
-                    setInterval(checkDevTools, 1000);
-                }
-
-                observeDOM() {
-                    const observer = new MutationObserver(() => {
-                        const iframe = document.getElementById('reader-frame');
-                        if (!iframe) {
-                            window.location.reload();
-                        }
-                    });
-
-                    observer.observe(document.body, {
-                        childList: true,
-                        subtree: true
-                    });
-                }
-
-                showProtectionWarning() {
-                    const wrapper = document.createElement('div');
-                    wrapper.innerHTML = `
-                        <div style="
-                            position: fixed;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%);
-                            background: rgba(0,0,0,0.95);
-                            color: white;
-                            padding: 30px;
-                            border-radius: 10px;
-                            border: 2px solid #e63946;
-                            z-index: 999999;
-                            text-align: center;
-                            max-width: 500px;
-                            width: 90%;
-                            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-                        ">
-                            <h3 style="color: #e63946; margin-bottom: 15px;">⚠️ Content Protected</h3>
-                            <p>Copying content from The Infinity Loop is disabled to protect intellectual property rights.</p>
-                            <p style="font-size: 14px; color: #ccc; margin-top: 20px;">
-                                This work is copyright protected. Unauthorized copying or distribution is prohibited.
-                            </p>
-                            <button style="
-                                background: #e63946;
-                                color: white;
-                                border: none;
-                                padding: 10px 20px;
-                                border-radius: 5px;
-                                margin-top: 20px;
-                                cursor: pointer;
-                            ">
-                                Close
-                            </button>
-                        </div>
-                    `;
-
-                    const dialog = wrapper.firstElementChild;
-                    const button = dialog.querySelector('button');
-                    button.addEventListener('click', () => wrapper.remove());
-
-                    document.body.appendChild(wrapper);
-
-                    setTimeout(() => {
-                        if (wrapper.parentElement) wrapper.remove();
-                    }, 5000);
-                }
-
-                showPrintWarning() {
-                    const wrapper = document.createElement('div');
-                    wrapper.innerHTML = `
-                        <div style="
-                            position: fixed;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%);
-                            background: rgba(0,0,0,0.95);
-                            color: white;
-                            padding: 30px;
-                            border-radius: 10px;
-                            border: 2px solid #e63946;
-                            z-index: 999999;
-                            text-align: center;
-                            max-width: 500px;
-                            width: 90%;
-                            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-                        ">
-                            <h3 style="color: #e63946; margin-bottom: 15px;">🖨️ Printing Disabled</h3>
-                            <p>Printing of The Infinity Loop content is disabled.</p>
-                            <p>Full license holders receive printable materials.</p>
-                            <button style="
-                                background: #e63946;
-                                color: white;
-                                border: none;
-                                padding: 10px 20px;
-                                border-radius: 5px;
-                                margin-top: 20px;
-                                cursor: pointer;
-                            ">
-                                Close
-                            </button>
-                        </div>
-                    `;
-
-                    const dialog = wrapper.firstElementChild;
-                    const button = dialog.querySelector('button');
-                    button.addEventListener('click', () => wrapper.remove());
-
-                    document.body.appendChild(wrapper);
-
-                    setTimeout(() => {
-                        if (wrapper.parentElement) wrapper.remove();
-                    }, 5000);
-                }
+                        // 2) Event-level block inside iframe, as a backup
+                        doc.addEventListener('selectstart', (e) => {
+                            const tag = (e.target && e.target.tagName) || '';
+                            if (tag !== 'INPUT' && tag !== 'TEXTAREA' &&
+                                !(e.target && e.target.isContentEditable)) {
+                                e.preventDefault();
+                            }
+                        });
+                    } catch (e) {
+                        console.warn('Could not inject iframe selection guard:', e);
+                    }
+                });
             }
+        }
 
-            // Initialize protection
-            new ContentProtection();
-        })();
-    </script>
+        disableRightClick() {
+            document.addEventListener('contextmenu', (e) => {
+                if (
+                    e.target.closest('.reader-iframe-wrap') ||
+                    e.target.closest('#reader-frame') ||
+                    e.target.closest('.reader-pane')
+                ) {
+                    e.preventDefault();
+                    this.showProtectionWarning();
+                }
+            });
+
+            const iframe = document.getElementById('reader-frame');
+            if (iframe) {
+                iframe.addEventListener('load', () => {
+                    try {
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        iframeDoc.addEventListener('contextmenu', (e) => {
+                            e.preventDefault();
+                            this.showProtectionWarning();
+                        });
+                    } catch (e) {
+                        // ignore
+                    }
+                });
+            }
+        }
+
+        disableKeyboardCopy() {
+            document.addEventListener('keydown', (e) => {
+                const key = (e.key || '').toLowerCase();
+                const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+                const forbidden =
+                    // Ctrl/Cmd + C / X / U
+                    (isCtrlOrCmd && ['c', 'x', 'u'].includes(key)) ||
+                    // F12
+                    key === 'f12' ||
+                    // Ctrl+Shift+I / J
+                    (isCtrlOrCmd && e.shiftKey && ['i', 'j'].includes(key));
+
+                if (forbidden) {
+                    e.preventDefault();
+                    this.showProtectionWarning();
+                }
+            });
+        }
+
+        disablePrintShortcut() {
+            document.addEventListener('keydown', (e) => {
+                const key = (e.key || '').toLowerCase();
+                if ((e.ctrlKey || e.metaKey) && key === 'p') {
+                    e.preventDefault();
+                    this.showPrintWarning();
+                }
+            });
+
+            const originalPrint = window.print;
+            window.print = () => {
+                console.warn('Printing disabled - The Infinity Loop content is copyright protected.');
+                this.showPrintWarning();
+            };
+        }
+
+        showProtectionWarning() {
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: rgba(0,0,0,0.95);
+                    color: white;
+                    padding: 30px;
+                    border-radius: 10px;
+                    border: 2px solid #e63946;
+                    z-index: 999999;
+                    text-align: center;
+                    max-width: 500px;
+                    width: 90%;
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+                ">
+                    <h3 style="color: #e63946; margin-bottom: 15px;">⚠️ Content Protected</h3>
+                    <p>Copying content from The Infinity Loop is disabled to protect intellectual property rights.</p>
+                    <p style="font-size: 14px; color: #ccc; margin-top: 20px;">
+                        This work is copyright protected. Unauthorized copying or distribution is prohibited.
+                    </p>
+                    <button style="
+                        background: #e63946;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        margin-top: 20px;
+                        cursor: pointer;
+                    ">
+                        Close
+                    </button>
+                </div>
+            `;
+
+            const dialog = wrapper.firstElementChild;
+            const button = dialog.querySelector('button');
+            button.addEventListener('click', () => wrapper.remove());
+
+            document.body.appendChild(wrapper);
+
+            setTimeout(() => {
+                if (wrapper.parentElement) wrapper.remove();
+            }, 5000);
+        }
+
+        showPrintWarning() {
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: rgba(0,0,0,0.95);
+                    color: white;
+                    padding: 30px;
+                    border-radius: 10px;
+                    border: 2px solid #e63946;
+                    z-index: 999999;
+                    text-align: center;
+                    max-width: 500px;
+                    width: 90%;
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+                ">
+                    <h3 style="color: #e63946; margin-bottom: 15px;">🖨️ Printing Disabled</h3>
+                    <p>Printing of The Infinity Loop content is disabled.</p>
+                    <p>Full license holders receive printable materials.</p>
+                    <button style="
+                        background: #e63946;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        margin-top: 20px;
+                        cursor: pointer;
+                    ">
+                        Close
+                    </button>
+                </div>
+            `;
+
+            const dialog = wrapper.firstElementChild;
+            const button = dialog.querySelector('button');
+            button.addEventListener('click', () => wrapper.remove());
+
+            document.body.appendChild(wrapper);
+
+            setTimeout(() => {
+                if (wrapper.parentElement) wrapper.remove();
+            }, 5000);
+        }
+    }   new ContentProtection();
+})();
+</script>
 </body>
 </html>
