@@ -5,10 +5,8 @@
     <title>Infinity Loop Reader</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <meta name="description" content="Interactive reader for The Infinity Loop - Mapping the Machinery of Power, Policy, and Profit" />
-
     <!-- GOOGLE FONTS -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet" />
-
     <style>
         :root {
             --bg: #050608;
@@ -536,7 +534,6 @@
         }
 
         .menu-toggle {
-            display: none;
             width: 34px;
             height: 34px;
             border-radius: 10px;
@@ -545,7 +542,9 @@
             color: #e5e7eb;
             cursor: pointer;
             font-size: 1.1rem;
-            display: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .current-label {
@@ -569,6 +568,14 @@
             border-radius: 999px;
             background: rgba(15, 23, 42, 0.95);
             border: 1px solid rgba(148, 163, 184, 0.6);
+            transition: box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+
+        /* Glowing green when full license is active */
+        .license-status-full {
+            background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.25), rgba(21, 128, 61, 0.95));
+            border-color: rgba(74, 222, 128, 0.9);
+            box-shadow: 0 0 18px rgba(34, 197, 94, 0.9);
         }
 
         .license-dot {
@@ -613,6 +620,17 @@
             color: #e5e7eb;
             font-size: 0.9rem;
             cursor: pointer;
+            transition: box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+
+        /* Glowing green License Active button */
+        .btn-secondary.active-license {
+            background: radial-gradient(circle at top, rgba(22, 163, 74, 0.98), rgba(21, 128, 61, 0.98));
+            border-color: rgba(74, 222, 128, 0.9);
+            color: #eafff2;
+            box-shadow: 0 0 18px rgba(34, 197, 94, 0.9);
+            cursor: default;
+            pointer-events: none;
         }
 
         /* MAIN LAYOUT */
@@ -742,9 +760,11 @@
             color: #f97316;
         }
 
+        /* Red glow on active entry */
         .nav-link.active {
-            background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.15), rgba(59, 130, 246, 0.2));
-            border-color: rgba(129, 140, 248, 0.9);
+            background: radial-gradient(circle at top left, rgba(248, 113, 113, 0.22), rgba(239, 68, 68, 0.3));
+            border-color: rgba(248, 113, 113, 0.9);
+            box-shadow: 0 0 12px rgba(248, 113, 113, 0.8);
         }
 
         .nav-link.trial-only:not(.active) {
@@ -857,7 +877,6 @@
         }
 
         .trial-limitation {
-            display: none;
             background: rgba(127, 29, 29, 0.95);
             color: #fee2e2;
             padding: 10px 18px;
@@ -888,7 +907,6 @@
             background: linear-gradient(90deg, #b91c1c, #dc2626);
             color: #fee2e2;
             font-size: 0.88rem;
-            display: none;
         }
 
         #upgradeBannerContent {
@@ -1040,7 +1058,7 @@
             }
         }
 
-        /* PRINT LOCKOUT (optional – prevents easy printing) */
+        /* PRINT LOCKOUT */
         @media print {
             body * {
                 visibility: hidden !important;
@@ -1061,10 +1079,8 @@
             }
         }
 
-        /* ====== MOBILE HEADER & EBOOK-STYLE LAYOUT FOR PHONES ====== */
         /* Phones: 0–599px */
         @media (max-width: 599px) {
-            /* Header wraps into two rows, like an app bar */
             .app-header {
                 padding: 10px 16px;
                 flex-wrap: wrap;
@@ -1109,7 +1125,6 @@
                 font-size: 0.9rem;
             }
 
-            /* Reader toolbar tuned for thumb reach */
             .reader-controls {
                 padding: 10px 12px;
                 justify-content: center;
@@ -1126,7 +1141,6 @@
                 justify-content: center;
             }
 
-            /* Reader area should feel like a full-screen page */
             .reader-pane {
                 min-height: calc(100vh - 140px);
             }
@@ -1136,7 +1150,7 @@
             }
         }
 
-        /* Extra-small phones: ~iPhone SE and similar */
+        /* Extra-small phones */
         @media (max-width: 400px) {
             .app-header {
                 padding: 8px 10px;
@@ -1152,7 +1166,6 @@
                 font-size: 0.8rem;
             }
 
-            /* On very small phones, stack the header buttons full-width */
             .upgrade-btn,
             .btn-secondary {
                 flex: 1 1 100%;
@@ -1165,7 +1178,6 @@
         }
     </style>
 </head>
-
 <body>
     <!-- ========== SPLASH ENTRANCE ========== -->
     <div id="splashEntrance">
@@ -1178,20 +1190,16 @@
                     <div class="cover-reflection"></div>
                 </div>
             </div>
-
             <div class="splash-right">
                 <div class="splash-pill">
                     <div class="splash-pill-dot"></div>
                     <div class="splash-pill-text">Early access • Limited reader beta</div>
                 </div>
-
                 <h1 class="splash-title">The Infinity Loop</h1>
                 <p class="splash-subtitle">
-                    An interactive journey through the machinery of systemic control and resistance.
-                    Explore 11 chapters of meticulously researched history, theory, data, and abolition-aligned
-                    strategies.
+                    An interactive journey through the machinery of systemic control and resistance. Explore 11 chapters
+                    of meticulously researched history, theory, data, and abolition-aligned strategies.
                 </p>
-
                 <div class="splash-bullets">
                     <div class="splash-bullet">
                         <div class="bullet-icon primary">📚</div>
@@ -1227,33 +1235,26 @@
                         <div class="bullet-body">
                             <div class="bullet-title">Resilience blueprints</div>
                             <div class="bullet-text">
-                                Abolition-aligned strategies, mutual aid, and resilience practices for breaking the
-                                Loop.
+                                Abolition-aligned strategies, mutual aid, and resilience practices for breaking the Loop.
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="splash-cta-row">
                     <button id="enterBookBtn" class="btn-primary">
                         <span>Enter Interactive Reader</span>
                     </button>
-                    <button id="viewSampleBtn" class="btn-secondary-outline">
-                        <span>View Free Sample</span>
-                    </button>
                 </div>
-
                 <div class="trial-card">
                     <div class="trial-card-header">
                         <div class="trial-card-title">Trial access</div>
                         <div class="trial-card-badge">First 2 chapters free</div>
                     </div>
                     <div class="trial-card-body">
-                        Read the opening chapters and front matter without a credit card. Upgrade later for full 11-chapter
-                        access and all appendices.
+                        Read the opening chapters and front matter without a credit card. Upgrade later for full
+                        11-chapter access and all appendices.
                     </div>
                 </div>
-
                 <p class="splash-disclaimer">
                     Your progress is stored locally on this device. By continuing, you agree to the
                     <a href="#" id="licenseAgreementLink">License &amp; Use Policy</a>.
@@ -1268,40 +1269,31 @@
             <button class="modal-close" id="closeEmailModal">✕</button>
             <h2>Unlock trial access</h2>
             <p>
-                Access front matter plus
-                <span class="modal-highlight">Chapters 1–2</span>
-                for 7 days. No credit card required. Your email is used only for sending your license &amp; major
-                updates.
+                Access front matter plus <span class="modal-highlight">Chapters 1–2</span> for 7 days. No credit card
+                required. Your email is used only for sending your license &amp; major updates.
             </p>
-
             <form id="emailForm">
                 <div class="input-group">
                     <label for="trialName">Name</label>
                     <input type="text" id="trialName" placeholder="How should we address you?" required />
                 </div>
-
                 <div class="input-group">
                     <label for="trialEmail">Email</label>
                     <input type="email" id="trialEmail" placeholder="you@example.com" required />
                 </div>
-
                 <div class="checkbox-group">
                     <input type="checkbox" id="agreeTerms" required />
                     <label for="agreeTerms">
-                        I agree to the
-                        <a href="#" id="termsLink">Terms of Service</a>
-                        and understand I may receive occasional Loop updates.
+                        I agree to the <a href="#" id="termsLink">Terms of Service</a> and understand I may receive
+                        occasional Loop updates.
                     </label>
                 </div>
-
                 <button type="submit" class="btn-primary" style="width: 100%;">
                     <span>Start 7-Day Free Trial</span>
                 </button>
             </form>
-
             <p class="small-text">
-                Already have a license?
-                <a href="#" id="switchToLicense">Activate here</a>.
+                Already have a license? <a href="#" id="switchToLicense">Activate here</a>.
             </p>
         </div>
     </div>
@@ -1314,27 +1306,19 @@
             <p>
                 Enter your license key to unlock all 11 chapters, appendices, and data tables on this device.
             </p>
-
             <div class="input-group">
                 <label for="licenseInput">License Key</label>
                 <input type="text" id="licenseInput" placeholder="INF-XXXX-XXXX-XXXX" required />
             </div>
-
             <button id="activateLicense" class="btn-primary" style="width: 100%; margin-bottom: 12px;">
                 <span>Activate License</span>
             </button>
-
             <div class="purchase-options">
-                <button id="purchaseStripe">
-                    <span>Purchase with</span>
-                    <strong>Stripe</strong>
-                </button>
                 <button id="purchasePaypal">
                     <span>Purchase with</span>
                     <strong>PayPal</strong>
                 </button>
             </div>
-
             <p class="small-text">
                 By activating, you agree to the single-device, non-transferable license terms.
             </p>
@@ -1348,7 +1332,6 @@
                 <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">☰</button>
                 <div id="current-label" class="current-label">The Infinity Loop</div>
             </div>
-
             <div class="header-right">
                 <div class="license-status">
                     <span class="license-dot" id="licenseDot"></span>
@@ -1359,7 +1342,6 @@
                 <button id="activateBtn" class="btn-secondary">Activate License</button>
             </div>
         </header>
-
         <div class="app-main">
             <!-- SIDEBAR -->
             <aside class="sidebar" id="sidebar">
@@ -1368,14 +1350,12 @@
                         <div class="user-email" id="userEmail">Not logged in</div>
                         <div class="license-type" id="licenseTypeDisplay">No Access</div>
                     </div>
-
                     <div class="nav-group">
                         <!-- FRONT MATTER -->
                         <div class="nav-section">
                             <h3 class="nav-section-title">Front Matter</h3>
                             <ul class="nav-list" id="frontMatterList"></ul>
                         </div>
-
                         <!-- CHAPTERS -->
                         <div class="nav-section">
                             <h3 class="nav-section-title">
@@ -1384,7 +1364,6 @@
                             </h3>
                             <ul class="nav-list" id="chapterList"></ul>
                         </div>
-
                         <!-- BACK MATTER -->
                         <div class="nav-section">
                             <h3 class="nav-section-title">Back Matter</h3>
@@ -1393,7 +1372,6 @@
                     </div>
                 </div>
             </aside>
-
             <!-- READER -->
             <section class="reader-pane">
                 <div class="reader-controls">
@@ -1406,18 +1384,15 @@
                         <div class="trial-remaining" id="trialInfoPill" style="display: none;"></div>
                     </div>
                 </div>
-
                 <div class="reader-iframe-wrap">
                     <div id="loadingOverlay">
                         <div class="spinner"></div>
                     </div>
                     <iframe id="readerFrame" title="Infinity Loop Reader"></iframe>
                 </div>
-
                 <div id="trialLimitation" class="trial-limitation">
                     Trial limit reached. Only front matter and Chapters 1–2 are accessible during the trial.
-                    <a href="#" id="trialUpgradeLink">Upgrade to full version</a>
-                    for complete access.
+                    <a href="#" id="trialUpgradeLink">Upgrade to full version</a> for complete access.
                 </div>
             </section>
         </div>
@@ -1426,8 +1401,11 @@
     <!-- Bottom upgrade banner -->
     <div id="upgradeBanner">
         <div id="upgradeBannerContent">
-            <span>Trial limit reached — Chapters 3–11 require a full license.</span>
-            <button id="upgradeNow">Upgrade Now</button>
+            <span id="upgradeBannerMessage">Trial limit reached — Chapters 3–11 require a full license.</span>
+            <div class="upgrade-buttons">
+                <button id="signupTrialButton" class="btn-primary" style="display:none;"><span>Sign Up for Trial</span></button>
+                <button id="upgradeNow" class="upgrade-btn"><span>Upgrade Now</span></button>
+            </div>
         </div>
     </div>
 
@@ -1444,6 +1422,7 @@
             TRIAL_CHAPTERS: 2,
             TRIAL_DAYS: 7,
             TEST_LICENSE: "INF-TEST-2024-ABCD-5678",
+            MASTER_LICENSE: "INF-MASTER-2025-ROOT-0001", // master key
             VALID_LICENSE_PREFIX: "INF-",
             STRIPE_CHECKOUT_URL: "https://buy.stripe.com/dRm7sN2on3yF26FbYEdIA01",
             PAYPAL_CHECKOUT_URL: "https://www.paypal.com/ncp/payment/FR755FQZHEGQA",
@@ -1501,14 +1480,7 @@
                     alwaysAccessible: true,
                     id: "methodology",
                 },
-                {
-                    file: "HOW_TO_USE_THIS_BOOK_A_READER'S_GUIDE_.htm",
-                    label: "How to Use This Book: A Reader's Guide",
-                    alwaysAccessible: true,
-                    id: "reader-guide",
-                },
             ],
-
             chapters: [
                 {
                     file: "CHAPTER_1_clean_stitched_formatted.htm",
@@ -1577,7 +1549,6 @@
                     id: "ch11",
                 },
             ],
-
             backMatter: [
                 {
                     file: "APPENDIX_A_LOOP MECHANISM GLOSSARY_.htm",
@@ -1598,7 +1569,7 @@
                     id: "app-c",
                 },
                 {
-                    file: "WORKS_CITED_.htm",
+                    file: "WORKS CITED.htm",
                     label: "Works Cited",
                     alwaysAccessible: true,
                     id: "works-cited",
@@ -1637,6 +1608,7 @@
                 this.userData = this.loadUserData();
                 this.licenseData = this.loadLicenseData();
                 this.trialData = this.loadTrialData();
+                this.normalizeTrialState(); // clean up expired trials
             }
 
             getDeviceId() {
@@ -1678,6 +1650,18 @@
                 }
             }
 
+            normalizeTrialState() {
+                if (!this.trialData || !this.trialData.expiry) return;
+                const expiry = new Date(this.trialData.expiry);
+                const now = new Date();
+                if (isNaN(expiry.getTime()) || expiry <= now) {
+                    // mark that a trial just expired (for banner)
+                    localStorage.setItem("infinityLoopTrialExpiredFlag", "1");
+                    localStorage.removeItem("infinityLoopTrial");
+                    this.trialData = null;
+                }
+            }
+
             saveUser(email, name = "") {
                 const userData = {
                     email,
@@ -1701,28 +1685,37 @@
                 };
                 localStorage.setItem("infinityLoopTrial", JSON.stringify(trialData));
                 this.trialData = trialData;
+                // clear any old "expired" flag when a new trial starts
+                localStorage.removeItem("infinityLoopTrialExpiredFlag");
                 return trialData;
             }
 
             activateLicense(licenseKey, email, name = "") {
-                if (!licenseKey || (!licenseKey.startsWith(CONFIG.VALID_LICENSE_PREFIX) && licenseKey !== CONFIG.TEST_LICENSE)) {
-                    throw new Error("Invalid license key format");
+                const normalizedKey = licenseKey.trim().toUpperCase();
+                
+                // Check for valid license formats
+                const isValid = 
+                    normalizedKey.startsWith(CONFIG.VALID_LICENSE_PREFIX) ||
+                    normalizedKey === CONFIG.TEST_LICENSE ||
+                    normalizedKey === CONFIG.MASTER_LICENSE;
+                
+                if (!isValid) {
+                    throw new Error("Invalid license key format. Valid keys start with 'INF-'");
                 }
 
                 const licenseData = {
-                    licenseKey,
+                    licenseKey: normalizedKey,
                     email,
                     name: name || "",
                     activated: new Date().toISOString(),
                     deviceId: this.deviceId,
                     version: CONFIG.APP_VERSION,
+                    isMaster: normalizedKey === CONFIG.MASTER_LICENSE,
                 };
                 localStorage.setItem("infinityLoopLicense", JSON.stringify(licenseData));
                 this.licenseData = licenseData;
-
                 localStorage.removeItem("infinityLoopTrial");
                 this.trialData = null;
-
                 return licenseData;
             }
 
@@ -1737,9 +1730,24 @@
             }
 
             canAccessChapter(chapterNumber) {
-                if (chapterNumber === 0) return true;
+                // Backwards compatible: delegate to section-based check for chapters
+                return this.canAccessSection("chapter", chapterNumber, "");
+            }
+
+            canAccessSection(sectionType, chapterNumber = 0, file = "") {
+                // Title page is always accessible
+                if (file === "TITLE_PAGE.htm") return true;
+
+                // Full license: full access everywhere
                 if (this.hasActiveLicense()) return true;
-                if (this.hasActiveTrial()) return chapterNumber <= CONFIG.TRIAL_CHAPTERS;
+
+                // Active trial: only chapters within trial allowed; front/back (except title page) are locked
+                if (this.hasActiveTrial()) {
+                    if (sectionType === "chapter") return chapterNumber <= CONFIG.TRIAL_CHAPTERS;
+                    return false;
+                }
+
+                // No access: nothing allowed except title page (handled above)
                 return false;
             }
 
@@ -1774,13 +1782,11 @@
 
         /**
          * Apply consistent, ebook-style typography inside the loaded chapter iframe.
-         * This keeps phone reading comfortable without editing each individual .htm file.
          */
         function applyReaderTypographyToIframe(iframeEl) {
             if (!iframeEl) return;
             const doc = iframeEl.contentDocument || (iframeEl.contentWindow && iframeEl.contentWindow.document);
             if (!doc) return;
-
             try {
                 let head = doc.head;
                 if (!head) {
@@ -1791,34 +1797,32 @@
                         doc.body.parentNode.insertBefore(head, doc.body);
                     }
                 }
-
                 let styleEl = doc.getElementById("infinity-loop-ebook-typography");
                 if (!styleEl) {
                     styleEl = doc.createElement("style");
                     styleEl.id = "infinity-loop-ebook-typography";
                     head.appendChild(styleEl);
                 }
-
                 styleEl.textContent = [
                     "html, body {",
-                    "  margin: 0;",
-                    "  padding: 20px 18px;",
-                    "  max-width: 44rem;",
-                    "  margin-left: auto;",
-                    "  margin-right: auto;",
-                    '  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;',
-                    "  font-size: 16px;",
-                    "  line-height: 1.6;",
-                    "  color: #111827;",
-                    "  background: #ffffff;",
+                    " margin: 0;",
+                    " padding: 20px 18px;",
+                    " max-width: 44rem;",
+                    " margin-left: auto;",
+                    " margin-right: auto;",
+                    ' font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;',
+                    " font-size: 16px;",
+                    " line-height: 1.6;",
+                    " color: #111827;",
+                    " background: #ffffff;",
                     "}",
                     "",
                     "p { margin: 0 0 1em 0; }",
                     "",
                     "h1, h2, h3, h4, h5, h6 {",
-                    '  font-family: "Crimson Pro", "Georgia", serif;',
-                    "  margin: 1.4em 0 0.7em;",
-                    "  line-height: 1.3;",
+                    ' font-family: "Crimson Pro", "Georgia", serif;',
+                    " margin: 1.4em 0 0.7em;",
+                    " line-height: 1.3;",
                     "}",
                     "h1 { font-size: 1.9em; }",
                     "h2 { font-size: 1.6em; }",
@@ -1828,23 +1832,23 @@
                     "ul, ol { margin: 0 0 1.1em 1.4em; }",
                     "",
                     "table {",
-                    "  width: 100%;",
-                    "  border-collapse: collapse;",
-                    "  margin: 1.5em 0;",
+                    " width: 100%;",
+                    " border-collapse: collapse;",
+                    " margin: 1.5em 0;",
                     "}",
                     "th, td {",
-                    "  padding: 0.5em 0.6em;",
-                    "  border: 1px solid #d1d5db;",
+                    " padding: 0.5em 0.6em;",
+                    " border: 1px solid #d1d5db;",
                     "}",
                     "",
                     "a { color: #1d4ed8; text-decoration: underline; }",
                     "",
                     "@media (max-width: 600px) {",
-                    "  html, body {",
-                    "    padding: 18px 14px;",
-                    "    font-size: 17px;",
-                    "    line-height: 1.7;",
-                    "  }",
+                    " html, body {",
+                    " padding: 18px 14px;",
+                    " font-size: 17px;",
+                    " line-height: 1.7;",
+                    " }",
                     "}",
                 ].join("\n");
             } catch (err) {
@@ -1861,98 +1865,84 @@
                 this.currentIndex = 0;
                 this.isMobile = window.innerWidth <= 768;
                 this.allSections = [];
-
                 this.licenseManager = new LicenseManager();
                 this.init();
             }
 
             init() {
-    this.cacheDOM();
-
-    // Ensure we have the latest mobile flag
-    this.isMobile = window.innerWidth <= 768;
-
-    // NEW: initial sidebar state on first load
-    if (this.isMobile) {
-        // Start collapsed (hidden) on phones
-        this.sidebar.style.display = "none";
-        this.menuToggle.textContent = "☰";
-    } else {
-        // Visible by default on desktop
-        this.sidebar.style.display = "block";
-    }
-
-    this.setupEventListeners();
-    this.initializeNavigation();
-    this.loadNavigation();
-    this.updateAccessUI();
-
-    this.openSection(
-        "CONTENT_WARNING_.htm",
-        "Content Warning / Reader Care Note",
-        0,
-        "content-warning",
-        "front"
-    );
-}
+                this.cacheDOM();
+                this.setupEventListeners();
+                this.initializeNavigation();
+                this.loadNavigation();
+                this.updateAccessUI();
+                
+                // Initialize mobile sidebar state
+                if (this.isMobile) {
+                    this.sidebar.style.display = "none";
+                    this.menuToggle.textContent = "☰";
+                }
+                
+                // Preload Title Page so it shows first when the book is entered
+                this.openSection("TITLE_PAGE.htm", "Title Page", 0, "title-page", "front");
+            }
 
             cacheDOM() {
                 this.splashEntrance = document.getElementById("splashEntrance");
                 this.emailModal = document.getElementById("emailModal");
                 this.licenseModal = document.getElementById("licenseModal");
                 this.appShell = document.getElementById("app-shell");
-
                 this.readerFrame = document.getElementById("readerFrame");
                 this.loadingOverlay = document.getElementById("loadingOverlay");
-
                 this.sidebar = document.getElementById("sidebar");
                 this.menuToggle = document.getElementById("menu-toggle");
-
                 this.frontMatterList = document.getElementById("frontMatterList");
                 this.chapterList = document.getElementById("chapterList");
                 this.backMatterList = document.getElementById("backMatterList");
-
                 this.userEmailSpan = document.getElementById("userEmail");
                 this.licenseTypeDisplay = document.getElementById("licenseTypeDisplay");
                 this.trialBadge = document.getElementById("trialBadge");
                 this.upgradeButton = document.getElementById("upgradeButton");
                 this.activateBtn = document.getElementById("activateBtn");
                 this.currentLabel = document.getElementById("current-label");
-
                 this.licenseStatusEl = document.getElementById("licenseStatus");
                 this.licenseDot = document.getElementById("licenseDot");
+                this.licenseStatusContainer = document.querySelector(".license-status");
                 this.chapterLimitEl = document.getElementById("chapterLimit");
                 this.trialInfoPill = document.getElementById("trialInfoPill");
                 this.positionPill = document.getElementById("positionPill");
                 this.trialLimitation = document.getElementById("trialLimitation");
                 this.upgradeBanner = document.getElementById("upgradeBanner");
-
+                this.upgradeBannerMessage = document.getElementById("upgradeBannerMessage");
+                this.signupTrialButton = document.getElementById("signupTrialButton");
+                this.upgradeNowBtn = document.getElementById("upgradeNow");
                 this.prevBtn = document.getElementById("prev-btn");
                 this.nextBtn = document.getElementById("next-btn");
             }
 
             initializeNavigation() {
                 this.allSections = [
-                    ...BOOK_STRUCTURE.frontMatter.map((item) => ({ ...item, type: "front" })),
-                    ...BOOK_STRUCTURE.chapters.map((item, index) => ({ ...item, type: "chapter", chapterNumber: index + 1 })),
-                    ...BOOK_STRUCTURE.backMatter.map((item) => ({ ...item, type: "back" })),
+                    ...BOOK_STRUCTURE.frontMatter.map((item) => ({
+                        ...item,
+                        type: "front",
+                    })),
+                    ...BOOK_STRUCTURE.chapters.map((item, index) => ({
+                        ...item,
+                        type: "chapter",
+                        chapterNumber: index + 1,
+                    })),
+                    ...BOOK_STRUCTURE.backMatter.map((item) => ({
+                        ...item,
+                        type: "back",
+                    })),
                 ];
             }
 
             setupEventListeners() {
                 const enterBookBtn = document.getElementById("enterBookBtn");
                 const bookCover = document.getElementById("bookCover");
-                const viewSampleBtn = document.getElementById("viewSampleBtn");
 
                 if (enterBookBtn) enterBookBtn.addEventListener("click", () => this.handleEnterClick());
                 if (bookCover) bookCover.addEventListener("click", () => this.handleEnterClick());
-
-                if (viewSampleBtn) {
-                    viewSampleBtn.addEventListener("click", () => {
-                        this.showApp();
-                        this.openSection("CONTENT_WARNING_.htm", "Content Warning / Reader Care Note", 0, "content-warning", "front");
-                    });
-                }
 
                 const emailForm = document.getElementById("emailForm");
                 const trialEmailInput = document.getElementById("trialEmail");
@@ -1974,13 +1964,14 @@
 
                 if (activateLicenseBtn) {
                     activateLicenseBtn.addEventListener("click", () => {
-                        this.activateLicense(licenseInput.value.trim().toUpperCase());
+                        this.activateLicense(licenseInput.value.trim());
                     });
                 }
 
                 if (closeEmailModal) {
                     closeEmailModal.addEventListener("click", () => (this.emailModal.style.display = "none"));
                 }
+
                 if (closeLicenseModal) {
                     closeLicenseModal.addEventListener("click", () => (this.licenseModal.style.display = "none"));
                 }
@@ -1999,17 +1990,7 @@
                     });
                 }
 
-                const purchaseStripe = document.getElementById("purchaseStripe");
                 const purchasePaypal = document.getElementById("purchasePaypal");
-
-                if (purchaseStripe) {
-                    purchaseStripe.addEventListener("click", (e) => {
-                        e.preventDefault();
-                        if (confirm("You will be redirected to our secure Stripe checkout page. Continue?")) {
-                            window.open(CONFIG.STRIPE_CHECKOUT_URL, "_blank");
-                        }
-                    });
-                }
 
                 if (purchasePaypal) {
                     purchasePaypal.addEventListener("click", (e) => {
@@ -2020,15 +2001,34 @@
                     });
                 }
 
-                this.upgradeButton.addEventListener("click", () => this.showLicenseModal());
+                if (this.upgradeButton) this.upgradeButton.addEventListener("click", () => {
+                    const accessType = this.licenseManager.getAccessType();
+                    if (accessType === "none") {
+                        this.showEmailModal();
+                    } else {
+                        this.showLicenseModal();
+                    }
+                });
+
                 const upgradeNow = document.getElementById("upgradeNow");
                 if (upgradeNow) upgradeNow.addEventListener("click", () => this.showLicenseModal());
-                this.activateBtn.addEventListener("click", () => this.showLicenseModal());
 
-                this.prevBtn.addEventListener("click", () => this.navigateToPrevious());
-                this.nextBtn.addEventListener("click", () => this.navigateToNext());
+                // Signup for trial button on bottom banner
+                if (this.signupTrialButton) {
+                    this.signupTrialButton.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        this.showEmailModal();
+                    });
+                }
 
-                this.menuToggle.addEventListener("click", () => this.toggleSidebar());
+                if (this.activateBtn) this.activateBtn.addEventListener("click", () => this.showLicenseModal());
+
+                if (this.prevBtn) this.prevBtn.addEventListener("click", () => this.navigateToPrevious());
+                if (this.nextBtn) this.nextBtn.addEventListener("click", () => this.navigateToNext());
+
+                if (this.menuToggle) {
+                    this.menuToggle.addEventListener("click", () => this.toggleSidebar());
+                }
 
                 document.querySelectorAll(".nav-section-title").forEach((title) => {
                     title.addEventListener("click", (e) => {
@@ -2039,10 +2039,6 @@
 
                 window.addEventListener("resize", () => {
                     this.isMobile = window.innerWidth <= 768;
-                    if (!this.isMobile) {
-                        this.sidebar.style.display = "block";
-                        this.menuToggle.textContent = "☰";
-                    }
                 });
 
                 const termsLink = document.getElementById("termsLink");
@@ -2065,11 +2061,25 @@
 
             handleEnterClick() {
                 const accessType = this.licenseManager.getAccessType();
+                
+                // Always show main reader shell
+                this.showApp();
+                
                 if (accessType === "none") {
+                    // First time: no trial, no license → show email/trial form
                     this.showEmailModal();
-                } else {
-                    this.showApp();
+                    this.openSection("TITLE_PAGE.htm", "Title Page", 0, "title-page", "front");
+                    return;
                 }
+                
+                // Trial or full license already active → show Title Page if nothing loaded yet
+                if (!this.currentFile) {
+                    this.openSection("TITLE_PAGE.htm", "Title Page", 0, "title-page", "front");
+                }
+            }
+
+            handleViewSampleClick() {
+                this.showEmailModal();
             }
 
             showEmailModal() {
@@ -2081,25 +2091,17 @@
             }
 
             showApp() {
-    this.splashEntrance.style.display = "none";
-    this.emailModal.style.display = "none";
-    this.licenseModal.style.display = "none";
-    this.appShell.style.display = "flex";
-
-    // Re-check screen size (in case they rotated or resized)
-    this.isMobile = window.innerWidth <= 768;
-
-    if (this.isMobile) {
-        // Always start with menu collapsed on phones
-        this.sidebar.style.display = "none";
-        this.menuToggle.textContent = "☰";
-    } else {
-        // Desktop keeps sidebar open
-        this.sidebar.style.display = "block";
-    }
-
-    this.updateAccessUI();
-}
+                this.splashEntrance.style.display = "none";
+                this.emailModal.style.display = "none";
+                this.licenseModal.style.display = "none";
+                this.appShell.style.display = "flex";
+                
+                // Update mobile flag
+                this.isMobile = window.innerWidth <= 768;
+                
+                this.updateAccessUI();
+                this.maybeShowTrialExpiredBanner();
+            }
 
             loadNavigation() {
                 this.frontMatterList.innerHTML = "";
@@ -2123,6 +2125,8 @@
                 const btn = document.createElement("button");
                 btn.className = "nav-link";
                 btn.dataset.file = item.file;
+                btn.dataset.sectionType = type;
+                btn.dataset.chapterNumber = String(chapterNumber);
 
                 const mainRow = document.createElement("div");
                 mainRow.className = "nav-link-main";
@@ -2140,25 +2144,39 @@
 
                 const metaRow = document.createElement("div");
                 metaRow.className = "nav-link-meta";
-
                 if (type === "chapter") {
-                    if (chapterNumber <= CONFIG.TRIAL_CHAPTERS) {
-                        metaRow.textContent = `Chapter ${chapterNumber} • Trial access`;
-                        btn.classList.add("trial-only");
+                    if (this.licenseManager.canAccessSection("chapter", chapterNumber, item.file)) {
+                        if (this.licenseManager.hasActiveLicense()) {
+                            metaRow.textContent = `Chapter ${chapterNumber} • Full access`;
+                            btn.classList.remove("trial-only");
+                        } else {
+                            metaRow.textContent = `Chapter ${chapterNumber} • Trial access`;
+                            btn.classList.add("trial-only");
+                        }
+                    } else {
+                        metaRow.innerHTML = `<span class="nav-link-locked">Locked • Requires full license</span>`;
+                        btn.classList.remove("trial-only");
+                    }
+                } else if (type === "front") {
+                    // Title page is the only front-matter item accessible without account
+                    if (item.file === "TITLE_PAGE.htm" || this.licenseManager.canAccessSection("front", 0, item.file)) {
+                        metaRow.textContent = item.file === "TITLE_PAGE.htm" ? "Title Page" : "Front matter";
                     } else {
                         metaRow.innerHTML = `<span class="nav-link-locked">Locked • Requires full license</span>`;
                     }
-                } else if (type === "front") {
-                    metaRow.textContent = "Front matter";
                 } else {
-                    metaRow.textContent = "Back matter";
+                    if (this.licenseManager.canAccessSection("back", 0, item.file)) {
+                        metaRow.textContent = "Back matter";
+                    } else {
+                        metaRow.innerHTML = `<span class="nav-link-locked">Locked • Requires full license</span>`;
+                    }
                 }
 
                 btn.appendChild(mainRow);
                 btn.appendChild(metaRow);
 
                 btn.addEventListener("click", () => {
-                    if (type === "chapter" && !this.licenseManager.canAccessChapter(chapterNumber)) {
+                    if (!this.licenseManager.canAccessSection(type, chapterNumber, item.file)) {
                         this.showTrialLimitation();
                         return;
                     }
@@ -2176,43 +2194,140 @@
 
                 this.userEmailSpan.textContent = email || "Not logged in";
 
+                // reset styles
+                if (this.licenseStatusContainer) {
+                    this.licenseStatusContainer.classList.remove("license-status-full");
+                }
+                this.activateBtn.classList.remove("active-license");
+                this.activateBtn.disabled = false;
+
                 if (accessType === "full") {
                     this.licenseTypeDisplay.textContent = "Full Version • 11/11 Chapters";
                     this.trialBadge.style.display = "none";
                     this.chapterLimitEl.textContent = "(11/11)";
                     this.upgradeButton.style.display = "none";
+                    this.activateBtn.style.display = "inline-flex";
                     this.activateBtn.textContent = "License Active";
                     this.licenseStatusEl.textContent = "Full Version";
                     this.licenseDot.style.background = "#22c55e";
                     this.trialInfoPill.style.display = "none";
                     this.upgradeBanner.style.display = "none";
+
+                    if (this.licenseStatusContainer) {
+                        this.licenseStatusContainer.classList.add("license-status-full");
+                    }
+                    this.activateBtn.classList.add("active-license");
+                    this.activateBtn.disabled = true;
                 } else if (accessType === "trial") {
                     this.licenseTypeDisplay.textContent = `Trial • ${CONFIG.TRIAL_CHAPTERS}/11 Chapters • ${remainingDays} days left`;
                     this.trialBadge.style.display = "inline-block";
                     this.chapterLimitEl.textContent = `(${CONFIG.TRIAL_CHAPTERS}/11)`;
+                    // Show upgradeButton as the primary top-right CTA with 'Activate License'
                     this.upgradeButton.style.display = "inline-flex";
-                    this.activateBtn.textContent = "Activate License";
+                    this.upgradeButton.textContent = "Activate License";
+                    // Hide the separate activate button while trial is active
+                    this.activateBtn.style.display = "none";
                     this.licenseStatusEl.textContent = `Trial Active • ${remainingDays} days left`;
                     this.licenseDot.style.background = "#f97316";
                     this.trialInfoPill.style.display = "inline-flex";
                     this.trialInfoPill.textContent = `${CONFIG.TRIAL_CHAPTERS} chapters • ${remainingDays} days left`;
+                    // Trial active: hide signup CTA on bottom banner; only show upgrade
+                    if (this.upgradeBanner) this.upgradeBanner.style.display = "block";
+                    if (this.signupTrialButton) this.signupTrialButton.style.display = "none";
+                    if (this.upgradeNowBtn) {
+                        this.upgradeNowBtn.style.display = "inline-flex";
+                        this.upgradeNowBtn.textContent = "Activate License";
+                    }
                 } else {
                     this.licenseTypeDisplay.textContent = "No Access";
                     this.trialBadge.style.display = "none";
                     this.chapterLimitEl.textContent = "(0/11)";
                     this.upgradeButton.style.display = "inline-flex";
-                    this.activateBtn.textContent = "Get Access";
+                    // No access: top-right CTAs invite signup for trial or upgrade for full access
+                    this.upgradeButton.textContent = "Signup for Trial";
+                    this.activateBtn.style.display = "inline-flex";
+                    this.activateBtn.textContent = "Upgrade for Full Access";
                     this.licenseStatusEl.textContent = "No Access";
                     this.licenseDot.style.background = "#ef4444";
                     this.trialInfoPill.style.display = "none";
+                    // Show bottom banner offering trial signup or upgrade
+                    if (this.upgradeBanner) this.upgradeBanner.style.display = "block";
+                    if (this.upgradeBannerMessage) this.upgradeBannerMessage.textContent = "Get started — sign up for a free 7-day trial or upgrade for full access.";
+                    if (this.signupTrialButton) this.signupTrialButton.style.display = "inline-flex";
+                    if (this.upgradeNowBtn) {
+                        this.upgradeNowBtn.style.display = "inline-flex";
+                        this.upgradeNowBtn.textContent = "Upgrade for Full Access";
+                    }
                 }
+
+                // Update nav meta labels based on current access state (covers front, chapter, back)
+                document.querySelectorAll(".nav-link").forEach((btn) => {
+                    const sectionType = btn.dataset.sectionType;
+                    const chapterNumber = Number(btn.dataset.chapterNumber || "0");
+                    const file = btn.dataset.file;
+                    const metaRow = btn.querySelector(".nav-link-meta");
+                    if (!metaRow) return;
+
+                    const hasLicense = this.licenseManager.hasActiveLicense();
+                    const hasTrial = this.licenseManager.hasActiveTrial();
+
+                    if (sectionType === "chapter") {
+                        if (hasLicense) {
+                            metaRow.textContent = `Chapter ${chapterNumber} • Full access`;
+                            btn.classList.remove("trial-only");
+                        } else if (hasTrial && chapterNumber <= CONFIG.TRIAL_CHAPTERS) {
+                            metaRow.textContent = `Chapter ${chapterNumber} • Trial access`;
+                            btn.classList.add("trial-only");
+                        } else if (!hasLicense && !hasTrial && chapterNumber <= CONFIG.TRIAL_CHAPTERS) {
+                            metaRow.textContent = `Chapter ${chapterNumber} • Trial access (after signup)`;
+                            btn.classList.add("trial-only");
+                        } else {
+                            metaRow.innerHTML = `<span class="nav-link-locked">Locked • Requires full license</span>`;
+                            btn.classList.remove("trial-only");
+                        }
+                    } else if (sectionType === "front") {
+                        if (file === "TITLE_PAGE.htm") {
+                            metaRow.textContent = "Title Page";
+                        } else if (hasLicense) {
+                            metaRow.textContent = "Front matter";
+                        } else {
+                            metaRow.innerHTML = `<span class="nav-link-locked">Locked • Requires full license</span>`;
+                        }
+                    } else if (sectionType === "back") {
+                        if (hasLicense) {
+                            metaRow.textContent = "Back matter";
+                        } else {
+                            metaRow.innerHTML = `<span class="nav-link-locked">Locked • Requires full license</span>`;
+                        }
+                    }
+                });
             }
 
             openSection(file, label, chapterNumber, sectionId, type = "") {
                 if (!file) return;
 
+                // HARD GATE: no code path can open a locked chapter
+                if (!this.licenseManager.canAccessSection(type, chapterNumber, file)) {
+                    this.showTrialLimitation();
+                    return;
+                }
+
                 this.loadingOverlay.style.display = "flex";
+                
+                // Set handlers BEFORE changing src
+                this.readerFrame.onload = () => {
+                    this.loadingOverlay.style.display = "none";
+                    applyReaderTypographyToIframe(this.readerFrame);
+                };
+                
+                this.readerFrame.onerror = () => {
+                    this.loadingOverlay.style.display = "none";
+                    alert(`Error loading "${label}". Please check if the file "${file}" exists.`);
+                };
+                
+                // Now set the source
                 this.readerFrame.src = file;
+                
                 this.currentLabel.textContent = label;
                 this.currentFile = file;
                 this.currentChapter = chapterNumber;
@@ -2227,10 +2342,11 @@
                     this.positionPill.textContent = "";
                 }
 
-                this.currentIndex = this.allSections.findIndex((s) => s.file === file);
+                this.currentIndex = this.allSections.findIndex(
+                    (s) => s.file === file && s.id === sectionId
+                );
 
                 this.updateNavButtons();
-
                 this.trialLimitation.style.display = "none";
                 this.upgradeBanner.style.display = "none";
 
@@ -2241,16 +2357,6 @@
                     const section = activeBtn.closest(".nav-section");
                     if (section) section.classList.remove("collapsed");
                 }
-
-                this.readerFrame.onload = () => {
-                    this.loadingOverlay.style.display = "none";
-                    applyReaderTypographyToIframe(this.readerFrame);
-                };
-
-                this.readerFrame.onerror = () => {
-                    this.loadingOverlay.style.display = "none";
-                    alert(`Error loading "${label}". Please check if the file "${file}" exists.`);
-                };
             }
 
             updateNavButtons() {
@@ -2260,7 +2366,7 @@
                     this.prevBtn.classList.remove("nav-disabled");
                 }
 
-                if (this.currentIndex >= this.allSections.length - 1) {
+                if (this.currentIndex >= this.allSections.length - 1 || this.currentIndex === -1) {
                     this.nextBtn.classList.add("nav-disabled");
                 } else {
                     this.nextBtn.classList.remove("nav-disabled");
@@ -2271,45 +2377,112 @@
                 if (this.currentIndex > 0) {
                     const prevSection = this.allSections[this.currentIndex - 1];
                     const chapterNumber = prevSection.type === "chapter" ? prevSection.chapterNumber : 0;
-
-                    if (prevSection.type === "chapter" && !this.licenseManager.canAccessChapter(chapterNumber)) {
+                    if (!this.licenseManager.canAccessSection(prevSection.type, chapterNumber, prevSection.file)) {
                         this.showTrialLimitation();
                         return;
                     }
-
-                    this.openSection(prevSection.file, prevSection.label, chapterNumber, prevSection.id, prevSection.type);
+                    this.openSection(
+                        prevSection.file,
+                        prevSection.label,
+                        chapterNumber,
+                        prevSection.id,
+                        prevSection.type
+                    );
                 }
             }
 
             navigateToNext() {
-                if (this.currentIndex < this.allSections.length - 1) {
+                if (this.currentIndex < this.allSections.length - 1 && this.currentIndex !== -1) {
                     const nextSection = this.allSections[this.currentIndex + 1];
                     const chapterNumber = nextSection.type === "chapter" ? nextSection.chapterNumber : 0;
-
-                    if (nextSection.type === "chapter" && !this.licenseManager.canAccessChapter(chapterNumber)) {
+                    if (!this.licenseManager.canAccessSection(nextSection.type, chapterNumber, nextSection.file)) {
                         this.showTrialLimitation();
                         return;
                     }
-
-                    this.openSection(nextSection.file, nextSection.label, chapterNumber, nextSection.id, nextSection.type);
+                    this.openSection(
+                        nextSection.file,
+                        nextSection.label,
+                        chapterNumber,
+                        nextSection.id,
+                        nextSection.type
+                    );
                 }
             }
 
             showTrialLimitation() {
-                this.trialLimitation.style.display = "block";
-                this.upgradeBanner.style.display = "block";
+                if (this.trialLimitation) this.trialLimitation.style.display = "block";
+                const msgEl = document.getElementById("upgradeBannerMessage");
+                if (msgEl) {
+                    msgEl.textContent = "Access Restricted — Chapters 3–11 require a full license.";
+                }
+                if (this.upgradeBanner) this.upgradeBanner.style.display = "block";
             }
 
-            activateLicense(licenseKey) {
+            maybeShowTrialExpiredBanner() {
+                const flag = localStorage.getItem("infinityLoopTrialExpiredFlag");
+                if (flag === "1" && !this.licenseManager.hasActiveLicense()) {
+                    const msgEl = document.getElementById("upgradeBannerMessage");
+                    if (msgEl) {
+                        msgEl.textContent =
+                            "Your trial has expired – please upgrade to continue reading Chapters 3–11.";
+                    }
+                    if (this.trialLimitation) {
+                        this.trialLimitation.style.display = "none";
+                    }
+                    // Show upgrade-only banner when a previous trial just expired
+                    if (this.upgradeBanner) {
+                        this.upgradeBanner.style.display = "block";
+                    }
+                    if (this.signupTrialButton) this.signupTrialButton.style.display = "none";
+                    localStorage.removeItem("infinityLoopTrialExpiredFlag");
+                }
+            }
+
+            async activateLicense(licenseKey) {
                 const email = this.licenseManager.getUserEmail() || prompt("Email associated with this license:");
                 if (!email) {
                     alert("Email is required to activate license.");
                     return;
                 }
-
                 let name = this.licenseManager.getUserName();
                 if (!name) {
                     name = prompt("Name associated with this license (optional):") || "";
+                }
+
+                // If a Make webhook is configured, perform activation check first
+                if (CONFIG.MAKE_WEBHOOK_URL) {
+                    try {
+                        const payload = { type: "activationcheck", email };
+                        const res = await fetch(CONFIG.MAKE_WEBHOOK_URL, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(payload),
+                        });
+
+                        if (!res.ok) {
+                            alert("Activation check failed (network). Please try again later.");
+                            return;
+                        }
+
+                        let json = null;
+                        try {
+                            json = await res.json();
+                        } catch (e) {
+                            alert("Activation check returned an unexpected response. Please try again later.");
+                            return;
+                        }
+
+                        // Expecting a JSON response with { valid: true } for success
+                        if (!json || !json.valid) {
+                            alert(json && json.message ? json.message : "License activation check failed. Please verify your email or contact support.");
+                            return;
+                        }
+                        // else continue to activate locally
+                    } catch (err) {
+                        console.warn("Activation check error:", err);
+                        alert("Activation check failed (error). Please try again later.");
+                        return;
+                    }
                 }
 
                 try {
@@ -2318,10 +2491,17 @@
                     this.sendToMake("license_activation", {
                         email,
                         name,
-                        licenseKey,
+                        licenseKey: data.licenseKey,
                         deviceId: data.deviceId,
+                        isMaster: data.isMaster || false,
                     });
                     this.updateAccessUI();
+                    // After activating license, ensure top-right buttons reflect full access
+                    if (this.upgradeButton) this.upgradeButton.style.display = "none";
+                    if (this.activateBtn) {
+                        this.activateBtn.style.display = "inline-flex";
+                        this.activateBtn.textContent = "License Active";
+                    }
                     this.licenseModal.style.display = "none";
                 } catch (err) {
                     alert(err.message || "Failed to activate license. Please verify your key.");
@@ -2333,31 +2513,51 @@
                     alert("Please enter a valid email address.");
                     return;
                 }
-
                 const agreeTerms = document.getElementById("agreeTerms");
                 if (agreeTerms && !agreeTerms.checked) {
                     alert("You must agree to the Terms of Service to continue.");
                     return;
                 }
-
                 this.licenseManager.saveUser(email, name);
-                this.licenseManager.startTrial(email, name);
-
+                const trialData = this.licenseManager.startTrial(email, name);
+                // Send full trial payload to Make webhook (JSON)
                 this.sendToMake("trial_signup", {
                     email,
                     name: name || "",
                     accessType: "trial",
                     agreedToTerms: true,
+                    trial: trialData,
                 });
-
                 this.showApp();
+                this.updateAccessUI();
+                // Hide signup CTA after trial is started; keep upgrade visible
+                if (this.signupTrialButton) this.signupTrialButton.style.display = "none";
+                if (this.upgradeNowBtn) this.upgradeNowBtn.style.display = "inline-flex";
+                // Ensure we start the restricted reader on the Title Page
+                this.openSection("TITLE_PAGE.htm", "Title Page", 0, "title-page", "front");
             }
 
             toggleSidebar() {
-                if (!this.isMobile) return;
-                const isHidden = this.sidebar.style.display === "none" || !this.sidebar.style.display;
-                this.sidebar.style.display = isHidden ? "block" : "none";
-                this.menuToggle.textContent = isHidden ? "✕" : "☰";
+                if (this.isMobile) {
+                    const isHidden = this.sidebar.style.display === "none" || 
+                                    getComputedStyle(this.sidebar).display === "none";
+
+                    this.sidebar.style.display = isHidden ? "block" : "none";
+                    this.menuToggle.textContent = isHidden ? "✕" : "☰";
+                } else {
+                    // For desktop: collapse/expand the sidebar so the reader pane can take full width
+                    const isNowCollapsed = this.sidebar.classList.toggle("collapsed");
+
+                    if (isNowCollapsed) {
+                        // hide the sidebar to expand reading pane
+                        this.sidebar.style.display = "none";
+                        this.menuToggle.textContent = "☰"; // show open icon
+                    } else {
+                        // restore sidebar
+                        this.sidebar.style.display = "block";
+                        this.menuToggle.textContent = "✕"; // show close icon
+                    }
+                }
             }
 
             validateEmail(email) {
@@ -2367,7 +2567,6 @@
 
             sendToMake(eventType, data) {
                 if (!CONFIG.MAKE_WEBHOOK_URL) return;
-
                 const payload = {
                     eventType,
                     appVersion: CONFIG.APP_VERSION,
@@ -2375,11 +2574,12 @@
                     deviceId: this.licenseManager.deviceId,
                     ...data,
                 };
-
                 try {
                     fetch(CONFIG.MAKE_WEBHOOK_URL, {
                         method: "POST",
-                        headers: { "Content-Type": "application/json" },
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
                         body: JSON.stringify(payload),
                     }).catch((err) => console.warn("Webhook error (non-blocking):", err));
                 } catch (err) {
@@ -2418,18 +2618,15 @@
     <script>
         (function () {
             "use strict";
-
             class ContentProtection {
                 constructor() {
                     this.init();
                 }
-
                 init() {
                     this.disableContextMenu();
                     this.disableKeyShortcuts();
                     this.disableDragSelect();
                 }
-
                 disableContextMenu() {
                     document.addEventListener(
                         "contextmenu",
@@ -2439,7 +2636,6 @@
                         false
                     );
                 }
-
                 disableKeyShortcuts() {
                     document.addEventListener("keydown", (e) => {
                         if (
@@ -2452,13 +2648,11 @@
                         }
                     });
                 }
-
                 disableDragSelect() {
                     document.addEventListener("dragstart", (e) => e.preventDefault());
                     document.addEventListener("selectstart", (e) => e.preventDefault());
                 }
             }
-
             new ContentProtection();
         })();
     </script>
