@@ -645,6 +645,16 @@
             align-items: center;
             justify-content: center;
         }
+            .close-sidebar {
+                display: none;
+                position: relative;
+                background: transparent;
+                border: none;
+                color: var(--text);
+                font-size: 1.1rem;
+                padding: 6px 8px;
+                cursor: pointer;
+            }
 
         .current-label {
             font-family: "Crimson Pro", "Times New Roman", serif;
@@ -1101,6 +1111,16 @@
                 box-shadow: 12px 0 35px rgba(0, 0, 0, 0.7);
             }
 
+                    .close-sidebar {
+                        display: inline-flex;
+                        position: absolute;
+                        top: 12px;
+                        right: 12px;
+                        z-index: 120;
+                        background: rgba(0,0,0,0.2);
+                        border-radius: 8px;
+                    }
+
             .app-header {
                 padding: 12px 14px;
             }
@@ -1515,6 +1535,7 @@
             <!-- SIDEBAR -->
             <aside class="sidebar" id="sidebar">
                 <div class="sidebar-inner">
+                    <button id="closeSidebarBtn" class="close-sidebar" aria-label="Close menu">✕</button>
                     <div class="user-info">
                         <div class="user-email" id="userEmail">Not logged in</div>
                         <div class="license-type" id="licenseTypeDisplay">No Access</div>
@@ -2072,6 +2093,7 @@
                 this.loadingOverlay = document.getElementById("loadingOverlay");
                 this.sidebar = document.getElementById("sidebar");
                 this.menuToggle = document.getElementById("menu-toggle");
+                this.closeSidebarBtn = document.getElementById("closeSidebarBtn");
                 this.frontMatterList = document.getElementById("frontMatterList");
                 this.chapterList = document.getElementById("chapterList");
                 this.backMatterList = document.getElementById("backMatterList");
@@ -2298,6 +2320,33 @@
                 if (this.menuToggle) {
                     this.menuToggle.addEventListener("click", () => this.toggleSidebar());
                 }
+
+                if (this.closeSidebarBtn) {
+                    this.closeSidebarBtn.addEventListener("click", () => this.toggleSidebar());
+                }
+
+                // Close mobile sidebar when clicking outside it (on the app shell)
+                document.addEventListener("click", (e) => {
+                    try {
+                        if (!this.isMobile) return;
+                        const sidebarEl = this.sidebar;
+                        const menuBtn = this.menuToggle;
+                        if (!sidebarEl) return;
+
+                        const isVisible = getComputedStyle(sidebarEl).display !== "none";
+                        if (!isVisible) return;
+
+                        const clickedInsideSidebar = sidebarEl.contains(e.target);
+                        const clickedMenuToggle = menuBtn && menuBtn.contains(e.target);
+
+                        if (!clickedInsideSidebar && !clickedMenuToggle) {
+                            this.toggleSidebar();
+                        }
+                    } catch (err) {
+                        // swallow any errors to avoid breaking page interaction
+                        console.warn('sidebar outside-click handler error', err);
+                    }
+                });
 
                 document.querySelectorAll(".nav-section-title").forEach((title) => {
                     title.addEventListener("click", (e) => {
