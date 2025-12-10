@@ -1049,11 +1049,17 @@
             #splashEntrance {
                 padding: 16px 10px 24px;
                 align-items: flex-start;
+                /* Allow the splash to scroll on small viewports so content isn't clipped */
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .splash-inner {
                 padding: 20px 16px;
                 border-radius: 26px;
+                /* Constrain inner height so the modal/card can scroll within the viewport */
+                max-height: calc(100vh - 56px);
+                overflow: auto;
             }
 
             .splash-title {
@@ -1150,6 +1156,15 @@
                 justify-content: space-between;
                 gap: 8px;
                 font-size: 0.78rem;
+            }
+
+            /* On very small phones ensure splash content is scrollable and fits */
+            #splashEntrance {
+                padding-top: 12px;
+            }
+
+            .splash-inner {
+                max-height: calc(100vh - 36px);
             }
 
             .nav-link {
@@ -1438,7 +1453,7 @@
             <div class="purchase-options">
                 <button id="purchasePaypal">
                     <span>Purchase with</span>
-                    <strong>PayPal</strong>
+                    <strong>PayPal (use same email as account)</strong>
                 </button>
             </div>
             <p class="small-text">
