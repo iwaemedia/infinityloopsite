@@ -465,6 +465,104 @@
             color: #e5e7eb;
         }
 
+        /* ========== MODAL TABS ========== */
+        .modal-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+        }
+
+        .modal-tab {
+            padding: 10px 16px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .modal-tab.active {
+            color: var(--text);
+            border-bottom-color: var(--accent);
+        }
+
+        .modal-tab-content {
+            display: none;
+        }
+
+        .modal-tab-content.active {
+            display: block;
+        }
+
+        /* ========== PAYMENT MODAL ========== */
+        .payment-success {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .payment-success-icon {
+            font-size: 3.5rem;
+            margin-bottom: 12px;
+        }
+
+        .payment-success-title {
+            font-size: 1.3rem;
+            color: #22c55e;
+            margin-bottom: 8px;
+        }
+
+        .payment-success-message {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .payment-tier-option {
+            padding: 14px;
+            border-radius: 14px;
+            border: 2px solid rgba(148, 163, 184, 0.4);
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .payment-tier-option:hover {
+            border-color: var(--accent);
+            background: rgba(230, 57, 70, 0.1);
+        }
+
+        .payment-tier-option.selected {
+            border-color: var(--accent);
+            background: rgba(230, 57, 70, 0.15);
+        }
+
+        .payment-tier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .payment-tier-name {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .payment-tier-price {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .payment-tier-description {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
         /* Purchase buttons inside license modal */
         .purchase-options {
             display: flex;
@@ -1245,7 +1343,13 @@
                     <button id="enterBookBtn" class="btn-primary">
                         <span>Enter Interactive Reader</span>
                     </button>
+                    <button id="loginSplashBtn" class="btn-secondary-outline" style="display:none;">
+                        <span>Sign In</span>
+                    </button>
                 </div>
+                <p class="splash-cta-secondary" style="text-align: center; margin-top: 12px; font-size: 0.9rem;">
+                    Have a license? <a href="#" id="loginFromSplash" style="color: #f97316; text-decoration: none; font-weight: 600;">Sign in here</a>
+                </p>
                 <div class="trial-card">
                     <div class="trial-card-header">
                         <div class="trial-card-title">Trial access</div>
@@ -1299,20 +1403,37 @@
         </div>
     </div>
 
+    <!-- ========== LOGIN MODAL ========== -->
+    <div id="loginModal" class="modal-backdrop">
+        <div class="modal">
+            <button class="modal-close" id="closeLoginModal">✕</button>
+            <h2>Welcome back</h2>
+            <p>Sign in with your email to restore your trial or full access.</p>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="you@example.com" required />
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-bottom: 12px;">
+                    <span>Sign In</span>
+                </button>
+            </form>
+            <p class="small-text">
+                New here? <a href="#" id="switchToTrial">Start a free trial</a>.
+            </p>
+        </div>
+    </div>
+
     <!-- ========== LICENSE MODAL ========== -->
     <div id="licenseModal" class="modal-backdrop">
         <div class="modal">
             <button class="modal-close" id="closeLicenseModal">✕</button>
-            <h2>Activate full access</h2>
+            <h2>Purchase or Check License Status</h2>
             <p>
-                Enter your license key to unlock all 11 chapters, appendices, and data tables on this device.
+                Check if you have an active license to unlock all 11 chapters, appendices, and data tables on this device.
             </p>
-            <div class="input-group">
-                <label for="licenseInput">License Key</label>
-                <input type="text" id="licenseInput" placeholder="INF-XXXX-XXXX-XXXX" required />
-            </div>
-            <button id="activateLicense" class="btn-primary" style="width: 100%; margin-bottom: 12px;">
-                <span>Activate License</span>
+            <button id="checkLicenseStatus" class="btn-primary" style="width: 100%; margin-bottom: 12px;">
+                <span>Check License Status</span>
             </button>
             <div class="purchase-options">
                 <button id="purchasePaypal">
@@ -1323,6 +1444,37 @@
             <p class="small-text">
                 By activating, you agree to the single-device, non-transferable license terms.
             </p>
+        </div>
+    </div>
+
+    <!-- ========== PAYMENT MODAL ========== -->
+    <div id="paymentModal" class="modal-backdrop">
+        <div class="modal">
+            <button class="modal-close" id="closePaymentModal">✕</button>
+            <div id="paymentContent">
+                <h2>Unlock full access</h2>
+                <p>Choose your plan to access all 11 chapters, appendices, and premium content.</p>
+                
+                <div id="paymentTierContainer">
+                    <div class="payment-tier-option" data-tier="lifetime">
+                        <div class="payment-tier-header">
+                            <span class="payment-tier-name">Full Lifetime Access</span>
+                            <span class="payment-tier-price">$29.99</span>
+                        </div>
+                        <div class="payment-tier-description">
+                            One-time purchase • All chapters • All updates • One device
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="proceedPaymentBtn" style="width: 100%; margin-bottom: 12px;">
+                    <span>Proceed to PayPal</span>
+                </button>
+                
+                <p class="small-text" style="text-align: center; margin-top: 16px;">
+                    You will be redirected to PayPal to complete your payment securely.
+                </p>
+            </div>
         </div>
     </div>
 
@@ -1339,8 +1491,9 @@
                     <span id="licenseStatus">Loading...</span>
                     <span id="trialBadge" class="trial-badge" style="display: none;">TRIAL</span>
                 </div>
-                <button id="upgradeButton" class="upgrade-btn">Upgrade</button>
-                <button id="activateBtn" class="btn-secondary">Activate License</button>
+                <button id="upgradeButton" class="upgrade-btn" title="Upgrade or login">Upgrade</button>
+                <button id="activateBtn" class="btn-secondary" title="Check license status">Activate License</button>
+                <button id="loginHeaderBtn" class="btn-secondary" style="display:none;" title="Sign in to your account">Sign In</button>
             </div>
         </header>
         <div class="app-main">
@@ -1877,6 +2030,12 @@
                 this.loadNavigation();
                 this.updateAccessUI();
                 
+                // Check if there are saved users and show login button on splash
+                const hasSavedUsers = !!localStorage.getItem("infinityLoopTrial") || !!localStorage.getItem("infinityLoopLicense");
+                if (hasSavedUsers && this.loginSplashBtn) {
+                    this.loginSplashBtn.style.display = "inline-flex";
+                }
+                
                 // Initialize mobile sidebar state
                 if (this.isMobile) {
                     this.sidebar.style.display = "none";
@@ -1891,6 +2050,8 @@
                 this.splashEntrance = document.getElementById("splashEntrance");
                 this.emailModal = document.getElementById("emailModal");
                 this.licenseModal = document.getElementById("licenseModal");
+                this.loginModal = document.getElementById("loginModal");
+                this.paymentModal = document.getElementById("paymentModal");
                 this.appShell = document.getElementById("app-shell");
                 this.readerFrame = document.getElementById("readerFrame");
                 this.loadingOverlay = document.getElementById("loadingOverlay");
@@ -1904,6 +2065,7 @@
                 this.trialBadge = document.getElementById("trialBadge");
                 this.upgradeButton = document.getElementById("upgradeButton");
                 this.activateBtn = document.getElementById("activateBtn");
+                this.loginHeaderBtn = document.getElementById("loginHeaderBtn");
                 this.currentLabel = document.getElementById("current-label");
                 this.licenseStatusEl = document.getElementById("licenseStatus");
                 this.licenseDot = document.getElementById("licenseDot");
@@ -1956,21 +2118,24 @@
                     });
                 }
 
-                const activateLicenseBtn = document.getElementById("activateLicense");
-                const licenseInput = document.getElementById("licenseInput");
+                const checkLicenseBtn = document.getElementById("checkLicenseStatus");
                 const closeEmailModal = document.getElementById("closeEmailModal");
                 const closeLicenseModal = document.getElementById("closeLicenseModal");
                 const switchToLicense = document.getElementById("switchToLicense");
                 const trialUpgradeLink = document.getElementById("trialUpgradeLink");
 
-                if (activateLicenseBtn) {
-                    activateLicenseBtn.addEventListener("click", () => {
-                        this.activateLicense(licenseInput.value.trim());
+                if (checkLicenseBtn) {
+                    checkLicenseBtn.addEventListener("click", () => {
+                        this.checkLicenseStatus();
                     });
                 }
 
                 if (closeEmailModal) {
-                    closeEmailModal.addEventListener("click", () => (this.emailModal.style.display = "none"));
+                    closeEmailModal.addEventListener("click", () => {
+                        // Close the signup/trial modal and return to the landing splash
+                        this.emailModal.style.display = "none";
+                        if (this.splashEntrance) this.splashEntrance.style.display = "flex";
+                    });
                 }
 
                 if (closeLicenseModal) {
@@ -1981,6 +2146,84 @@
                     switchToLicense.addEventListener("click", (e) => {
                         e.preventDefault();
                         this.showLicenseModal();
+                    });
+                }
+
+                // LOGIN MODAL LISTENERS
+                const loginForm = document.getElementById("loginForm");
+                const loginEmailInput = document.getElementById("loginEmail");
+                const closeLoginModal = document.getElementById("closeLoginModal");
+                const switchToTrial = document.getElementById("switchToTrial");
+                const loginSplashBtn = document.getElementById("loginSplashBtn");
+
+                if (loginForm) {
+                    loginForm.addEventListener("submit", (e) => {
+                        e.preventDefault();
+                        this.handleLogin(loginEmailInput.value.trim());
+                    });
+                }
+
+                if (closeLoginModal) {
+                    closeLoginModal.addEventListener("click", () => {
+                        // Close login modal and refresh the page to return to a clean state
+                        if (this.loginModal) this.loginModal.style.display = "none";
+                        try {
+                            window.location.reload();
+                        } catch (e) {
+                            // Fallback: navigate to current URL
+                            window.location.href = window.location.href;
+                        }
+                    });
+                }
+
+                if (switchToTrial) {
+                    switchToTrial.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        this.loginModal.style.display = "none";
+                        this.showEmailModal();
+                    });
+                }
+
+                if (loginSplashBtn) {
+                    loginSplashBtn.addEventListener("click", () => this.showLoginModal());
+                }
+
+                const loginFromSplash = document.getElementById("loginFromSplash");
+                if (loginFromSplash) {
+                    loginFromSplash.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        this.showLoginModal();
+                    });
+                }
+
+                const loginHeaderBtn = document.getElementById("loginHeaderBtn");
+                if (loginHeaderBtn) {
+                    loginHeaderBtn.addEventListener("click", () => this.showLoginModal());
+                }
+
+                // PAYMENT MODAL LISTENERS
+                const closePaymentModal = document.getElementById("closePaymentModal");
+                const proceedPaymentBtn = document.getElementById("proceedPaymentBtn");
+                const paymentTierContainer = document.getElementById("paymentTierContainer");
+
+                if (closePaymentModal) {
+                    closePaymentModal.addEventListener("click", () => (this.paymentModal.style.display = "none"));
+                }
+
+                if (paymentTierContainer) {
+                    paymentTierContainer.addEventListener("click", (e) => {
+                        const option = e.target.closest(".payment-tier-option");
+                        if (option) {
+                            document.querySelectorAll(".payment-tier-option").forEach(el => el.classList.remove("selected"));
+                            option.classList.add("selected");
+                            this.selectedPaymentTier = option.dataset.tier;
+                        }
+                    });
+                }
+
+                if (proceedPaymentBtn) {
+                    proceedPaymentBtn.addEventListener("click", () => {
+                        this.processPayment();
                     });
                 }
 
@@ -2007,12 +2250,22 @@
                     if (accessType === "none") {
                         this.showEmailModal();
                     } else {
+                        // Trial user: show license modal with check status and pay options
                         this.showLicenseModal();
                     }
                 });
 
                 const upgradeNow = document.getElementById("upgradeNow");
-                if (upgradeNow) upgradeNow.addEventListener("click", () => this.showLicenseModal());
+                if (upgradeNow) upgradeNow.addEventListener("click", () => {
+                    // Hide the bottom banner, scroll to top, then open the license modal
+                    if (this.upgradeBanner) this.upgradeBanner.style.display = "none";
+                    try {
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                    } catch (e) {
+                        window.scrollTo(0, 0);
+                    }
+                    this.showLicenseModal();
+                });
 
                 // Signup for trial button on bottom banner
                 if (this.signupTrialButton) {
@@ -2067,8 +2320,16 @@
                 this.showApp();
                 
                 if (accessType === "none") {
-                    // First time: no trial, no license → show email/trial form
-                    this.showEmailModal();
+                    // First time: no trial, no license
+                    // Check if there are saved users they can log into
+                    const hasSavedUsers = !!localStorage.getItem("infinityLoopTrial") || !!localStorage.getItem("infinityLoopLicense");
+                    if (hasSavedUsers) {
+                        // Show login prompt
+                        this.showLoginModal();
+                    } else {
+                        // Show email/trial form
+                        this.showEmailModal();
+                    }
                     this.openSection("TITLE_PAGE.htm", "Title Page", 0, "title-page", "front");
                     return;
                 }
@@ -2095,6 +2356,8 @@
                 this.splashEntrance.style.display = "none";
                 this.emailModal.style.display = "none";
                 this.licenseModal.style.display = "none";
+                this.loginModal.style.display = "none";
+                this.paymentModal.style.display = "none";
                 this.appShell.style.display = "flex";
                 
                 // Update mobile flag
@@ -2102,6 +2365,303 @@
                 
                 this.updateAccessUI();
                 this.maybeShowTrialExpiredBanner();
+            }
+
+            showLoginModal() {
+                this.splashEntrance.style.display = "none";
+                this.loginModal.style.display = "flex";
+            }
+
+            async showPaymentModal() {
+                const email = this.licenseManager.getUserEmail();
+                
+                // Check if user already has a license
+                let hasExistingLicense = false;
+                if (email && CONFIG.MAKE_WEBHOOK_URL) {
+                    try {
+                        const response = await fetch(CONFIG.MAKE_WEBHOOK_URL, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                type: "check_license",
+                                email: email
+                            }),
+                        });
+                        
+                        // If status is 200, license exists
+                        if (response.status === 200) {
+                            hasExistingLicense = true;
+                        }
+                    } catch (err) {
+                        console.warn("License check error:", err);
+                    }
+                }
+                
+                // If license already exists, activate it immediately
+                if (hasExistingLicense) {
+                    const userName = this.licenseManager.getUserName() || "";
+                    const licenseData = {
+                        email: email,
+                        name: userName,
+                        licenseKey: "VERIFIED",
+                        activated: new Date().toISOString(),
+                        deviceId: this.licenseManager.deviceId,
+                        version: CONFIG.APP_VERSION,
+                        isMaster: false,
+                    };
+                    this.licenseManager.licenseData = licenseData;
+                    localStorage.setItem("infinityLoopLicense", JSON.stringify(licenseData));
+                    localStorage.removeItem("infinityLoopTrial");
+                    this.licenseManager.trialData = null;
+                    
+                    alert("License verified! Full access unlocked.");
+                    this.updateAccessUI();
+                    if (this.upgradeButton) this.upgradeButton.style.display = "none";
+                    this.paymentModal.style.display = "none";
+                    return;
+                }
+                
+                // No existing license, show PayPal payment option
+                // Initialize first tier as selected
+                this.selectedPaymentTier = "lifetime";
+                const tiers = document.querySelectorAll(".payment-tier-option");
+                tiers.forEach(el => el.classList.remove("selected"));
+                if (tiers.length > 0) {
+                    tiers[0].classList.add("selected");
+                }
+                
+                // Show payment content, hide success (not used anymore since we redirect to PayPal)
+                document.getElementById("paymentContent").style.display = "block";
+                document.getElementById("paymentSuccess").style.display = "none";
+                
+                this.paymentModal.style.display = "flex";
+            }
+
+            async handleLogin(email) {
+                if (!this.validateEmail(email)) {
+                    alert("Please enter a valid email address.");
+                    return;
+                }
+
+                // Check if user exists locally (local backup)
+                const localUserRecord = this.findUserByEmail(email);
+
+                // Call check_login to Make webhook - this is the source of truth
+                if (!CONFIG.MAKE_WEBHOOK_URL) {
+                    alert("Login service is not available. Please contact support.");
+                    return;
+                }
+
+                try {
+                    const response = await fetch(CONFIG.MAKE_WEBHOOK_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            type: "check_login",
+                            email: email
+                        }),
+                    });
+
+                    // 200 = User account found (at minimum a trial account)
+                    // 400 = No account found
+                    if (response.status === 200) {
+                        // User exists - login successful
+                        // Assume they have at least a trial account
+                        // Will check for license status after fully logged in
+                        
+                        // Use local data to restore account temporarily
+                        if (localUserRecord?.type === "license") {
+                            // They have a license locally, restore it
+                            this.licenseManager.licenseData = localUserRecord.data;
+                            localStorage.setItem("infinityLoopLicense", JSON.stringify(localUserRecord.data));
+                            localStorage.removeItem("infinityLoopTrial");
+                            this.licenseManager.trialData = null;
+                            alert("Welcome back! Your account has been restored.");
+                        } else if (localUserRecord?.type === "trial") {
+                            // Check if trial is still active
+                            if (localUserRecord.data?.expiry) {
+                                const expiry = new Date(localUserRecord.data.expiry);
+                                if (expiry > new Date()) {
+                                    // Trial is still active
+                                    this.licenseManager.trialData = localUserRecord.data;
+                                    localStorage.setItem("infinityLoopTrial", JSON.stringify(localUserRecord.data));
+                                    localStorage.removeItem("infinityLoopLicense");
+                                    this.licenseManager.licenseData = null;
+                                    
+                                    const remainingDays = this.licenseManager.getRemainingTrialDays();
+                                    alert(`Welcome back! Your trial continues (${remainingDays} days remaining).`);
+                                } else {
+                                    // Trial expired - show upgrade option
+                                    localStorage.removeItem("infinityLoopTrial");
+                                    this.licenseManager.trialData = null;
+                                    alert("Your trial has expired. Please upgrade to continue reading.");
+                                    this.loginModal.style.display = "none";
+                                    this.showPaymentModal();
+                                    return;
+                                }
+                            }
+                        } else {
+                            // No local data, create a default trial account entry
+                            const trialData = {
+                                email: email,
+                                name: "",
+                                startDate: new Date().toISOString(),
+                                expiry: new Date(Date.now() + CONFIG.TRIAL_DAYS * 24 * 60 * 60 * 1000).toISOString(),
+                            };
+                            this.licenseManager.trialData = trialData;
+                            localStorage.setItem("infinityLoopTrial", JSON.stringify(trialData));
+                            localStorage.removeItem("infinityLoopLicense");
+                            this.licenseManager.licenseData = null;
+                            alert("Welcome! Your account has been verified. Enjoy your access to The Infinity Loop.");
+                        }
+
+                        this.licenseManager.userData = { email, name: localUserRecord?.data?.name || "" };
+
+                        // Login successful, load the app
+                        this.loginModal.style.display = "none";
+                        this.showApp();
+                        this.updateAccessUI();
+                        this.openSection("TITLE_PAGE.htm", "Title Page", 0, "title-page", "front");
+
+                        // After login, check for license status in background
+                        this.checkLicenseAfterLogin(email);
+
+                    } else if (response.status === 400) {
+                        // No account found
+                        alert("No account found with this email. Please sign up for a new trial or purchase.");
+                        return;
+                    } else {
+                        // Other error
+                        alert("Unable to verify account. Please try again later.");
+                    }
+                } catch (err) {
+                    console.warn("Login error:", err);
+                    alert("Login failed. Please try again later.");
+                }
+            }
+
+            async checkLicenseAfterLogin(email) {
+                // After user is logged in, check if they have a full license
+                if (!CONFIG.MAKE_WEBHOOK_URL) return;
+
+                try {
+                    const response = await fetch(CONFIG.MAKE_WEBHOOK_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            type: "check_license",
+                            email: email
+                        }),
+                    });
+
+                    // 200 = User has a paid license
+                    if (response.status === 200) {
+                        // Upgrade them to full license
+                        const licenseData = {
+                            email: email,
+                            name: this.licenseManager.getUserName(),
+                            licenseKey: "VERIFIED",
+                            activated: new Date().toISOString(),
+                            deviceId: this.licenseManager.deviceId,
+                            version: CONFIG.APP_VERSION,
+                            isMaster: false,
+                        };
+                        this.licenseManager.licenseData = licenseData;
+                        localStorage.setItem("infinityLoopLicense", JSON.stringify(licenseData));
+                        localStorage.removeItem("infinityLoopTrial");
+                        this.licenseManager.trialData = null;
+                        
+                        // Update UI to show full access
+                        this.updateAccessUI();
+                        
+                        // Optional: Notify user that they have full access
+                        console.log("User has full license access restored.");
+                    }
+                } catch (err) {
+                    console.warn("License check after login failed:", err);
+                }
+            }
+
+            findUserByEmail(email) {
+                // Check current trial
+                if (this.licenseManager.trialData && this.licenseManager.trialData.email === email) {
+                    return { type: "trial", data: this.licenseManager.trialData };
+                }
+
+                // Check current license
+                if (this.licenseManager.licenseData && this.licenseManager.licenseData.email === email) {
+                    return { type: "license", data: this.licenseManager.licenseData };
+                }
+
+                // Check if there's stored user data with this email
+                const storedTrial = localStorage.getItem("infinityLoopTrial");
+                if (storedTrial) {
+                    try {
+                        const trialData = JSON.parse(storedTrial);
+                        if (trialData.email === email) {
+                            return { type: "trial", data: trialData };
+                        }
+                    } catch (e) {
+                        console.warn("Could not parse stored trial data");
+                    }
+                }
+
+                const storedLicense = localStorage.getItem("infinityLoopLicense");
+                if (storedLicense) {
+                    try {
+                        const licenseData = JSON.parse(storedLicense);
+                        if (licenseData.email === email) {
+                            return { type: "license", data: licenseData };
+                        }
+                    } catch (e) {
+                        console.warn("Could not parse stored license data");
+                    }
+                }
+
+                return null;
+            }
+
+            processPayment() {
+                const email = this.licenseManager.getUserEmail();
+                
+                if (!email) {
+                    alert("Please start a trial or provide an email before purchasing.");
+                    return;
+                }
+
+                // Store user email for post-payment verification
+                const tier = this.selectedPaymentTier || "lifetime";
+                localStorage.setItem("infinityLoopPendingPayment", JSON.stringify({
+                    email,
+                    name: this.licenseManager.getUserName(),
+                    tier,
+                    timestamp: new Date().toISOString()
+                }));
+
+                // Redirect to PayPal for actual payment
+                if (confirm("You will be redirected to PayPal to complete your purchase. Continue?")) {
+                    // Send license activation event to Make webhook with JSON form data
+                    this.sendToMake("license_activation", {
+                        email,
+                        name: this.licenseManager.getUserName(),
+                        tier,
+                    });
+                    
+                    // Redirect to PayPal
+                    window.location.href = CONFIG.PAYPAL_CHECKOUT_URL;
+                }
+            }
+
+            generateLicenseKey(email) {
+                // Generate a deterministic but unique license key based on email and timestamp
+                const emailHash = email.split("").reduce((acc, char) => {
+                    return ((acc << 5) - acc) + char.charCodeAt(0);
+                }, 0).toString(16).slice(0, 4);
+                
+                const timestamp = Date.now().toString(16).slice(0, 4);
+                const random = Math.random().toString(16).slice(2, 6);
+                
+                return `INF-${timestamp}-${emailHash}-${random}`.toUpperCase();
             }
 
             loadNavigation() {
@@ -2201,6 +2761,7 @@
                 }
                 this.activateBtn.classList.remove("active-license");
                 this.activateBtn.disabled = false;
+                if (this.loginHeaderBtn) this.loginHeaderBtn.style.display = "none";
 
                 if (accessType === "full") {
                     this.licenseTypeDisplay.textContent = "Full Version • 11/11 Chapters";
@@ -2232,28 +2793,32 @@
                     this.licenseDot.style.background = "#f97316";
                     this.trialInfoPill.style.display = "inline-flex";
                     this.trialInfoPill.textContent = `${CONFIG.TRIAL_CHAPTERS} chapters • ${remainingDays} days left`;
-                    // Trial active: hide signup CTA on bottom banner; only show upgrade
+                    // Trial active: show bottom banner with upgrade CTA; hide signup button
                     if (this.upgradeBanner) this.upgradeBanner.style.display = "block";
                     if (this.signupTrialButton) this.signupTrialButton.style.display = "none";
                     if (this.upgradeNowBtn) {
                         this.upgradeNowBtn.style.display = "inline-flex";
-                        this.upgradeNowBtn.textContent = "Activate License";
+                        this.upgradeNowBtn.textContent = "Upgrade for Full Access";
                     }
                 } else {
                     this.licenseTypeDisplay.textContent = "No Access";
                     this.trialBadge.style.display = "none";
                     this.chapterLimitEl.textContent = "(0/11)";
+                    // No access: show login button + upgrade button + trial signup
                     this.upgradeButton.style.display = "inline-flex";
-                    // No access: top-right CTAs invite signup for trial or upgrade for full access
                     this.upgradeButton.textContent = "Signup for Trial";
                     this.activateBtn.style.display = "inline-flex";
                     this.activateBtn.textContent = "Upgrade for Full Access";
+                    if (this.loginHeaderBtn) {
+                        this.loginHeaderBtn.style.display = "inline-flex";
+                        this.loginHeaderBtn.textContent = "Sign In";
+                    }
                     this.licenseStatusEl.textContent = "No Access";
                     this.licenseDot.style.background = "#ef4444";
                     this.trialInfoPill.style.display = "none";
-                    // Show bottom banner offering trial signup or upgrade
+                    // Show bottom banner offering trial signup, login, or upgrade
                     if (this.upgradeBanner) this.upgradeBanner.style.display = "block";
-                    if (this.upgradeBannerMessage) this.upgradeBannerMessage.textContent = "Get started — sign up for a free 7-day trial or upgrade for full access.";
+                    if (this.upgradeBannerMessage) this.upgradeBannerMessage.textContent = "Get started — sign up for a free 7-day trial, login to existing account, or upgrade for full access.";
                     if (this.signupTrialButton) this.signupTrialButton.style.display = "inline-flex";
                     if (this.upgradeNowBtn) {
                         this.upgradeNowBtn.style.display = "inline-flex";
@@ -2421,7 +2986,10 @@
 
             maybeShowTrialExpiredBanner() {
                 const flag = localStorage.getItem("infinityLoopTrialExpiredFlag");
-                if (flag === "1" && !this.licenseManager.hasActiveLicense()) {
+                const hasFullAccess = this.licenseManager.hasActiveLicense();
+                
+                // Only show expired banner if flag is set AND user doesn't have full access
+                if (flag === "1" && !hasFullAccess) {
                     const msgEl = document.getElementById("upgradeBannerMessage");
                     if (msgEl) {
                         msgEl.textContent =
@@ -2436,76 +3004,69 @@
                     }
                     if (this.signupTrialButton) this.signupTrialButton.style.display = "none";
                     localStorage.removeItem("infinityLoopTrialExpiredFlag");
+                } else if (hasFullAccess) {
+                    // If user has full access, hide the trial expired banner
+                    if (this.upgradeBanner) {
+                        this.upgradeBanner.style.display = "none";
+                    }
                 }
             }
 
-            async activateLicense(licenseKey) {
-                const email = this.licenseManager.getUserEmail() || prompt("Email associated with this license:");
+            async checkLicenseStatus() {
+                const email = this.licenseManager.getUserEmail();
+                
                 if (!email) {
-                    alert("Email is required to activate license.");
+                    alert("No email found. Please sign up for a trial or upgrade first.");
                     return;
                 }
-                let name = this.licenseManager.getUserName();
-                if (!name) {
-                    name = prompt("Name associated with this license (optional):") || "";
-                }
 
-                // If a Make webhook is configured, perform activation check first
-                if (CONFIG.MAKE_WEBHOOK_URL) {
-                    try {
-                        const payload = { type: "activationcheck", email };
-                        const res = await fetch(CONFIG.MAKE_WEBHOOK_URL, {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(payload),
-                        });
-
-                        if (!res.ok) {
-                            alert("Activation check failed (network). Please try again later.");
-                            return;
-                        }
-
-                        let json = null;
-                        try {
-                            json = await res.json();
-                        } catch (e) {
-                            alert("Activation check returned an unexpected response. Please try again later.");
-                            return;
-                        }
-
-                        // Expecting a JSON response with { valid: true } for success
-                        if (!json || !json.valid) {
-                            alert(json && json.message ? json.message : "License activation check failed. Please verify your email or contact support.");
-                            return;
-                        }
-                        // else continue to activate locally
-                    } catch (err) {
-                        console.warn("Activation check error:", err);
-                        alert("Activation check failed (error). Please try again later.");
-                        return;
-                    }
+                // Check license status via Make webhook
+                if (!CONFIG.MAKE_WEBHOOK_URL) {
+                    alert("License check service is not available. Please contact support.");
+                    return;
                 }
 
                 try {
-                    const data = this.licenseManager.activateLicense(licenseKey, email, name);
-                    alert("License activated successfully!");
-                    this.sendToMake("license_activation", {
-                        email,
-                        name,
-                        licenseKey: data.licenseKey,
-                        deviceId: data.deviceId,
-                        isMaster: data.isMaster || false,
+                    const response = await fetch(CONFIG.MAKE_WEBHOOK_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            type: "check_license",
+                            email: email
+                        }),
                     });
-                    this.updateAccessUI();
-                    // After activating license, ensure top-right buttons reflect full access
-                    if (this.upgradeButton) this.upgradeButton.style.display = "none";
-                    if (this.activateBtn) {
-                        this.activateBtn.style.display = "inline-flex";
-                        this.activateBtn.textContent = "License Active";
+
+                    // If status is 200, license exists
+                    if (response.status === 200) {
+                        // License exists - activate it
+                        const userName = this.licenseManager.getUserName() || "";
+                        const licenseData = {
+                            email: email,
+                            name: userName,
+                            licenseKey: "VERIFIED",
+                            activated: new Date().toISOString(),
+                            deviceId: this.licenseManager.deviceId,
+                            version: CONFIG.APP_VERSION,
+                            isMaster: false,
+                        };
+                        this.licenseManager.licenseData = licenseData;
+                        localStorage.setItem("infinityLoopLicense", JSON.stringify(licenseData));
+                        localStorage.removeItem("infinityLoopTrial");
+                        this.licenseManager.trialData = null;
+                        
+                        alert("License verified! Full access unlocked.");
+                        this.updateAccessUI();
+                        if (this.upgradeButton) this.upgradeButton.style.display = "none";
+                        this.licenseModal.style.display = "none";
+                    } else if (response.status === 400) {
+                        // No license found
+                        alert("No active license found for this email. Please purchase a license or start a trial.");
+                    } else {
+                        alert("Unable to verify license. Please try again later.");
                     }
-                    this.licenseModal.style.display = "none";
                 } catch (err) {
-                    alert(err.message || "Failed to activate license. Please verify your key.");
+                    console.warn("License check error:", err);
+                    alert("License check failed. Please try again later.");
                 }
             }
 
