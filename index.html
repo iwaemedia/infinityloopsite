@@ -1424,8 +1424,9 @@
                 <div class="checkbox-group">
                     <input type="checkbox" id="agreeTerms" required />
                     <label for="agreeTerms">
-                        I agree to the <a href="#" id="termsLink">Terms of Service</a> and understand I may receive
-                        occasional Loop updates.
+                        I agree to the <a href="/terms.html" id="termsLink" target="_blank" rel="noopener">Terms of Service</a>
+                        and <a href="/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>, and understand I may
+                        receive occasional Loop updates.
                     </label>
                 </div>
                 <button type="submit" class="btn-primary" style="width: 100%;">
@@ -1477,7 +1478,9 @@
                 </button>
             </div>
             <p class="small-text">
-                By activating, you agree to the single-device, non-transferable license terms.
+                By activating, you agree to the single-device, non-transferable license terms. See our
+                <a href="/terms.html" target="_blank" rel="noopener">Terms of Service</a> and
+                <a href="/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
             </p>
         </div>
     </div>
@@ -2359,15 +2362,7 @@
                     this.isMobile = window.innerWidth <= 768;
                 });
 
-                const termsLink = document.getElementById("termsLink");
                 const licenseAgreementLink = document.getElementById("licenseAgreementLink");
-
-                if (termsLink) {
-                    termsLink.addEventListener("click", (e) => {
-                        e.preventDefault();
-                        this.showTerms();
-                    });
-                }
 
                 if (licenseAgreementLink) {
                     licenseAgreementLink.addEventListener("click", (e) => {
