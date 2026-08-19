@@ -1165,6 +1165,8 @@
             }
         }
     </style>
+    <!-- NETLIFY IDENTITY: server-backed authentication for paid reader access -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 
 <body>
@@ -1301,8 +1303,8 @@
             </form>
 
             <p class="small-text">
-                Already have a license?
-                <a href="#" id="switchToLicense">Activate here</a>.
+                Already purchased access?
+                <a href="#" id="switchToLicense">Sign in here</a>.
             </p>
         </div>
     </div>
@@ -1311,18 +1313,14 @@
     <div id="licenseModal" class="modal-backdrop">
         <div class="modal">
             <button class="modal-close" id="closeLicenseModal">✕</button>
-            <h2>Activate full access</h2>
+            <h2>Full reader access</h2>
             <p>
-                Enter your license key to unlock all 11 chapters, appendices, and data tables on this device.
+                Purchased access? Sign in with the email and password connected to your reader account.
+                Chapters 3–11 are released only to accounts with verified paid access.
             </p>
 
-            <div class="input-group">
-                <label for="licenseInput">License Key</label>
-                <input type="text" id="licenseInput" placeholder="INF-XXXX-XXXX-XXXX" required />
-            </div>
-
             <button id="activateLicense" class="btn-primary" style="width: 100%; margin-bottom: 12px;">
-                <span>Activate License</span>
+                <span>Sign In to Full Access</span>
             </button>
 
             <div class="purchase-options">
@@ -1337,7 +1335,7 @@
             </div>
 
             <p class="small-text">
-                By activating, you agree to the single-device, non-transferable license terms.
+                Paid reader access is tied to the authenticated account. Do not share account credentials.
             </p>
         </div>
     </div>
@@ -1357,7 +1355,7 @@
                     <span id="trialBadge" class="trial-badge" style="display: none;">TRIAL</span>
                 </div>
                 <button id="upgradeButton" class="upgrade-btn">Upgrade</button>
-                <button id="activateBtn" class="btn-secondary">Activate License</button>
+                <button id="activateBtn" class="btn-secondary">Sign In</button>
             </div>
         </header>
 
@@ -1441,12 +1439,10 @@
     <script>
         // ========== CONFIG ==========
         const CONFIG = {
-            APP_VERSION: "2.1.2",
+            APP_VERSION: "3.0.0",
             TRIAL_CHAPTERS: 2,
             TRIAL_DAYS: 7,
-            TEST_LICENSE: "INF-TEST-2024-ABCD-5678",
-            MASTER_LICENSE: "INF-MASTER-2025-ROOT-0001", // master key
-            VALID_LICENSE_PREFIX: "INF-",
+            PAID_ROLE: "paid",
             STRIPE_CHECKOUT_URL: "https://buy.stripe.com/dRm7sN2on3yF26FbYEdIA01",
             PAYPAL_CHECKOUT_URL: "https://www.paypal.com/ncp/payment/FR755FQZHEGQA",
             MAKE_WEBHOOK_URL: "https://hook.us2.make.com/4bwg1lvvkqkqwk75tv8b2jmc8upri5fv",
@@ -1519,55 +1515,55 @@
                     id: "ch2",
                 },
                 {
-                    file: "CHAPTER_3_clean_stitched_formatted.htm",
+                    file: "protected/CHAPTER_3_clean_stitched_formatted.htm",
                     label: "CHAPTER 3: MOBILIZATION AND BACKLASH: RED SUMMER, GARVEY, AND THE PROTO-COINTELPRO",
                     badge: "(1919 - 1945)",
                     id: "ch3",
                 },
                 {
-                    file: "CHAPTER_4_clean_stitched_formatted.htm",
+                    file: "protected/CHAPTER_4_clean_stitched_formatted.htm",
                     label: "CHAPTER 4: COLD WAR CONTRADICTIONS: VETERANS, MCGEE, AND 'GENOCIDE'",
                     badge: "(1946 - 1955)",
                     id: "ch4",
                 },
                 {
-                    file: "CHAPTER_5_clean_stitched_formatted.htm",
+                    file: "protected/CHAPTER_5_clean_stitched_formatted.htm",
                     label: "CHAPTER 5: COINTELPRO PEAK: NEUTRALIZATION, KERNER, AND THE PANTHER'S PRICE",
                     badge: "(1956 - 1971)",
                     id: "ch5",
                 },
                 {
-                    file: "CHAPTER_6_clean_stitched_formatted.htm",
+                    file: "protected/CHAPTER_6_clean_stitched_formatted.htm",
                     label: "CHAPTER 6: THE MODERN CARCERAL STATE: THE WAR ON DRUGS ESCALATES",
                     badge: "(1972 - 1989)",
                     id: "ch6",
                 },
                 {
-                    file: "CHAPTER_7_clean_stitched_formatted.htm",
+                    file: "protected/CHAPTER_7_clean_stitched_formatted.htm",
                     label: "CHAPTER 7: THE 'COLORBLIND' ERA: DATA-DRIVEN POLICING AND MASS INCARCERATION",
                     badge: "(1990 - 2009)",
                     id: "ch7",
                 },
                 {
-                    file: "CHAPTER_8_clean_stitched_formatted.htm",
+                    file: "protected/CHAPTER_8_clean_stitched_formatted.htm",
                     label: "CHAPTER 8: DIGITAL AUGMENTATION: FERGUSON, BALTIMORE, AND ALGORITHMIC BIAS",
                     badge: "(2010 - 2016)",
                     id: "ch8",
                 },
                 {
-                    file: "CHAPTER_9_clean_stitched_formatted.htm",
+                    file: "protected/CHAPTER_9_clean_stitched_formatted.htm",
                     label: "CHAPTER 9: THE AUTOMATED LOOP: BIE LABELS, AI, AND THE FUTURE OF CONTROL",
                     badge: "(2017 - 2024)",
                     id: "ch9",
                 },
                 {
-                    file: "CHAPTER_10_clean_stitched_formatted.htm",
+                    file: "protected/CHAPTER_10_clean_stitched_formatted.htm",
                     label: "CHAPTER 10: THE RESILIENCE BLUEPRINT: RESISTANCE AND THRIVING WITHIN THE LOOP",
                     badge: "(1619 - Present)",
                     id: "ch10",
                 },
                 {
-                    file: "CHAPTER_11_clean_stitched_formatted.htm",
+                    file: "protected/CHAPTER_11_clean_stitched_formatted.htm",
                     label: "CHAPTER 11: THE ABOLITION HORIZON: FROM EVIDENCE TO ABOLITION",
                     badge: "2025 AND BEYOND",
                     id: "ch11",
@@ -1619,8 +1615,12 @@
             constructor() {
                 this.deviceId = this.getDeviceId();
                 this.userData = this.loadUserData();
-                this.licenseData = this.loadLicenseData();
+                this.identityUser = null;
+                this.identityReady = false;
                 this.trialData = this.loadTrialData();
+
+                // Security migration: never trust the legacy browser-stored license.
+                localStorage.removeItem("infinityLoopLicense");
             }
 
             getDeviceId() {
@@ -1642,15 +1642,6 @@
                 }
             }
 
-            loadLicenseData() {
-                try {
-                    const data = localStorage.getItem("infinityLoopLicense");
-                    return data ? JSON.parse(data) : null;
-                } catch (e) {
-                    console.error("Error loading license data", e);
-                    return null;
-                }
-            }
 
             loadTrialData() {
                 try {
@@ -1688,36 +1679,24 @@
                 return trialData;
             }
 
-            activateLicense(licenseKey, email, name = "") {
-                if (
-                    !licenseKey ||
-                    (!licenseKey.startsWith(CONFIG.VALID_LICENSE_PREFIX) &&
-                        licenseKey !== CONFIG.TEST_LICENSE &&
-                        licenseKey !== CONFIG.MASTER_LICENSE)
-                ) {
-                    throw new Error("Invalid license key format");
-                }
+            setIdentityUser(user) {
+                this.identityUser = user || null;
+                this.identityReady = true;
+            }
 
-                const licenseData = {
-                    licenseKey,
-                    email,
-                    name: name || "",
-                    activated: new Date().toISOString(),
-                    deviceId: this.deviceId,
-                    version: CONFIG.APP_VERSION,
-                    isMaster: licenseKey === CONFIG.MASTER_LICENSE,
-                };
-                localStorage.setItem("infinityLoopLicense", JSON.stringify(licenseData));
-                this.licenseData = licenseData;
+            getIdentityRoles() {
+                const user = this.identityUser;
+                if (!user) return [];
+                const appMetadata = user.app_metadata || user.appMetadata || {};
+                return Array.isArray(appMetadata.roles) ? appMetadata.roles : [];
+            }
 
-                localStorage.removeItem("infinityLoopTrial");
-                this.trialData = null;
-
-                return licenseData;
+            hasPaidRole() {
+                return this.getIdentityRoles().includes(CONFIG.PAID_ROLE);
             }
 
             hasActiveLicense() {
-                return !!this.licenseData;
+                return this.identityReady && this.hasPaidRole();
             }
 
             hasActiveTrial() {
@@ -1734,14 +1713,17 @@
             }
 
             getUserEmail() {
-                if (this.licenseData && this.licenseData.email) return this.licenseData.email;
+                if (this.identityUser && this.identityUser.email) return this.identityUser.email;
                 if (this.trialData && this.trialData.email) return this.trialData.email;
                 if (this.userData && this.userData.email) return this.userData.email;
                 return "";
             }
 
             getUserName() {
-                if (this.licenseData && this.licenseData.name) return this.licenseData.name;
+                if (this.identityUser) {
+                    const meta = this.identityUser.user_metadata || this.identityUser.userMetadata || {};
+                    if (meta.full_name) return meta.full_name;
+                }
                 if (this.trialData && this.trialData.name) return this.trialData.name;
                 if (this.userData && this.userData.name) return this.userData.name;
                 return "";
@@ -1805,6 +1787,7 @@
                 this.setupEventListeners();
                 this.initializeNavigation();
                 this.loadNavigation();
+                this.setupIdentity();
                 this.updateAccessUI();
 
                 // Preload Title Page so it shows first when the book is entered
@@ -1815,6 +1798,37 @@
                     "title-page",
                     "front"
                 );
+            }
+
+            setupIdentity() {
+                if (!window.netlifyIdentity) {
+                    console.error("Netlify Identity did not load.");
+                    this.licenseManager.setIdentityUser(null);
+                    this.updateAccessUI();
+                    return;
+                }
+
+                window.netlifyIdentity.on("init", (user) => {
+                    this.licenseManager.setIdentityUser(user);
+                    this.updateAccessUI();
+                });
+
+                window.netlifyIdentity.on("login", (user) => {
+                    this.licenseManager.setIdentityUser(user);
+                    window.netlifyIdentity.close();
+
+                    if (!this.licenseManager.hasPaidRole()) {
+                        alert("This account is signed in, but it does not yet have paid reader access.");
+                    }
+
+                    // Full reload ensures the fresh nf_jwt cookie is used by Netlify's CDN role gate.
+                    window.location.reload();
+                });
+
+                window.netlifyIdentity.on("logout", () => {
+                    this.licenseManager.setIdentityUser(null);
+                    window.location.reload();
+                });
             }
 
             cacheDOM() {
@@ -1887,7 +1901,6 @@
                 }
 
                 const activateLicenseBtn = document.getElementById("activateLicense");
-                const licenseInput = document.getElementById("licenseInput");
                 const closeEmailModal = document.getElementById("closeEmailModal");
                 const closeLicenseModal = document.getElementById("closeLicenseModal");
                 const switchToLicense = document.getElementById("switchToLicense");
@@ -1895,7 +1908,7 @@
 
                 if (activateLicenseBtn) {
                     activateLicenseBtn.addEventListener("click", () => {
-                        this.activateLicense(licenseInput.value.trim().toUpperCase());
+                        this.openIdentityLogin();
                     });
                 }
 
@@ -1944,7 +1957,13 @@
                 this.upgradeButton.addEventListener("click", () => this.showLicenseModal());
                 const upgradeNow = document.getElementById("upgradeNow");
                 if (upgradeNow) upgradeNow.addEventListener("click", () => this.showLicenseModal());
-                this.activateBtn.addEventListener("click", () => this.showLicenseModal());
+                this.activateBtn.addEventListener("click", () => {
+                    if (this.licenseManager.hasActiveLicense() && window.netlifyIdentity) {
+                        window.netlifyIdentity.logout();
+                    } else {
+                        this.showLicenseModal();
+                    }
+                });
 
                 this.prevBtn.addEventListener("click", () => this.navigateToPrevious());
                 this.nextBtn.addEventListener("click", () => this.navigateToNext());
@@ -2089,12 +2108,12 @@
                 this.userEmailSpan.textContent = email || "Not logged in";
 
                 if (accessType === "full") {
-                    this.licenseTypeDisplay.textContent = "Full Version • 11/11 Chapters";
+                    this.licenseTypeDisplay.textContent = "Paid Account • 11/11 Chapters";
                     this.trialBadge.style.display = "none";
                     this.chapterLimitEl.textContent = "(11/11)";
                     this.upgradeButton.style.display = "none";
-                    this.activateBtn.textContent = "License Active";
-                    this.licenseStatusEl.textContent = "Full Version";
+                    this.activateBtn.textContent = "Sign Out";
+                    this.licenseStatusEl.textContent = "Paid Access";
                     this.licenseDot.style.background = "#22c55e";
                     this.trialInfoPill.style.display = "none";
                     this.upgradeBanner.style.display = "none";
@@ -2103,7 +2122,7 @@
                     this.trialBadge.style.display = "inline-block";
                     this.chapterLimitEl.textContent = `(${CONFIG.TRIAL_CHAPTERS}/11)`;
                     this.upgradeButton.style.display = "inline-flex";
-                    this.activateBtn.textContent = "Activate License";
+                    this.activateBtn.textContent = "Sign In";
                     this.licenseStatusEl.textContent = `Trial Active • ${remainingDays} days left`;
                     this.licenseDot.style.background = "#f97316";
                     this.trialInfoPill.style.display = "inline-flex";
@@ -2113,7 +2132,7 @@
                     this.trialBadge.style.display = "none";
                     this.chapterLimitEl.textContent = "(0/11)";
                     this.upgradeButton.style.display = "inline-flex";
-                    this.activateBtn.textContent = "Get Access";
+                    this.activateBtn.textContent = "Sign In";
                     this.licenseStatusEl.textContent = "No Access";
                     this.licenseDot.style.background = "#ef4444";
                     this.trialInfoPill.style.display = "none";
@@ -2265,33 +2284,13 @@
                 this.upgradeBanner.style.display = "block";
             }
 
-            activateLicense(licenseKey) {
-                const email = this.licenseManager.getUserEmail() || prompt("Email associated with this license:");
-                if (!email) {
-                    alert("Email is required to activate license.");
+            openIdentityLogin() {
+                if (!window.netlifyIdentity) {
+                    alert("Secure sign-in is temporarily unavailable. Please reload the page and try again.");
                     return;
                 }
-
-                let name = this.licenseManager.getUserName();
-                if (!name) {
-                    name = prompt("Name associated with this license (optional):") || "";
-                }
-
-                try {
-                    const data = this.licenseManager.activateLicense(licenseKey, email, name);
-                    alert("License activated successfully!");
-                    this.sendToMake("license_activation", {
-                        email,
-                        name,
-                        licenseKey,
-                        deviceId: data.deviceId,
-                        isMaster: data.isMaster || false,
-                    });
-                    this.updateAccessUI();
-                    this.licenseModal.style.display = "none";
-                } catch (err) {
-                    alert(err.message || "Failed to activate license. Please verify your key.");
-                }
+                this.licenseModal.style.display = "none";
+                window.netlifyIdentity.open("login");
             }
 
             startTrial(email, name) {
