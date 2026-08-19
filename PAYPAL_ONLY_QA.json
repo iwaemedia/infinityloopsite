@@ -1,0 +1,15 @@
+{
+  "app_version": "3.0.1",
+  "checks": {
+    "paypal_url_present": true,
+    "paypal_button_present": true,
+    "stripe_config_removed": true,
+    "stripe_button_removed": true,
+    "stripe_listener_removed": true,
+    "protected_ch3_present": true,
+    "protected_ch11_present": true,
+    "paid_role_gate_retained": true,
+    "legacy_keys_absent": true
+  },
+  "overall_pass": true
+}

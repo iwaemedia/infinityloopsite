@@ -1,0 +1,43 @@
+{
+  "app_version": "3.0.0",
+  "protected_chapters": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "protected_files": [
+    "CHAPTER_3_clean_stitched_formatted.htm",
+    "CHAPTER_4_clean_stitched_formatted.htm",
+    "CHAPTER_5_clean_stitched_formatted.htm",
+    "CHAPTER_6_clean_stitched_formatted.htm",
+    "CHAPTER_7_clean_stitched_formatted.htm",
+    "CHAPTER_8_clean_stitched_formatted.htm",
+    "CHAPTER_9_clean_stitched_formatted.htm",
+    "CHAPTER_10_clean_stitched_formatted.htm",
+    "CHAPTER_11_clean_stitched_formatted.htm"
+  ],
+  "checks": {
+    "identity_widget_present": true,
+    "no_master_license": true,
+    "no_test_license": true,
+    "no_valid_prefix_unlock": true,
+    "paid_role_configured": true,
+    "chapter_3_protected_path": true,
+    "chapter_11_protected_path": true,
+    "role_gate_present": true,
+    "fallback_denial_present": true,
+    "protected_3_to_11_moved": true,
+    "public_3_to_11_absent": true,
+    "chapter_1_public": true,
+    "chapter_2_public": true,
+    "route_fix_retained": true,
+    "legalized_apartheid_absent": true
+  },
+  "overall_pass": true
+}

@@ -489,12 +489,8 @@
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
         }
 
-        #purchaseStripe {
-            background: linear-gradient(135deg, #635bff, #5433ff);
-            color: white;
-        }
-
         #purchasePaypal {
+            width: 100%;
             background: linear-gradient(135deg, #ffc439, #ffb42b);
             color: #003087;
         }
@@ -1324,10 +1320,6 @@
             </button>
 
             <div class="purchase-options">
-                <button id="purchaseStripe">
-                    <span>Purchase with</span>
-                    <strong>Stripe</strong>
-                </button>
                 <button id="purchasePaypal">
                     <span>Purchase with</span>
                     <strong>PayPal</strong>
@@ -1439,11 +1431,10 @@
     <script>
         // ========== CONFIG ==========
         const CONFIG = {
-            APP_VERSION: "3.0.0",
+            APP_VERSION: "3.0.1",
             TRIAL_CHAPTERS: 2,
             TRIAL_DAYS: 7,
             PAID_ROLE: "paid",
-            STRIPE_CHECKOUT_URL: "https://buy.stripe.com/dRm7sN2on3yF26FbYEdIA01",
             PAYPAL_CHECKOUT_URL: "https://www.paypal.com/ncp/payment/FR755FQZHEGQA",
             MAKE_WEBHOOK_URL: "https://hook.us2.make.com/4bwg1lvvkqkqwk75tv8b2jmc8upri5fv",
         };
@@ -1933,15 +1924,7 @@
                     });
                 }
 
-                const purchaseStripe = document.getElementById("purchaseStripe");
                 const purchasePaypal = document.getElementById("purchasePaypal");
-
-                if (purchaseStripe) {
-                    purchaseStripe.addEventListener("click", (e) => {
-                        e.preventDefault();
-                        if (confirm("You will be redirected to our secure Stripe checkout page. Continue?")) {
-                            window.open(CONFIG.STRIPE_CHECKOUT_URL, "_blank");
-                        }
                     });
                 }
 
