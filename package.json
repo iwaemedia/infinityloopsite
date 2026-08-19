@@ -1,0 +1,16 @@
+{
+  "name": "infinityloopsite",
+  "version": "2.0.0",
+  "private": true,
+  "description": "The Infinity Loop interactive reader — static site with Netlify Identity gated chapters.",
+  "type": "module",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@netlify/functions": "^6.0.0",
+    "@netlify/identity": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "typescript": "^5.9.3"
+  }
+}
