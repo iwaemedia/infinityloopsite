@@ -1,6 +1,23 @@
 [build]
   publish = "."
 
+# Paid chapters are protected at Netlify's CDN edge.
+# Only Identity users whose JWT contains app_metadata.roles = ["paid", ...]
+# may retrieve these files, including by direct URL.
+[[redirects]]
+  from = "/protected/*"
+  to = "/protected/:splat"
+  status = 200
+  force = true
+  conditions = {Role = ["paid"]}
+
+# Everyone else is denied and receives a public explanation page.
+[[redirects]]
+  from = "/protected/*"
+  to = "/access-denied.html"
+  status = 401
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
@@ -13,6 +30,13 @@
   [headers.values]
     Content-Type = "text/html; charset=utf-8"
     Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/protected/*"
+  [headers.values]
+    Content-Type = "text/html; charset=utf-8"
+    Cache-Control = "private, no-store, max-age=0"
+    X-Robots-Tag = "noindex, nofollow, noarchive"
 
 [[headers]]
   for = "/index.html"
