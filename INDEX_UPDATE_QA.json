@@ -1,0 +1,18 @@
+{
+  "index_version": "2.1.0",
+  "revised_html_files_copied": 25,
+  "book_structure_entries": 25,
+  "missing_referenced_files": [],
+  "unreferenced_html_files": [],
+  "duplicate_book_structure_files": [],
+  "duplicate_readers_guide_removed": true,
+  "iframe_typography_override_removed": true,
+  "special_files_preserved_exactly": {
+    "CONTENT_WARNING_.htm": true,
+    "Dedication.htm": true,
+    "Epigraph_.htm": true,
+    "NOTE_ON_SOURCES_AND_METHODOLOGY_.htm": true
+  },
+  "cover_present": true,
+  "overall_pass": true
+}

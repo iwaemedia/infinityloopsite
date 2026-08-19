@@ -1,0 +1,22 @@
+{
+  "app_version": "2.1.1",
+  "tier_label_replacements": {
+    "<p>Tier 1: Primary and Official Sources\\.": 1,
+    "<p>Tier 2: Scholarly and Empirical Secondary Sources\\.": 1,
+    "<p>Tier 3: Journalistic and Commentary Sources\\.": 1
+  },
+  "tier_labels_bold_and_consistent": {
+    "Tier 1: Primary and Official Sources.": true,
+    "Tier 2: Scholarly and Empirical Secondary Sources.": true,
+    "Tier 3: Journalistic and Commentary Sources.": true
+  },
+  "chapter_2_navigation_label_updated": true,
+  "chapter_2_actual_header": "Chapter 2: The Refinement: Jim Crow",
+  "chapter_2_actual_header_pass": true,
+  "remaining_legalized_apartheid_occurrences": [],
+  "html_files": 25,
+  "book_structure_entries": 25,
+  "missing_referenced_files": [],
+  "unreferenced_html_files": [],
+  "overall_pass": true
+}

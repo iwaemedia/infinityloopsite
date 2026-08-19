@@ -1,0 +1,27 @@
+{
+  "app_version": "2.1.2",
+  "book_structure_entries": 25,
+  "html_files_present": 25,
+  "missing_referenced_files": [],
+  "unreferenced_html_files": [],
+  "duplicate_references": [],
+  "critical_file_presence": {
+    "TITLE_PAGE.htm": true,
+    "NOTE_ON_SOURCES_AND_METHODOLOGY_.htm": true,
+    "WORKS_CITED_.htm": true
+  },
+  "checks": {
+    "absolute_root_routing": true,
+    "landing_page_guard": true,
+    "spa_catchall_removed": true,
+    "chapter_2_label_correct": true,
+    "legalized_apartheid_absent": true
+  },
+  "special_page_sha256": {
+    "CONTENT_WARNING_.htm": "3bffccc999e5111f843a5893b56be6d9c450809720496aba5ab657658a41e991",
+    "Dedication.htm": "4564dbfb74b9f89935636b4c68f3d3600d532d47190b1be2cb76f46db6ed0671",
+    "Epigraph_.htm": "5d055cad82688433e0c6274ccbc85bebc340d5cdabbf9a49c1d1a6e23be9719c",
+    "NOTE_ON_SOURCES_AND_METHODOLOGY_.htm": "7110e93e7345498c167abe037229061125d40456ef84ce2127397b2cd7ea82ea"
+  },
+  "overall_pass": true
+}

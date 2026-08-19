@@ -1441,7 +1441,7 @@
     <script>
         // ========== CONFIG ==========
         const CONFIG = {
-            APP_VERSION: "2.1.1",
+            APP_VERSION: "2.1.2",
             TRIAL_CHAPTERS: 2,
             TRIAL_DAYS: 7,
             TEST_LICENSE: "INF-TEST-2024-ABCD-5678",
@@ -2130,7 +2130,8 @@
                 }
 
                 this.loadingOverlay.style.display = "flex";
-                this.readerFrame.src = encodeURI(file);
+                const rootFileUrl = new URL("/" + encodeURI(file), window.location.origin);
+                this.readerFrame.src = rootFileUrl.href;
                 this.currentLabel.textContent = label;
                 this.currentFile = file;
                 this.currentChapter = chapterNumber;
@@ -2164,6 +2165,50 @@
 
                 this.readerFrame.onload = () => {
                     this.loadingOverlay.style.display = "none";
+
+                    try {
+                        const loadedDoc = this.readerFrame.contentDocument;
+                        const loadedTitle = loadedDoc && loadedDoc.title ? loadedDoc.title.trim() : "";
+                        const loadedLandingShell = loadedDoc && loadedDoc.getElementById("splashEntrance");
+
+                        // If a missing .htm request is rewritten to index.html, do not
+                        // silently display a nested copy of the landing page.
+                        if (loadedTitle === "Infinity Loop Reader" || loadedLandingShell) {
+                            this.readerFrame.srcdoc = `
+                                <!DOCTYPE html>
+                                <html lang="en">
+                                <head>
+                                    <meta charset="UTF-8">
+                                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                    <title>Reader file unavailable</title>
+                                    <style>
+                                        body {
+                                            font-family: Georgia, "Times New Roman", serif;
+                                            max-width: 44rem;
+                                            margin: 0 auto;
+                                            padding: 3rem 1.25rem;
+                                            line-height: 1.6;
+                                            color: #111827;
+                                            background: #fff;
+                                            text-align: center;
+                                        }
+                                    </style>
+                                </head>
+                                <body>
+                                    <h1>Reader file unavailable</h1>
+                                    <p>The requested section did not resolve to its deployed HTML file.</p>
+                                    <p><strong>${label}</strong></p>
+                                    <p>Expected file: <code>${file}</code></p>
+                                </body>
+                                </html>
+                            `;
+                            console.error("Reader route resolved to index.html instead of:", file);
+                            return;
+                        }
+                    } catch (err) {
+                        console.warn("Could not verify loaded reader route:", err);
+                    }
+
                     applyReaderTypographyToIframe(this.readerFrame);
                 };
 
