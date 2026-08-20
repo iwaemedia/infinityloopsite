@@ -1431,7 +1431,7 @@
     <script>
         // ========== CONFIG ==========
         const CONFIG = {
-            APP_VERSION: "3.0.2",
+            APP_VERSION: "3.0.3",
             TRIAL_CHAPTERS: 2,
             TRIAL_DAYS: 7,
             PAID_ROLE: "paid",
@@ -1678,6 +1678,11 @@
             getIdentityRoles() {
                 const user = this.identityUser;
                 if (!user) return [];
+
+                // Support both the legacy Netlify Identity widget user shape
+                // and the normalized @netlify/identity user shape.
+                if (Array.isArray(user.roles)) return user.roles;
+
                 const appMetadata = user.app_metadata || user.appMetadata || {};
                 return Array.isArray(appMetadata.roles) ? appMetadata.roles : [];
             }
@@ -1796,30 +1801,123 @@
                     console.error("Netlify Identity did not load.");
                     this.licenseManager.setIdentityUser(null);
                     this.updateAccessUI();
+                    this.loadNavigation();
                     return;
                 }
 
-                window.netlifyIdentity.on("init", (user) => {
-                    this.licenseManager.setIdentityUser(user);
+                const identity = window.netlifyIdentity;
+
+                const decodeJwtPayload = (jwt) => {
+                    if (!jwt || typeof jwt !== "string") return null;
+
+                    try {
+                        const parts = jwt.split(".");
+                        if (parts.length !== 3) return null;
+
+                        let payload = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+                        while (payload.length % 4) payload += "=";
+
+                        const json = decodeURIComponent(
+                            Array.prototype.map
+                                .call(atob(payload), (char) =>
+                                    "%" + ("00" + char.charCodeAt(0).toString(16)).slice(-2)
+                                )
+                                .join("")
+                        );
+
+                        return JSON.parse(json);
+                    } catch (err) {
+                        console.warn("Could not decode Identity JWT:", err);
+                        return null;
+                    }
+                };
+
+                const mergeJwtClaimsIntoUser = (user, jwt) => {
+                    if (!user) return null;
+
+                    const claims = decodeJwtPayload(jwt);
+                    if (!claims) return user;
+
+                    const claimAppMetadata = claims.app_metadata || {};
+                    const existingAppMetadata = user.app_metadata || user.appMetadata || {};
+                    const mergedAppMetadata = {
+                        ...existingAppMetadata,
+                        ...claimAppMetadata,
+                    };
+
+                    return {
+                        ...user,
+                        email: claims.email || user.email,
+                        roles: Array.isArray(claimAppMetadata.roles)
+                            ? claimAppMetadata.roles
+                            : user.roles,
+                        app_metadata: mergedAppMetadata,
+                        appMetadata: mergedAppMetadata,
+                    };
+                };
+
+                const syncIdentityUser = (user) => {
+                    this.licenseManager.setIdentityUser(user || null);
                     this.updateAccessUI();
-                });
 
-                window.netlifyIdentity.on("login", (user) => {
-                    this.licenseManager.setIdentityUser(user);
-                    window.netlifyIdentity.close();
+                    // Navigation is initially rendered before Identity finishes loading.
+                    // Rebuild it after every authentication change so Chapters 3-11
+                    // immediately reflect the verified paid role.
+                    this.loadNavigation();
+                };
 
-                    if (!this.licenseManager.hasPaidRole()) {
-                        alert("This account is signed in, but it does not yet have paid reader access.");
+                const refreshAndSync = async (fallbackUser) => {
+                    let user = fallbackUser || null;
+
+                    try {
+                        const jwt = await identity.refresh();
+                        user = identity.currentUser() || user;
+                        user = mergeJwtClaimsIntoUser(user, jwt);
+                    } catch (err) {
+                        // A valid newly-created session may not need a refresh yet.
+                        // Fall back to the widget's current user rather than locking it out.
+                        console.warn("Identity refresh warning:", err);
+                        user = identity.currentUser() || user;
                     }
 
-                    // Full reload ensures the fresh nf_jwt cookie is used by Netlify's CDN role gate.
+                    syncIdentityUser(user);
+                    return user;
+                };
+
+                identity.on("init", (user) => {
+                    if (user) {
+                        refreshAndSync(user);
+                    } else {
+                        syncIdentityUser(null);
+                    }
+                });
+
+                identity.on("login", async (user) => {
+                    identity.close();
+
+                    const freshUser = await refreshAndSync(user);
+
+                    if (!freshUser || !this.licenseManager.hasPaidRole()) {
+                        alert("This account is signed in, but it does not yet have paid reader access.");
+                    }
+                });
+
+                identity.on("logout", () => {
+                    syncIdentityUser(null);
                     window.location.reload();
                 });
 
-                window.netlifyIdentity.on("logout", () => {
-                    this.licenseManager.setIdentityUser(null);
-                    window.location.reload();
-                });
+                // The widget can finish its automatic initialization before this app's
+                // DOMContentLoaded handler registers the init listener. Recover that
+                // existing session immediately instead of leaving identityReady false.
+                try {
+                    const existingUser = identity.currentUser();
+                    if (existingUser) {
+                        refreshAndSync(existingUser);
+                    }
+                } catch (err) {
+                    console.warn("Could not restore Identity session:", err);
+                }
             }
 
             cacheDOM() {
@@ -2057,6 +2155,8 @@
                     if (chapterNumber <= CONFIG.TRIAL_CHAPTERS) {
                         metaRow.textContent = `Chapter ${chapterNumber} • Trial access`;
                         btn.classList.add("trial-only");
+                    } else if (this.licenseManager.hasActiveLicense()) {
+                        metaRow.textContent = `Chapter ${chapterNumber} • Full access`;
                     } else {
                         metaRow.innerHTML = `<span class="nav-link-locked">Locked • Requires full license</span>`;
                     }
