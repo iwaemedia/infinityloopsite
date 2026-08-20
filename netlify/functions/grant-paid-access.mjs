@@ -16,10 +16,8 @@ function normalizeEmail(value) {
   return String(value || "").trim().toLowerCase();
 }
 
-function getBearerToken(request) {
-  const header = request.headers.get("authorization") || "";
-  const match = header.match(/^Bearer\\s+(.+)$/i);
-  return match ? match[1].trim() : "";
+function getProvisionSecret(request) {
+  return String(request.headers.get("x-provision-secret") || "").trim();
 }
 
 function getRoles(user) {
@@ -41,7 +39,7 @@ export default async function grantPaidAccess(request) {
 
   const secret = process.env.MAKE_PROVISION_SECRET;
   if (!secret) return jsonResponse(500, { ok: false, error: "SERVER_NOT_CONFIGURED" });
-  if (getBearerToken(request) !== secret) return jsonResponse(401, { ok: false, error: "UNAUTHORIZED" });
+  if (getProvisionSecret(request) !== String(secret).trim()) return jsonResponse(401, { ok: false, error: "UNAUTHORIZED" });
 
   let body;
   try {
