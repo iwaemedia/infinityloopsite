@@ -69,8 +69,8 @@ export default async function grantPaidAccess(request) {
     const roles = Array.from(new Set([...currentRoles, PAID_ROLE]));
 
     await admin.updateUser(
-      { id: user.id },
-      { app_metadata: { roles } }
+       user.id,
+       { app_metadata: { roles } }
     );
 
     const verified = await findUserByEmail(email);
