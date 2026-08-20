@@ -634,6 +634,15 @@
             gap: 18px;
         }
 
+        /* Mobile/tablet navigation controls. Hidden on desktop/laptop. */
+        .sidebar-mobile-close {
+            display: none;
+        }
+
+        .sidebar-backdrop {
+            display: none;
+        }
+
         .user-info {
             padding: 12px 12px 10px;
             border-radius: 18px;
@@ -908,6 +917,60 @@
 
         /* RESPONSIVE */
         @media (max-width: 1024px) {
+            /* On phones and tablets, navigation behaves as an overlay drawer so
+               it never permanently consumes or blocks the reading pane. */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                height: 100dvh;
+                z-index: 100;
+                display: none;
+                width: min(86vw, 360px);
+                max-width: 360px;
+                box-shadow: 12px 0 35px rgba(0, 0, 0, 0.82);
+                overscroll-behavior: contain;
+            }
+
+            .sidebar-mobile-close {
+                position: sticky;
+                top: 0;
+                z-index: 3;
+                align-self: flex-end;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 42px;
+                height: 42px;
+                margin: -6px -2px -6px 0;
+                border-radius: 12px;
+                border: 1px solid rgba(148, 163, 184, 0.75);
+                background: #0f172a;
+                color: #f8fafc;
+                font-size: 1.25rem;
+                font-weight: 700;
+                cursor: pointer;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+            }
+
+            .sidebar-mobile-close:focus-visible {
+                outline: 3px solid rgba(56, 189, 248, 0.9);
+                outline-offset: 2px;
+            }
+
+            .sidebar-backdrop {
+                position: fixed;
+                inset: 0;
+                z-index: 90;
+                background: rgba(2, 6, 23, 0.68);
+                backdrop-filter: blur(2px);
+            }
+
+            .sidebar-backdrop.open {
+                display: block;
+            }
+
             .splash-inner {
                 grid-template-columns: minmax(0, 1fr);
             }
@@ -964,15 +1027,8 @@
             }
 
             .sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                height: 100vh;
-                z-index: 100;
-                display: none;
-                width: 80%;
-                max-width: 320px;
-                box-shadow: 12px 0 35px rgba(0, 0, 0, 0.7);
+                width: min(88vw, 340px);
+                max-width: 340px;
             }
 
             .app-header {
@@ -1336,7 +1392,7 @@
     <div id="app-shell">
         <header class="app-header">
             <div class="header-left">
-                <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">☰</button>
+                <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="sidebar">☰</button>
                 <div id="current-label" class="current-label">The Infinity Loop</div>
             </div>
 
@@ -1353,8 +1409,16 @@
 
         <div class="app-main">
             <!-- SIDEBAR -->
-            <aside class="sidebar" id="sidebar">
+            <aside class="sidebar" id="sidebar" aria-label="Reader navigation">
                 <div class="sidebar-inner">
+                    <button
+                        type="button"
+                        class="sidebar-mobile-close"
+                        id="sidebarClose"
+                        aria-label="Close navigation menu"
+                        title="Close menu"
+                    >✕</button>
+
                     <div class="user-info">
                         <div class="user-email" id="userEmail">Not logged in</div>
                         <div class="license-type" id="licenseTypeDisplay">No Access</div>
@@ -1384,6 +1448,12 @@
                     </div>
                 </div>
             </aside>
+
+            <div
+                class="sidebar-backdrop"
+                id="sidebarBackdrop"
+                aria-hidden="true"
+            ></div>
 
             <!-- READER -->
             <section class="reader-pane">
@@ -1431,7 +1501,7 @@
     <script>
         // ========== CONFIG ==========
         const CONFIG = {
-            APP_VERSION: "3.0.3",
+            APP_VERSION: "3.0.4",
             TRIAL_CHAPTERS: 2,
             TRIAL_DAYS: 7,
             PAID_ROLE: "paid",
@@ -1931,6 +2001,8 @@
 
                 this.sidebar = document.getElementById("sidebar");
                 this.menuToggle = document.getElementById("menu-toggle");
+                this.sidebarClose = document.getElementById("sidebarClose");
+                this.sidebarBackdrop = document.getElementById("sidebarBackdrop");
 
                 this.frontMatterList = document.getElementById("frontMatterList");
                 this.chapterList = document.getElementById("chapterList");
@@ -2049,6 +2121,20 @@
 
                 this.menuToggle.addEventListener("click", () => this.toggleSidebar());
 
+                if (this.sidebarClose) {
+                    this.sidebarClose.addEventListener("click", () => this.closeSidebar());
+                }
+
+                if (this.sidebarBackdrop) {
+                    this.sidebarBackdrop.addEventListener("click", () => this.closeSidebar());
+                }
+
+                document.addEventListener("keydown", (e) => {
+                    if (e.key === "Escape" && window.innerWidth <= 1024) {
+                        this.closeSidebar();
+                    }
+                });
+
                 document.querySelectorAll(".nav-section-title").forEach((title) => {
                     title.addEventListener("click", (e) => {
                         const section = e.currentTarget.closest(".nav-section");
@@ -2058,6 +2144,9 @@
 
                 window.addEventListener("resize", () => {
                     this.isMobile = window.innerWidth <= 768;
+                    if (window.innerWidth > 1024 && this.sidebarBackdrop) {
+                        this.sidebarBackdrop.classList.remove("open");
+                    }
                 });
 
                 const termsLink = document.getElementById("termsLink");
@@ -2105,8 +2194,7 @@
                 this.isMobile = window.innerWidth <= 768;
 
                 // Always start with menu collapsed on entry (desktop + mobile)
-                this.sidebar.style.display = "none";
-                this.menuToggle.textContent = "☰";
+                this.closeSidebar();
 
                 this.updateAccessUI();
             }
@@ -2172,9 +2260,14 @@
                 btn.addEventListener("click", () => {
                     if (type === "chapter" && !this.licenseManager.canAccessChapter(chapterNumber)) {
                         this.showTrialLimitation();
+                        if (window.innerWidth <= 1024) this.closeSidebar();
                         return;
                     }
+
                     this.openSection(item.file, item.label, chapterNumber, item.id, type);
+
+                    // Phones/tablets: once a destination is chosen, restore the reading view.
+                    if (window.innerWidth <= 1024) this.closeSidebar();
                 });
 
                 li.appendChild(btn);
@@ -2399,10 +2492,38 @@
                 this.showApp();
             }
 
+            openSidebar() {
+                this.sidebar.style.display = "block";
+                this.menuToggle.textContent = "✕";
+                this.menuToggle.setAttribute("aria-expanded", "true");
+
+                if (window.innerWidth <= 1024 && this.sidebarBackdrop) {
+                    this.sidebarBackdrop.classList.add("open");
+                }
+
+                if (window.innerWidth <= 1024 && this.sidebarClose) {
+                    // Move keyboard focus to the visible close control for accessibility.
+                    window.setTimeout(() => this.sidebarClose.focus(), 0);
+                }
+            }
+
+            closeSidebar() {
+                this.sidebar.style.display = "none";
+                this.menuToggle.textContent = "☰";
+                this.menuToggle.setAttribute("aria-expanded", "false");
+
+                if (this.sidebarBackdrop) {
+                    this.sidebarBackdrop.classList.remove("open");
+                }
+            }
+
             toggleSidebar() {
                 const isHidden = this.sidebar.style.display === "none" || !this.sidebar.style.display;
-                this.sidebar.style.display = isHidden ? "block" : "none";
-                this.menuToggle.textContent = isHidden ? "✕" : "☰";
+                if (isHidden) {
+                    this.openSidebar();
+                } else {
+                    this.closeSidebar();
+                }
             }
 
             validateEmail(email) {
